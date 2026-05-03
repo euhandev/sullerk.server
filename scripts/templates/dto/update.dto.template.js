@@ -1,0 +1,10 @@
+export const updateDtoTemplate = ({
+  pascal,
+  kebab,
+}) => `import { PartialType } from '@nestjs/swagger';
+import { Create${pascal}Dto } from './create-${kebab}.dto';
+
+export class Update${pascal}Dto extends PartialType(
+  Create${pascal}Dto,
+) {}
+`;

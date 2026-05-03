@@ -1,0 +1,68 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: oaktree-api
+    restart: unless-stopped
+    ports:
+      - '8989:8989'
+    env_file:
+      - .env
+    depends_on:
+      - mongo
+
+  jenkins:
+    build:
+      context: .
+      dockerfile: ./jenkins/jenkins.Dockerfile
+    container_name: oaktree-jenkins
+    restart: unless-stopped
+    privileged: true
+    user: root # Needed to access docker.sock, or ensure jenkins user has right GID
+    ports:
+      - '8080:8080'
+      - '50000:50000'
+    environment:
+      - JENKINS_OPTS=--prefix=/jenkins
+    volumes:
+      - jenkins_data:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - mongo
+
+  nginx:
+    image: nginx:latest
+    container_name: oaktree-nginx
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - api
+      - jenkins
+
+  # Optional MongoDB instance if you're not using MongoDB Atlas
+  mongo:
+    image: mongo:latest
+    container_name: oaktree-mongo
+    restart: unless-stopped
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo_data:/data/db
+
+  mongo-express:
+    image: mongo-express:latest
+    container_name: oaktree-mongo-express
+    restart: unless-stopped
+    ports:
+      - '8081:8081'
+    depends_on:
+      - mongo
+
+volumes:
+  mongo_data:
+  jenkins_data:

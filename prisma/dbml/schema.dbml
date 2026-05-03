@@ -1,0 +1,376 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table users {
+  id String [pk]
+  username String
+  email String [unique, not null]
+  contactNo String [not null, default: '']
+  password String [not null]
+  lang Lang [not null, default: 'ENG']
+  role Role [not null, default: 'CUSTOMER']
+  avatar String [default: '']
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  status Status [not null, default: 'ACTIVE']
+  dob DateTime
+  fcmToken String [default: '']
+  resetPasswordOtp String
+  resetPasswordOtpExpires DateTime
+  admin admins
+  customer customers
+  notifications notifications [not null]
+}
+
+Table admins {
+  id String [pk]
+  userId String [unique, not null]
+  fullName String [not null]
+  address String
+  intro String
+  user users [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  pricingConfigs pricing_configs [not null]
+}
+
+Table customers {
+  id String [pk]
+  userId String [unique, not null]
+  fullName String
+  bloodGroup BloodGroup
+  gender Gender
+  address String [default: '']
+  city String [default: '']
+  postcode String [not null]
+  state String [default: '']
+  country String [default: '']
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  user users [not null]
+  items items [not null]
+  ordersAsBuyer orders [not null]
+  ordersAsSeller orders [not null]
+  disputes disputes [not null]
+  watchlists watchlists [not null]
+  paymentMethods payment_methods [not null]
+  transactions transactions [not null]
+}
+
+Table items {
+  id String [pk]
+  title String
+  sport String [not null]
+  teamOrCountry String [not null]
+  playerName String
+  category ItemCategory [not null]
+  seasonOrYear String [not null]
+  kitType String
+  description String [not null]
+  photos String[] [not null]
+  signatureType SignatureType [not null, default: 'NONE']
+  photoProofLevel ProofLevel [not null, default: 'NONE']
+  authentication String
+  videoEvidence VideoEvidence [not null, default: 'NONE']
+  format SaleFormat [not null, default: 'BUY_NOW']
+  baseValue Float [not null, default: 0]
+  initialPrice Float [not null, default: 0]
+  allowOffers Boolean [not null, default: false]
+  autoPriceAdjust Boolean [not null, default: false]
+  status ItemStatus [not null, default: 'PENDING']
+  ownerId String [not null]
+  owner customers [not null]
+  acquiredDate DateTime
+  orders orders [not null]
+  watchlists watchlists [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table orders {
+  id String [pk]
+  orderNumber String [unique, not null]
+  itemId String [not null]
+  item items [not null]
+  buyerId String [not null]
+  buyer customers [not null]
+  sellerId String [not null]
+  seller customers [not null]
+  amount Float [not null]
+  status OrderStatus [not null, default: 'PENDING']
+  trackingNo String
+  type OrderType [not null, default: 'PURCHASE']
+  disputes disputes [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table disputes {
+  id String [pk]
+  orderId String [not null]
+  order orders [not null]
+  raisedById String [not null]
+  raisedBy customers [not null]
+  type DisputeType [not null]
+  status DisputeStatus [not null, default: 'OPEN']
+  reason String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table watchlists {
+  id String [pk]
+  customerId String [not null]
+  customer customers [not null]
+  itemId String [not null]
+  item items [not null]
+  createdAt DateTime [default: `now()`, not null]
+
+  indexes {
+    (customerId, itemId) [unique]
+  }
+}
+
+Table payment_methods {
+  id String [pk]
+  customerId String [not null]
+  customer customers [not null]
+  type PaymentMethodType [not null]
+  provider String [not null]
+  accountNo String
+  isDefault Boolean [not null, default: false]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table transactions {
+  id String [pk]
+  customerId String [not null]
+  customer customers [not null]
+  amount Float [not null]
+  type TransactionType [not null]
+  status TransactionStatus [not null, default: 'PENDING']
+  method String
+  referenceId String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table pricing_configs {
+  id String [pk]
+  key String [unique, not null]
+  value Float [not null]
+  description String
+  updatedBy String
+  admin admins
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table newsletters {
+  id String [pk]
+  customerId String
+  email String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table files {
+  id String [pk]
+  name String
+  url String [not null]
+  type FileType [not null, default: 'DOC']
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table blogs {
+  id String [pk]
+  name String [not null, default: '']
+  slug String [unique, not null]
+  writer String [not null, default: '']
+  description String [not null, default: '']
+  url String [default: '']
+  secUrl String [default: '']
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table notifications {
+  id String [pk]
+  userId String [not null]
+  type NotificationType [not null]
+  name String [not null]
+  body String [not null]
+  data String
+  read Boolean [not null, default: false]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  user users [not null]
+}
+
+Enum ItemCategory {
+  SHIRT
+  BOOTS
+  CARD
+  GLOVES
+  MATCH_BALL
+  SHORTS
+  OTHER
+}
+
+Enum SignatureType {
+  NONE
+  PARTIAL
+  FULL
+  DEDICATED
+}
+
+Enum ProofLevel {
+  NONE
+  PARTIAL
+  FULL
+  WITH_ATHLETE
+}
+
+Enum VideoEvidence {
+  NONE
+  ITEM
+  SIGNING
+  WITH_ATHLETE
+}
+
+Enum SaleFormat {
+  BUY_NOW
+  TRADE_ONLY
+  BUY_AND_TRADE
+}
+
+Enum ItemStatus {
+  ACTIVE
+  PAUSED
+  PENDING
+  SOLD
+}
+
+Enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+Enum OrderType {
+  PURCHASE
+  TRADE
+}
+
+Enum DisputeType {
+  DISPUTE
+  REFUND
+}
+
+Enum DisputeStatus {
+  OPEN
+  UNDER_REVIEW
+  RESOLVED
+}
+
+Enum PaymentMethodType {
+  BANK_ACCOUNT
+  PAYPAL
+  CARD
+}
+
+Enum TransactionType {
+  PAYMENT
+  WITHDRAWAL
+  FEE
+  REFUND
+}
+
+Enum TransactionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+Enum NotificationType {
+  SUBSCRIPTION_REMINDER
+  GROUP_ASSIGNMENT
+  MEMBER_REGISTERED
+  POST_ENGAGEMENT
+  TRAINING_REQUESTED
+  NEED_HELP_REQUESTED
+}
+
+Enum Role {
+  SUPER_ADMIN
+  ADMIN
+  CUSTOMER
+}
+
+Enum Status {
+  ACTIVE
+  INACTIVE
+}
+
+Enum Lang {
+  ENG
+  RON
+  HUN
+}
+
+Enum BloodGroup {
+  A_POSITIVE
+  A_NEGATIVE
+  B_POSITIVE
+  B_NEGATIVE
+  AB_POSITIVE
+  AB_NEGATIVE
+  O_POSITIVE
+  O_NEGATIVE
+}
+
+Enum Gender {
+  MALE
+  FEMALE
+  OTHERS
+}
+
+Enum FileType {
+  DOC
+  IMAGE
+  VIDEO
+}
+
+Ref: admins.userId - users.id
+
+Ref: customers.userId - users.id
+
+Ref: items.ownerId > customers.id
+
+Ref: orders.itemId > items.id
+
+Ref: orders.buyerId > customers.id
+
+Ref: orders.sellerId > customers.id
+
+Ref: disputes.orderId > orders.id
+
+Ref: disputes.raisedById > customers.id
+
+Ref: watchlists.customerId > customers.id
+
+Ref: watchlists.itemId > items.id
+
+Ref: payment_methods.customerId > customers.id
+
+Ref: transactions.customerId > customers.id
+
+Ref: pricing_configs.updatedBy > admins.id
+
+Ref: notifications.userId > users.id

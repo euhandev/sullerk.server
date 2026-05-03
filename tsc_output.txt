@@ -1,0 +1,101 @@
+node_modules/.pnpm/@prisma+client@6.17.1_prism_0f3e51022084b755e6e5bbd56889ea0f/node_modules/@prisma/client/runtime/library.d.ts(73,5): error TS18028: Private identifiers are only available when targeting ECMAScript 2015 and higher.
+node_modules/.pnpm/@prisma+client@6.17.1_prism_0f3e51022084b755e6e5bbd56889ea0f/node_modules/@prisma/client/runtime/library.d.ts(396,5): error TS18028: Private identifiers are only available when targeting ECMAScript 2015 and higher.
+node_modules/.pnpm/@prisma+client@6.17.1_prism_0f3e51022084b755e6e5bbd56889ea0f/node_modules/@prisma/client/runtime/library.d.ts(2032,5): error TS18028: Private identifiers are only available when targeting ECMAScript 2015 and higher.
+src/modules/user-learning-path/dto/create-user-learning-path.dto.ts(14,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'ClassFieldDecoratorContext<CreateUserLearningPathDto, string> & { name: "customerId"; private: false; static: false; }' is not assignable to parameter of type 'string | symbol'.
+src/modules/user-learning-path/dto/create-user-learning-path.dto.ts(15,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'ClassFieldDecoratorContext<CreateUserLearningPathDto, string> & { name: "customerId"; private: false; static: false; }' is not assignable to parameter of type 'string | symbol'.
+src/modules/user-learning-path/dto/create-user-learning-path.dto.ts(16,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'ClassFieldDecoratorContext<CreateUserLearningPathDto, string> & { name: "customerId"; private: false; static: false; }' is not assignable to parameter of type 'string | symbol'.
+src/modules/user-learning-path/dto/create-user-learning-path.dto.ts(19,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'ClassFieldDecoratorContext<CreateUserLearningPathDto, EmployerType> & { name: "employmentType"; private: false; static: false; }' is not assignable to parameter of type 'string | symbol'.
+src/modules/user-learning-path/dto/create-user-learning-path.dto.ts(20,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'ClassFieldDecoratorContext<CreateUserLearningPathDto, EmployerType> & { name: "employmentType"; private: false; static: false; }' is not assignable to parameter of type 'string | symbol'.
+src/modules/user-learning-path/dto/create-user-learning-path.dto.ts(21,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'ClassFieldDecoratorContext<CreateUserLearningPathDto, EmployerType> & { name: "employmentType"; private: false; static: false; }' is not assignable to parameter of type 'string | symbol'.
+src/modules/user-learning-path/dto/create-user-learning-path.dto.ts(24,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'ClassFieldDecoratorContext<CreateUserLearningPathDto, PrimaryConcern> & { name: "primaryConcern"; private: false; static: false; }' is not assignable to parameter of type 'string | symbol'.
+src/modules/user-learning-path/dto/create-user-learning-path.dto.ts(25,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'ClassFieldDecoratorContext<CreateUserLearningPathDto, PrimaryConcern> & { name: "primaryConcern"; private: false; static: false; }' is not assignable to parameter of type 'string | symbol'.
+src/modules/user-learning-path/dto/create-user-learning-path.dto.ts(26,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'ClassFieldDecoratorContext<CreateUserLearningPathDto, PrimaryConcern> & { name: "primaryConcern"; private: false; static: false; }' is not assignable to parameter of type 'string | symbol'.
+src/modules/user-learning-path/dto/create-user-learning-path.dto.ts(29,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'ClassFieldDecoratorContext<CreateUserLearningPathDto, AgeRange> & { name: "ageRange"; private: false; static: false; }' is not assignable to parameter of type 'string | symbol'.
+src/modules/user-learning-path/dto/create-user-learning-path.dto.ts(30,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'ClassFieldDecoratorContext<CreateUserLearningPathDto, AgeRange> & { name: "ageRange"; private: false; static: false; }' is not assignable to parameter of type 'string | symbol'.
+src/modules/user-learning-path/dto/create-user-learning-path.dto.ts(31,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'ClassFieldDecoratorContext<CreateUserLearningPathDto, AgeRange> & { name: "ageRange"; private: false; static: false; }' is not assignable to parameter of type 'string | symbol'.
+src/modules/user-learning-path/dto/create-user-learning-path.dto.ts(34,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'ClassFieldDecoratorContext<CreateUserLearningPathDto, boolean> & { name: "haveAttendedSeminar"; private: false; static: false; }' is not assignable to parameter of type 'string | symbol'.
+src/modules/user-learning-path/dto/create-user-learning-path.dto.ts(35,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'ClassFieldDecoratorContext<CreateUserLearningPathDto, boolean> & { name: "haveAttendedSeminar"; private: false; static: false; }' is not assignable to parameter of type 'string | symbol'.
+src/modules/user-learning-path/dto/create-user-learning-path.dto.ts(36,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'ClassFieldDecoratorContext<CreateUserLearningPathDto, boolean> & { name: "haveAttendedSeminar"; private: false; static: false; }' is not assignable to parameter of type 'string | symbol'.
+src/modules/user-learning-path/dto/create-user-learning-path.dto.ts(39,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'ClassFieldDecoratorContext<CreateUserLearningPathDto, boolean> & { name: "hasWill"; private: false; static: false; }' is not assignable to parameter of type 'string | symbol'.
+src/modules/user-learning-path/dto/create-user-learning-path.dto.ts(40,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'ClassFieldDecoratorContext<CreateUserLearningPathDto, boolean> & { name: "hasWill"; private: false; static: false; }' is not assignable to parameter of type 'string | symbol'.
+src/modules/user-learning-path/dto/create-user-learning-path.dto.ts(41,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'ClassFieldDecoratorContext<CreateUserLearningPathDto, boolean> & { name: "hasWill"; private: false; static: false; }' is not assignable to parameter of type 'string | symbol'.
+src/modules/user-learning-path/dto/create-user-learning-path.dto.ts(44,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'ClassFieldDecoratorContext<CreateUserLearningPathDto, boolean> & { name: "hasTrust"; private: false; static: false; }' is not assignable to parameter of type 'string | symbol'.
+src/modules/user-learning-path/dto/create-user-learning-path.dto.ts(45,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'ClassFieldDecoratorContext<CreateUserLearningPathDto, boolean> & { name: "hasTrust"; private: false; static: false; }' is not assignable to parameter of type 'string | symbol'.
+src/modules/user-learning-path/dto/create-user-learning-path.dto.ts(46,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'ClassFieldDecoratorContext<CreateUserLearningPathDto, boolean> & { name: "hasTrust"; private: false; static: false; }' is not assignable to parameter of type 'string | symbol'.
+src/modules/user-learning-path/dto/create-user-learning-path.dto.ts(49,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'ClassFieldDecoratorContext<CreateUserLearningPathDto, boolean> & { name: "hasPOA"; private: false; static: false; }' is not assignable to parameter of type 'string | symbol'.
+src/modules/user-learning-path/dto/create-user-learning-path.dto.ts(50,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'ClassFieldDecoratorContext<CreateUserLearningPathDto, boolean> & { name: "hasPOA"; private: false; static: false; }' is not assignable to parameter of type 'string | symbol'.
+src/modules/user-learning-path/dto/create-user-learning-path.dto.ts(51,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'ClassFieldDecoratorContext<CreateUserLearningPathDto, boolean> & { name: "hasPOA"; private: false; static: false; }' is not assignable to parameter of type 'string | symbol'.
+src/modules/user-learning-path/dto/create-user-learning-path.dto.ts(54,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'ClassFieldDecoratorContext<CreateUserLearningPathDto, string[]> & { name: "recommendedCategories"; private: false; static: false; }' is not assignable to parameter of type 'string | symbol'.
+src/modules/user-learning-path/dto/create-user-learning-path.dto.ts(60,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'ClassFieldDecoratorContext<CreateUserLearningPathDto, string[]> & { name: "recommendedCategories"; private: false; static: false; }' is not assignable to parameter of type 'string | symbol'.
+src/modules/user-learning-path/dto/create-user-learning-path.dto.ts(61,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'ClassFieldDecoratorContext<CreateUserLearningPathDto, string[]> & { name: "recommendedCategories"; private: false; static: false; }' is not assignable to parameter of type 'string | symbol'.
+src/modules/user-learning-path/dto/create-user-learning-path.dto.ts(62,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'ClassFieldDecoratorContext<CreateUserLearningPathDto, string[]> & { name: "recommendedCategories"; private: false; static: false; }' is not assignable to parameter of type 'string | symbol'.
+src/modules/user-learning-path/dto/create-user-learning-path.dto.ts(65,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'ClassFieldDecoratorContext<CreateUserLearningPathDto, string[]> & { name: "recommendedModules"; private: false; static: false; }' is not assignable to parameter of type 'string | symbol'.
+src/modules/user-learning-path/dto/create-user-learning-path.dto.ts(71,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'ClassFieldDecoratorContext<CreateUserLearningPathDto, string[]> & { name: "recommendedModules"; private: false; static: false; }' is not assignable to parameter of type 'string | symbol'.
+src/modules/user-learning-path/dto/create-user-learning-path.dto.ts(72,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'ClassFieldDecoratorContext<CreateUserLearningPathDto, string[]> & { name: "recommendedModules"; private: false; static: false; }' is not assignable to parameter of type 'string | symbol'.
+src/modules/user-learning-path/dto/create-user-learning-path.dto.ts(73,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'ClassFieldDecoratorContext<CreateUserLearningPathDto, string[]> & { name: "recommendedModules"; private: false; static: false; }' is not assignable to parameter of type 'string | symbol'.
+src/modules/user-learning-path/dto/create-user-learning-path.dto.ts(76,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'ClassFieldDecoratorContext<CreateUserLearningPathDto, number> & { name: "completionGoal"; private: false; static: false; }' is not assignable to parameter of type 'string | symbol'.
+src/modules/user-learning-path/dto/create-user-learning-path.dto.ts(77,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'ClassFieldDecoratorContext<CreateUserLearningPathDto, number> & { name: "completionGoal"; private: false; static: false; }' is not assignable to parameter of type 'string | symbol'.
+src/modules/user-learning-path/dto/create-user-learning-path.dto.ts(78,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'ClassFieldDecoratorContext<CreateUserLearningPathDto, number> & { name: "completionGoal"; private: false; static: false; }' is not assignable to parameter of type 'string | symbol'.
+src/modules/user-learning-path/dto/create-user-learning-path.dto.ts(81,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'ClassFieldDecoratorContext<CreateUserLearningPathDto, string> & { name: "currentModuleId"; private: false; static: false; }' is not assignable to parameter of type 'string | symbol'.
+src/modules/user-learning-path/dto/create-user-learning-path.dto.ts(82,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'ClassFieldDecoratorContext<CreateUserLearningPathDto, string> & { name: "currentModuleId"; private: false; static: false; }' is not assignable to parameter of type 'string | symbol'.
+src/modules/user-learning-path/dto/create-user-learning-path.dto.ts(83,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'ClassFieldDecoratorContext<CreateUserLearningPathDto, string> & { name: "currentModuleId"; private: false; static: false; }' is not assignable to parameter of type 'string | symbol'.
+src/modules/user-learning-path/dto/create-user-learning-path.dto.ts(86,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'ClassFieldDecoratorContext<CreateUserLearningPathDto, number> & { name: "modulesCompleted"; private: false; static: false; }' is not assignable to parameter of type 'string | symbol'.
+src/modules/user-learning-path/dto/create-user-learning-path.dto.ts(87,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'ClassFieldDecoratorContext<CreateUserLearningPathDto, number> & { name: "modulesCompleted"; private: false; static: false; }' is not assignable to parameter of type 'string | symbol'.
+src/modules/user-learning-path/dto/create-user-learning-path.dto.ts(88,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'ClassFieldDecoratorContext<CreateUserLearningPathDto, number> & { name: "modulesCompleted"; private: false; static: false; }' is not assignable to parameter of type 'string | symbol'.
+src/modules/user-learning-path/dto/create-user-learning-path.dto.ts(91,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'ClassFieldDecoratorContext<CreateUserLearningPathDto, boolean> & { name: "pathCompleted"; private: false; static: false; }' is not assignable to parameter of type 'string | symbol'.
+src/modules/user-learning-path/dto/create-user-learning-path.dto.ts(92,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'ClassFieldDecoratorContext<CreateUserLearningPathDto, boolean> & { name: "pathCompleted"; private: false; static: false; }' is not assignable to parameter of type 'string | symbol'.
+src/modules/user-learning-path/dto/create-user-learning-path.dto.ts(93,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'ClassFieldDecoratorContext<CreateUserLearningPathDto, boolean> & { name: "pathCompleted"; private: false; static: false; }' is not assignable to parameter of type 'string | symbol'.
+src/modules/user-learning-path/user-learning-path.constant.ts(1,51): error TS2307: Cannot find module '@/utils/query_builder' or its corresponding type declarations.
+src/modules/user-learning-path/user-learning-path.service.ts(5,31): error TS2307: Cannot find module '@/helper/prisma.service' or its corresponding type declarations.
+src/modules/user-learning-path/user-learning-path.service.ts(13,26): error TS2307: Cannot find module '@/utils/query_builder' or its corresponding type declarations.
+src/modules/user-learning-path/user-learning-path.service.ts(14,26): error TS2307: Cannot find module '@/utils/api_error' or its corresponding type declarations.
+src/modules/user-learning-path/user-learning-path.service.ts(74,16): error TS2802: Type 'Set<string>' can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher.
+npm notice
+npm notice New minor version of npm available! 11.6.2 -> 11.12.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.12.1
+npm notice To update run: npm install -g npm@11.12.1
+npm notice

@@ -1,0 +1,763 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                      String         @id @default(auto()) @map("_id") @db.ObjectId
+  username                String?
+  email                   String         @unique
+  contactNo               String         @default("")
+  password                String
+  lang                    Lang           @default(ENG)
+  role                    Role           @default(CUSTOMER)
+  avatar                  String?        @default("")
+  createdAt               DateTime       @default(now())
+  updatedAt               DateTime       @updatedAt
+  status                  Status         @default(ACTIVE)
+  dob                     DateTime?
+  fcmToken                String?        @default("")
+  resetPasswordOtp        String?
+  resetPasswordOtpExpires DateTime?
+  admin                   Admin?
+  customer                Customer?
+  notifications           Notification[]
+
+  @@index([email, role, status, createdAt])
+  @@index([username])
+  @@map("users")
+}
+
+model Admin {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @unique @db.ObjectId
+  fullName  String
+  address   String?
+  intro     String?
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  pricingConfigs PricingConfig[]
+
+  @@map("admins")
+}
+
+model Customer {
+  id         String      @id @default(auto()) @map("_id") @db.ObjectId
+  userId     String      @unique @db.ObjectId
+  fullName   String?
+  bloodGroup BloodGroup?
+  gender     Gender?
+  address    String?     @default("")
+  city       String?     @default("")
+  postcode   String
+  state      String?     @default("")
+  country    String?     @default("")
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  user       User        @relation(fields: [userId], references: [id])
+
+  items          Item[]          @relation("ItemOwner")
+  ordersAsBuyer  Order[]         @relation("OrderBuyer")
+  ordersAsSeller Order[]         @relation("OrderSeller")
+  disputes       Dispute[]
+  watchlists     Watchlist[]
+  paymentMethods PaymentMethod[]
+  transactions   Transaction[]
+  ItemHistory    ItemHistory[]
+  Report         Report[]
+  dealsAsBuyer   Deal[]          @relation("DealBuyer")
+  dealsAsSeller  Deal[]          @relation("DealSeller")
+  starredItems   StarredItem[]
+  posts          Post[]
+  reports        Repost[]
+  comments       Comment[]
+  reactions      Reaction[]
+  stars          StarredPost[]
+
+  followers           Follower[]    @relation("Follower")
+  followedBy          Follower[]    @relation("Following")
+  following           Following[]   @relation("Follower")
+  followedByFollowing Following[]   @relation("Following")
+  blockedBy           BlockedUser[] @relation("BlockedBy")
+  blockedUsers        BlockedUser[] @relation("BlockedUser")
+
+  communityMembers   CommunityMember[]
+  communityPosts     CommunityPost[]
+  communityComments  CommunityComment[]
+  communityReactions CommunityReaction[]
+  communityReposts   CommunityRepost[]
+  communityStars     CommunityStarredPost[]
+
+  @@index([createdAt])
+  @@map("customers")
+}
+
+model Follower {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  followerId  String   @db.ObjectId
+  follower    Customer @relation(name: "Follower", fields: [followerId], references: [id])
+  followingId String   @db.ObjectId
+  following   Customer @relation(name: "Following", fields: [followingId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Following {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  followerId  String   @db.ObjectId
+  follower    Customer @relation(name: "Follower", fields: [followerId], references: [id])
+  followingId String   @db.ObjectId
+  following   Customer @relation(name: "Following", fields: [followingId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model BlockedUser {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  blockedById   String   @db.ObjectId
+  blockedBy     Customer @relation(name: "BlockedBy", fields: [blockedById], references: [id])
+  blockedUserId String   @db.ObjectId
+  blockedUser   Customer @relation(name: "BlockedUser", fields: [blockedUserId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// post 
+
+model Post {
+  id         String        @id @default(auto()) @map("_id") @db.ObjectId
+  customerId String        @db.ObjectId
+  customer   Customer      @relation(fields: [customerId], references: [id])
+  type       PostType[]
+  text       String?
+  files      File[]
+  reports    Repost[]
+  comments   Comment[]
+  reactions  Reaction[]
+  stars      StarredPost[]
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+}
+
+model Reaction {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  postId      String   @db.ObjectId
+  post        Post     @relation(fields: [postId], references: [id])
+  reactedById String   @db.ObjectId
+  customer    Customer @relation(fields: [reactedById], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Repost {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  postId       String   @db.ObjectId
+  post         Post     @relation(fields: [postId], references: [id])
+  reportedById String   @db.ObjectId
+  customer     Customer @relation(fields: [reportedById], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model StarredPost {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  postId       String   @db.ObjectId
+  post         Post     @relation(fields: [postId], references: [id])
+  reportedById String   @db.ObjectId
+  customer     Customer @relation(fields: [reportedById], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Comment {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  postId String @db.ObjectId
+  post   Post   @relation(fields: [postId], references: [id])
+
+  customerId String   @db.ObjectId
+  customer   Customer @relation(fields: [customerId], references: [id])
+
+  body String
+
+  parentId String?   @db.ObjectId
+  parent   Comment?  @relation("CommentToComment", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  children Comment[] @relation("CommentToComment")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("comments")
+}
+
+model Community {
+  id           String                 @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  description  String?
+  tags         String[]
+  type         CommunityType
+  posts        CommunityPost[]
+  comments     CommunityComment[]
+  reactions    CommunityReaction[]
+  reposts      CommunityRepost[]
+  starredPosts CommunityStarredPost[]
+  members      CommunityMember[]
+  heroImg      String?
+  createdAt    DateTime               @default(now())
+  updatedAt    DateTime               @updatedAt
+}
+
+model CommunityMember {
+  id          String                @id @default(auto()) @map("_id") @db.ObjectId
+  customerId  String                @db.ObjectId
+  customer    Customer              @relation(fields: [customerId], references: [id])
+  communityId String                @db.ObjectId
+  community   Community             @relation(fields: [communityId], references: [id])
+  userType    CommunityUserType
+  status      CommunityMemberStatus
+  createdAt   DateTime              @default(now())
+  updatedAt   DateTime              @updatedAt
+}
+
+enum CommunityMemberStatus {
+  PENDING
+  ACTIVE
+  BLOCKED
+}
+
+enum CommunityUserType {
+  ADMIN
+  MODERATOR
+  USER
+}
+
+model CommunityPost {
+  id          String                 @id @default(auto()) @map("_id") @db.ObjectId
+  customerId  String                 @db.ObjectId
+  customer    Customer               @relation(fields: [customerId], references: [id])
+  communityId String                 @db.ObjectId
+  community   Community              @relation(fields: [communityId], references: [id])
+  type        PostType[]
+  text        String?
+  files       File[]
+  reports     CommunityRepost[]
+  comments    CommunityComment[]
+  reactions   CommunityReaction[]
+  stars       CommunityStarredPost[]
+  createdAt   DateTime               @default(now())
+  updatedAt   DateTime               @updatedAt
+}
+
+model CommunityReaction {
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  postId      String        @db.ObjectId
+  post        CommunityPost @relation(fields: [postId], references: [id])
+  communityId String        @db.ObjectId
+  community   Community     @relation(fields: [communityId], references: [id])
+  reactedById String        @db.ObjectId
+  customer    Customer      @relation(fields: [reactedById], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CommunityRepost {
+  id           String        @id @default(auto()) @map("_id") @db.ObjectId
+  postId       String        @db.ObjectId
+  post         CommunityPost @relation(fields: [postId], references: [id])
+  reportedById String        @db.ObjectId
+  customer     Customer      @relation(fields: [reportedById], references: [id])
+  communityId  String        @db.ObjectId
+  community    Community     @relation(fields: [communityId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CommunityStarredPost {
+  id           String        @id @default(auto()) @map("_id") @db.ObjectId
+  postId       String        @db.ObjectId
+  post         CommunityPost @relation(fields: [postId], references: [id])
+  reportedById String        @db.ObjectId
+  customer     Customer      @relation(fields: [reportedById], references: [id])
+  communityId  String        @db.ObjectId
+  community    Community     @relation(fields: [communityId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CommunityComment {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  postId      String        @db.ObjectId
+  post        CommunityPost @relation(fields: [postId], references: [id])
+  communityId String        @db.ObjectId
+  community   Community     @relation(fields: [communityId], references: [id])
+  customerId  String        @db.ObjectId
+  customer    Customer      @relation(fields: [customerId], references: [id])
+
+  body String
+
+  parentId String?            @db.ObjectId
+  parent   CommunityComment?  @relation("CommunityCommentReplies", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  children CommunityComment[] @relation("CommunityCommentReplies")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("communitycomments")
+}
+
+enum CommunityType {
+  PUBLIC
+  PRIVATE
+}
+
+enum PostType {
+  IMG
+  PRODUCT
+  POLL
+  LINK
+}
+
+model Item {
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  title           String?
+  sport           String
+  teamOrCountry   String
+  playerName      String?
+  category        ItemCategory
+  seasonOrYear    String
+  kitType         String? // Home, Away, Third, Special Edition, Match Worn, N/A
+  description     String
+  photos          File[]
+  signatureType   SignatureType @default(NONE)
+  photoProofLevel ProofLevel    @default(NONE)
+  authentication  String?
+  videoEvidence   VideoEvidence @default(NONE)
+  format          SaleFormat    @default(BUY_NOW)
+
+  baseValue       Float      @default(0.0)
+  initialPrice    Float      @default(0.0)
+  allowOffers     Boolean    @default(false)
+  autoPriceAdjust Boolean    @default(false)
+  status          ItemStatus @default(PENDING)
+
+  ownerId String   @db.ObjectId
+  owner   Customer @relation("ItemOwner", fields: [ownerId], references: [id])
+
+  acquiredDate DateTime?
+
+  orders     Order[]
+  watchlists Watchlist[]
+  reports    Report[]
+
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  ItemHistories ItemHistory[]
+  dealItems     DealItem[]
+  starredItems  StarredItem[]
+
+  @@map("items")
+}
+
+model Deal {
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  buyerId   String     @db.ObjectId
+  buyer     Customer   @relation("DealBuyer", fields: [buyerId], references: [id])
+  sellerId  String     @db.ObjectId
+  seller    Customer   @relation("DealSeller", fields: [sellerId], references: [id])
+  note      String?
+  status    DealStatus @default(APPROTCHED)
+  items     DealItem[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@map("deals")
+}
+
+enum DealStatus {
+  APPROTCHED
+  ACCEPTED
+  REJECTED
+}
+
+model DealItem {
+  id        String       @id @default(auto()) @map("_id") @db.ObjectId
+  dealId    String       @db.ObjectId
+  deal      Deal         @relation(fields: [dealId], references: [id])
+  itemId    String       @db.ObjectId
+  item      Item         @relation(fields: [itemId], references: [id])
+  type      DealItemType @default(MINE)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  @@map("deal_items")
+}
+
+enum DealItemType {
+  MINE
+  OTHERS
+}
+
+model StarredItem {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  itemId     String   @db.ObjectId
+  item       Item     @relation(fields: [itemId], references: [id])
+  customerId String   @db.ObjectId
+  customer   Customer @relation(fields: [customerId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Report {
+  id           String       @id @default(auto()) @map("_id") @db.ObjectId
+  itemId       String       @db.ObjectId
+  item         Item         @relation(fields: [itemId], references: [id])
+  reportedById String       @db.ObjectId
+  customer     Customer     @relation(fields: [reportedById], references: [id])
+  reportNote   String
+  status       ReportStatus @default(PENDING)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum ReportStatus {
+  PENDING
+  ACTIVE
+  COMPLETED
+}
+
+model ItemHistory {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  itemId     String   @db.ObjectId
+  item       Item     @relation(fields: [itemId], references: [id])
+  customerId String   @db.ObjectId
+  customer   Customer @relation(fields: [customerId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([itemId, customerId])
+}
+
+model Order {
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  orderNumber String      @unique
+  itemId      String      @db.ObjectId
+  item        Item        @relation(fields: [itemId], references: [id])
+  buyerId     String      @db.ObjectId
+  buyer       Customer    @relation("OrderBuyer", fields: [buyerId], references: [id])
+  sellerId    String      @db.ObjectId
+  seller      Customer    @relation("OrderSeller", fields: [sellerId], references: [id])
+  amount      Float
+  status      OrderStatus @default(PENDING)
+  trackingNo  String?
+  type        OrderType   @default(PURCHASE)
+
+  disputes Dispute[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("orders")
+}
+
+model Dispute {
+  id         String        @id @default(auto()) @map("_id") @db.ObjectId
+  orderId    String        @db.ObjectId
+  order      Order         @relation(fields: [orderId], references: [id])
+  raisedById String        @db.ObjectId
+  raisedBy   Customer      @relation(fields: [raisedById], references: [id])
+  type       DisputeType
+  status     DisputeStatus @default(OPEN)
+  reason     String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("disputes")
+}
+
+model Watchlist {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  customerId String   @db.ObjectId
+  customer   Customer @relation(fields: [customerId], references: [id])
+  itemId     String   @db.ObjectId
+  item       Item     @relation(fields: [itemId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@unique([customerId, itemId])
+  @@map("watchlists")
+}
+
+model PaymentMethod {
+  id         String            @id @default(auto()) @map("_id") @db.ObjectId
+  customerId String            @db.ObjectId
+  customer   Customer          @relation(fields: [customerId], references: [id])
+  type       PaymentMethodType
+  provider   String
+  accountNo  String?
+  isDefault  Boolean           @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("payment_methods")
+}
+
+model Transaction {
+  id          String            @id @default(auto()) @map("_id") @db.ObjectId
+  customerId  String            @db.ObjectId
+  customer    Customer          @relation(fields: [customerId], references: [id])
+  amount      Float
+  type        TransactionType
+  status      TransactionStatus @default(PENDING)
+  method      String?
+  referenceId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("transactions")
+}
+
+model PricingConfig {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  key         String  @unique
+  value       Float
+  description String?
+
+  updatedBy String? @db.ObjectId
+  admin     Admin?  @relation(fields: [updatedBy], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("pricing_configs")
+}
+
+enum ItemCategory {
+  SHIRT
+  BOOTS
+  CARD
+  GLOVES
+  MATCH_BALL
+  SHORTS
+  OTHER
+}
+
+enum SignatureType {
+  NONE
+  PARTIAL
+  FULL
+  DEDICATED
+}
+
+enum ProofLevel {
+  NONE
+  PARTIAL
+  FULL
+  WITH_ATHLETE
+}
+
+enum VideoEvidence {
+  NONE
+  ITEM
+  SIGNING
+  WITH_ATHLETE
+}
+
+enum SaleFormat {
+  BUY_NOW
+  TRADE_ONLY
+  BUY_AND_TRADE
+}
+
+enum ItemStatus {
+  ACTIVE
+  PAUSED
+  PENDING
+  SOLD
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum OrderType {
+  PURCHASE
+  TRADE
+}
+
+enum DisputeType {
+  DISPUTE
+  REFUND
+}
+
+enum DisputeStatus {
+  OPEN
+  UNDER_REVIEW
+  RESOLVED
+}
+
+enum PaymentMethodType {
+  BANK_ACCOUNT
+  PAYPAL
+  CARD
+}
+
+enum TransactionType {
+  PAYMENT
+  WITHDRAWAL
+  FEE
+  REFUND
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+model Newsletter {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  customerId String?  @db.ObjectId
+  email      String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("newsletters")
+}
+
+model File {
+  id              String         @id @default(auto()) @map("_id") @db.ObjectId
+  name            String?
+  url             String
+  type            FileType       @default(DOC)
+  as              FileAs         @default(NONE)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  Item            Item?          @relation(fields: [itemId], references: [id])
+  itemId          String?        @db.ObjectId
+  postId          String         @db.ObjectId
+  post            Post           @relation(fields: [postId], references: [id])
+  communityPostId String?        @db.ObjectId
+  communityPost   CommunityPost? @relation(fields: [communityPostId], references: [id])
+
+  @@map("files")
+}
+
+enum FileAs {
+  NONE
+  PHOTO_PROOF
+  VIDEO_PROOF
+  CERT_COA
+  COM_AUTH
+}
+
+model Blog {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String   @default("")
+  slug        String   @unique
+  writer      String   @default("")
+  description String   @default("")
+  url         String?  @default("")
+  secUrl      String?  @default("")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([createdAt])
+  @@map("blogs")
+}
+
+model Notification {
+  id        String           @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String           @db.ObjectId
+  type      NotificationType
+  name      String
+  body      String
+  data      String?
+  read      Boolean          @default(false)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  user      User             @relation(fields: [userId], references: [id])
+
+  @@map("notifications")
+}
+
+enum NotificationType {
+  SUBSCRIPTION_REMINDER
+  GROUP_ASSIGNMENT
+  MEMBER_REGISTERED
+  POST_ENGAGEMENT
+  NEED_HELP_REQUESTED
+  DISPUTE
+  REPORT
+}
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  CUSTOMER
+}
+
+enum Status {
+  ACTIVE
+  INACTIVE
+
+  @@map("status")
+}
+
+enum Lang {
+  ENG
+  RON
+  HUN
+}
+
+enum BloodGroup {
+  A_POSITIVE
+  A_NEGATIVE
+  B_POSITIVE
+  B_NEGATIVE
+  AB_POSITIVE
+  AB_NEGATIVE
+  O_POSITIVE
+  O_NEGATIVE
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHERS
+}
+
+enum FileType {
+  DOC
+  IMAGE
+  VIDEO
+}

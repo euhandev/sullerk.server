@@ -1,0 +1,80 @@
+pipeline {
+    agent any
+
+    environment {
+        // Define your Docker Hub registry or AWS ECR URL
+        DOCKER_IMAGE = 'oaktree-server'
+        DOCKER_TAG = "${env.BUILD_NUMBER}"
+        // Set this credential ID in Jenkins -> Manage Jenkins -> Credentials
+        // DOCKER_CREDENTIALS_ID = 'docker-hub-credentials'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Checkout the code from your repository
+                checkout scm
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    echo "Building Docker image ${DOCKER_IMAGE}:${DOCKER_TAG}..."
+                    // Build the multi-stage docker image
+                    sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} -t ${DOCKER_IMAGE}:latest ."
+                }
+            }
+        }
+
+        // Optional: If you have unit tests that don't require external DB connections
+        // stage('Test') {
+        //     steps {
+        //         echo "Running tests..."
+        //         sh "docker run --rm ${DOCKER_IMAGE}:${DOCKER_TAG} pnpm run test"
+        //     }
+        // }
+
+        /* Optional: Push to a registry if you are deploying to a remote server
+        stage('Push to Registry') {
+            steps {
+                script {
+                    echo "Pushing Docker image to Docker Hub..."
+                    withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIALS_ID}", usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        sh "echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin"
+                        sh "docker push ${DOCKER_IMAGE}:${DOCKER_TAG}"
+                        sh "docker push ${DOCKER_IMAGE}:latest"
+                    }
+                }
+            }
+        }
+        */
+
+        stage('Deploy') {
+            steps {
+                script {
+                    echo "Deploying application using Docker Compose..."
+                    
+                    // We only want to restart the 'api' container to avoid 
+                    // restarting the Jenkins container that is currently running this job!
+                    sh "docker-compose up -d --build api"
+                    
+                    // Optional: Clean up old containers/images
+                    sh "docker image prune -f"
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "Pipeline completed successfully!"
+            // Optionally add slack/email notifications here
+        }
+        failure {
+            echo "Pipeline failed! Check the logs."
+            // Clean up unused images to save space
+            sh "docker image prune -f"
+        }
+    }
+}

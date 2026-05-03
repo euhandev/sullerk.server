@@ -1,0 +1,89 @@
+// // prisma/seed.ts
+// import { PrismaClient } from '@prisma/client';
+// import * as romaniaData from './data.json'; // adjust path if needed
+// import slugify from 'slugify';
+
+// const prisma = new PrismaClient();
+
+// type Locality = {
+//   name: string;
+//   zip: string;
+//   lat: string;
+//   lng: string;
+// };
+
+// async function main() {
+//   // 1. Upsert Romania (COUNTRY)
+//   const romania = await prisma.location.upsert({
+//     where: { slug: 'romania' },
+//     update: {},
+//     create: {
+//       name: 'România',
+//       type: 'COUNTRY',
+//       slug: 'romania',
+//       searchableText: 'România Romania',
+//     },
+//   });
+
+//   console.log('✅ Created/updated Romania');
+
+//   // 2. Process each county
+//   for (const [countyName, localities] of Object.entries(romaniaData)) {
+//     const cleanCountyName = countyName; // keep original name (not slugified!)
+//     const countySlug = slugify(`${cleanCountyName}-county`, { lower: true });
+
+//     const county = await prisma.location.upsert({
+//       where: { slug: countySlug },
+//       update: {},
+//       create: {
+//         name: cleanCountyName,
+//         type: 'PROVINCE',
+//         parentId: romania.id,
+//         parentName: romania.name,
+//         slug: countySlug,
+//         searchableText: cleanCountyName,
+//       },
+//     });
+
+//     console.log(`✅ County: ${cleanCountyName} (${localities.length} localities)`);
+
+//     // 3. Create each locality
+//     for (const loc of localities as Locality[]) {
+//       const name = loc.name; // keep original name
+//       const slug = slugify(`${name}-${loc.zip}`, { lower: true });
+
+//       const exists = await prisma.location.findUnique({ where: { slug } });
+//       if (exists) continue;
+
+//       await prisma.location.create({
+//         data: {
+//           name,
+//           type: 'MUNICIPALITY',
+//           parentId: county.id,
+//           parentName: county.name,
+//           slug,
+//           searchableText: `${name} ${loc.zip}`,
+//           coordinates: {
+//             create: [
+//               {
+//                 lat: parseFloat(loc.lat),
+//                 lng: parseFloat(loc.lng),
+//               },
+//             ],
+//           },
+//         },
+//       });
+//     }
+//   }
+
+//   console.log('🎉 Romania seeding completed!');
+// }
+
+// main()
+//   .catch((e) => {
+//     console.error(e);
+//     process.exit(1);
+//   })
+//   .finally(async () => {
+//     await prisma.$disconnect();
+//   });

@@ -1,0 +1,13 @@
+node_modules
+npm-debug.log
+.git
+.gitignore
+.env
+dist
+doc
+test
+.dockerignore
+Dockerfile
+docker-compose.yml
+Jenkinsfile
+error_log.txt
