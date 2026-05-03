@@ -18,7 +18,6 @@ import { ParseFormDataInterceptor } from '@/helper/form_data_interceptor';
 import { FileService } from '../../helper/file.service';
 import { Role } from '@prisma/client';
 import { FileInterceptorInmemory } from '@/helper/file_interceptor_inmemorty';
-// import { FileFieldsInterceptor } from '@nestjs/platform-express';
 
 @Controller('admins')
 export class AdminController {
@@ -63,16 +62,14 @@ export class AdminController {
     @UploadedFiles() files: Record<string, Express.Multer.File[]>,
   ) {
     let avatar: string | undefined;
-
+    
     const uploadableFiles = files?.avatar;
 
     if (Array.isArray(uploadableFiles) && uploadableFiles?.length > 0) {
-      console.log(`see file`, uploadableFiles, updateAdminDto);
       const uploaded = await this.fileService.uploadMultipleToCloudinary(
         uploadableFiles,
         'avatars',
       );
-      console.log(uploaded);
       avatar = uploaded[0];
     }
 

@@ -13,21 +13,6 @@ datasource db {
 
 // ─── Embedded types for Posts (MongoDB composite types) ─────
 
-type LinkPreview {
-  url         String
-  title       String?
-  description String?
-  image       String?
-  siteName    String?
-  favicon     String?
-}
-
-type PollOption {
-  id    String
-  text  String
-  votes Int    @default(0)
-}
-
 model User {
   id                      String         @id @default(auto()) @map("_id") @db.ObjectId
   username                String?
@@ -120,8 +105,9 @@ model Customer {
   communityStars     CommunityStarredPost[]
 
   pollVotes    PollVote[]
-  Subscription Subscription[]
-  Payment      Payment[]
+  subscriptions Subscription[]
+  payments     Payment[]
+  activityLogs ActivityLog[]
 
   @@index([createdAt])
   @@map("customers")
@@ -166,18 +152,19 @@ model Post {
   id         String     @id @default(auto()) @map("_id") @db.ObjectId
   customerId String     @db.ObjectId
   customer   Customer   @relation(fields: [customerId], references: [id])
+  aiAnalysis String?    @default("")
   type       PostType[]
-  text       String?
+  text       String?    @default("")
+
+  // ─── Article Url ───
+  articleUrl String? @default("")
 
   // ─── Image uploads ───
   files File[]
 
-  // ─── Link preview (embedded document) ───
-  linkPreview LinkPreview?
-
   // ─── Poll ───
   pollQuestion       String?
-  pollOptions        PollOption[]
+  pollOptions        PollOption[] @relation("PollOptions")
   pollExpiresAt      DateTime?
   pollMultipleChoice Boolean      @default(false)
 
@@ -192,6 +179,35 @@ model Post {
   updatedAt DateTime @updatedAt
 }
 
+model PollOption {
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  text      String
+  votes     Int        @default(0)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  post      Post       @relation("PollOptions", fields: [postId], references: [id])
+  postId    String     @db.ObjectId
+  PollVote  PollVote[]
+
+  @@map("pollOptions")
+}
+
+model PollVote {
+  id         String     @id @default(auto()) @map("_id") @db.ObjectId
+  pollId     String     @db.ObjectId
+  poll       Post       @relation(fields: [pollId], references: [id])
+  customerId String     @db.ObjectId
+  customer   Customer   @relation(fields: [customerId], references: [id])
+  optionId   String     @db.ObjectId
+  option     PollOption @relation(fields: [optionId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([pollId, customerId])
+  @@map("poll_votes")
+}
+
 model Reaction {
   id          String       @id @default(auto()) @map("_id") @db.ObjectId
   postId      String       @db.ObjectId
@@ -204,6 +220,7 @@ model Reaction {
   updatedAt DateTime @updatedAt
 
   @@unique([postId, reactedById])
+  @@map("reactions")
 }
 
 model Repost {
@@ -215,6 +232,9 @@ model Repost {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@unique([postId, reportedById])
+  @@map("reposts")
 }
 
 model StarredPost {
@@ -226,6 +246,9 @@ model StarredPost {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@unique([postId, reportedById])
+  @@map("starred_posts")
 }
 
 model Comment {
@@ -264,6 +287,8 @@ model Community {
   heroImg      String?
   createdAt    DateTime               @default(now())
   updatedAt    DateTime               @updatedAt
+
+  @@map("communities")
 }
 
 model CommunityMember {
@@ -276,6 +301,8 @@ model CommunityMember {
   status      CommunityMemberStatus
   createdAt   DateTime              @default(now())
   updatedAt   DateTime              @updatedAt
+
+  @@map("community_members")
 }
 
 enum CommunityMemberStatus {
@@ -305,6 +332,8 @@ model CommunityPost {
   stars       CommunityStarredPost[]
   createdAt   DateTime               @default(now())
   updatedAt   DateTime               @updatedAt
+
+  @@map("community_posts")
 }
 
 model CommunityReaction {
@@ -318,6 +347,9 @@ model CommunityReaction {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@unique([postId, reactedById])
+  @@map("community_reactions")
 }
 
 model CommunityRepost {
@@ -331,6 +363,9 @@ model CommunityRepost {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@unique([postId, reportedById])
+  @@map("community_reposts")
 }
 
 model CommunityStarredPost {
@@ -344,6 +379,9 @@ model CommunityStarredPost {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@unique([postId, reportedById])
+  @@map("community_starred_posts")
 }
 
 model CommunityComment {
@@ -479,6 +517,8 @@ model StarredItem {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@map("starred_items")
 }
 
 model Report {
@@ -492,6 +532,8 @@ model Report {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@map("reports")
 }
 
 enum ReportStatus {
@@ -510,6 +552,7 @@ model ItemHistory {
   updatedAt  DateTime @updatedAt
 
   @@unique([itemId, customerId])
+  @@map("item_histories")
 }
 
 model Order {
@@ -888,22 +931,6 @@ enum FileType {
   AUDIO
 }
 
-// ─── Poll Votes ─────────────────────────────────────────
-
-model PollVote {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  postId     String   @db.ObjectId
-  post       Post     @relation(fields: [postId], references: [id])
-  customerId String   @db.ObjectId
-  customer   Customer @relation(fields: [customerId], references: [id])
-  optionId   String
-
-  createdAt DateTime @default(now())
-
-  @@unique([postId, customerId])
-  @@map("poll_votes")
-}
-
 // ─── Chat System ────────────────────────────────────────
 
 enum RoomType {
@@ -1013,4 +1040,29 @@ model ChatReaction {
 
   @@unique([chatId, userId, emoji])
   @@map("chat_reactions")
+}
+
+model ActivityLog {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  customerId String?   @db.ObjectId
+  customer   Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+
+  action      ActionType
+  section     String? // Which section was modified (e.g., "section_5")
+  description String
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@index([customerId, createdAt])
+  @@map("activity_logs")
+}
+
+// activity logs types should be based on whole websites functionality
+enum ActionType {
+  LOGIN
+  UPDATE_PROFILE
+  UPDATE_PASSWORD
+  RESET_PASSWORD
 }

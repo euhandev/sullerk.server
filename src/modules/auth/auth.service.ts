@@ -17,7 +17,6 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly bcryptService: BcryptService,
     private readonly configService: ConfigService,
-    private readonly brevoService: BrevoService,
     private readonly gmailService: GMailService,
     private readonly prisma: PrismaService,
     private readonly emailTemplate: EmailTemplate,

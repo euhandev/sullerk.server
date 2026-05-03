@@ -83,19 +83,6 @@ export class AdminService {
           }
         }
 
-        // if (user.contactNo) {
-        //   const isContactNoExists = await tx.user.findUnique({
-        //     where: { contactNo: user?.contactNo, NOT: { id } },
-        //   });
-
-        //   if (isContactNoExists) {
-        //     throw new ApiError(
-        //       HttpStatus.CONFLICT,
-        //       `contact no is already exists`,
-        //     );
-        //   }
-        // }
-
         const adminUpdation = await this.prisma.admin.update({
           where: { id: isUserExists?.admin?.id },
           data: { ...(admin as any) },
