@@ -18,16 +18,6 @@ export class FileService {
   constructor(private prisma: PrismaService) {}
 
   async create(createFileDto: CreateFileDto) {
-    const { advisorId } = createFileDto;
-
-    // Check if Advisor exists
-    const advisorExists = await this.prisma.advisor.findUnique({
-      where: { id: advisorId },
-    });
-
-    if (!advisorExists) {
-      throw new ApiError(HttpStatus.NOT_FOUND, `Advisor with ID ${advisorId} not found`);
-    }
 
     return await this.prisma.file.create({
       data: createFileDto,

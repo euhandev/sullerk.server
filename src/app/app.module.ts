@@ -24,8 +24,6 @@ import { AppController } from './app.controller';
 import { ConfigService } from '@/config/config.service';
 import { ConfigModule } from '@/config/config.module';
 import { AnalyticsModule } from '@/modules/analytics/analytics.module';
-import { NewsletterModule } from '@/modules/newsletter/newsletter.module';
-import { CategoryModule } from '@/modules/category/category.module';
 
 @Module({
   imports: [
@@ -57,11 +55,8 @@ import { CategoryModule } from '@/modules/category/category.module';
     CustomerModule,
     BlogModule,
     FileModule,
-    // FirebaseModule,
-    CategoryModule,
     ConfigModule,
     AnalyticsModule,
-    NewsletterModule,
   ],
   controllers: [AppController],
   providers: [

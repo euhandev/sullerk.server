@@ -21,27 +21,4 @@ export class AnalyticsController {
     });
   }
 
-  @Get(`advisor`)
-  @Roles(Role.ADVISOR)
-  async AdvisorAnalytics(@Req() req: Request) {
-    const user: any = req?.user;
-    const result = await this.analyticsService.AdvisorAnalytics(user);
-    return ResponseService.formatResponse({
-      statusCode: HttpStatus.OK,
-      message: `Advisor analytics retrieved successfully`,
-      data: result,
-    });
-  }
-
-  @Get(`customer`)
-  @Roles(Role.CUSTOMER)
-  async CustomerAnalytics(@Req() req: Request) {
-    const user: any = req?.user;
-    const result = await this.analyticsService.CustomerAnalytics(user);
-    return ResponseService.formatResponse({
-      statusCode: HttpStatus.OK,
-      message: `customer analytics retrieved successfully`,
-      data: result,
-    });
-  }
 }

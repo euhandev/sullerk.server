@@ -88,7 +88,7 @@ export class AuthController {
   }
 
   @Post('fcm-token')
-  @Roles(Role.ADMIN, Role.ADVISOR, Role.CUSTOMER)
+  @Roles(Role.ADMIN, Role.CUSTOMER)
   async setFCMToken(@Req() req: Request, @Body() tokenDto: { deviceToken: string }) {
     const result = await this.authService.setFCMToken(req, tokenDto);
     return ResponseService.formatResponse({

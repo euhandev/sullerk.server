@@ -75,24 +75,6 @@ export class UserService {
         throw new ApiError(HttpStatus.CONFLICT, `User email already exists`);
       }
 
-      // Duplicate Check Hash Generation
-      // MD5: name + postcode[0:4] + email
-      if (customerData.fullName && customerData.postcode && userData.email) {
-        const rawString = `${customerData.fullName.toLowerCase().trim()}${customerData.postcode.substring(0, 4).toLowerCase().trim()}${userData.email.toLowerCase().trim()}`;
-        const hash = CryptoJS.MD5(rawString).toString();
-
-        const isDuplicate = await tx.customer.findUnique({
-          where: { duplicateCheckHash: hash },
-        });
-
-        if (isDuplicate) {
-          throw new ApiError(HttpStatus.CONFLICT, 'Customer already exists (duplicate check)');
-        }
-
-        // Add hash to customer data
-        (customerData as any).duplicateCheckHash = hash;
-      }
-
       const userCreation = await tx.user.create({ data: userData });
 
       const customerCreation = await tx.customer.create({
@@ -124,7 +106,6 @@ export class UserService {
       include: {
         admin: true,
         customer: true,
-        Advisor: true,
       },
     });
 

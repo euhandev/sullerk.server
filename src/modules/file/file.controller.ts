@@ -31,7 +31,7 @@ export class FileController {
   ) {}
 
   @Post('upload')
-  @Roles(Role.ADMIN, Role.SUPER_ADMIN, Role.ADVISOR)
+  @Roles(Role.ADMIN, Role.SUPER_ADMIN)
   @UseInterceptors(
     FileInterceptorInmemory([{ name: 'files', maxCount: 10 }]),
     ParseFormDataInterceptor,
@@ -123,7 +123,7 @@ export class FileController {
   }
 
   @Post()
-  @Roles(Role.ADMIN, Role.SUPER_ADMIN, Role.ADVISOR)
+  @Roles(Role.ADMIN, Role.SUPER_ADMIN)
   async create(@Body() createFileDto: CreateFileDto) {
     const result = await this.fileService.create(createFileDto);
     return ResponseService.formatResponse({

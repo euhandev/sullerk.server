@@ -11,6 +11,23 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// ─── Embedded types for Posts (MongoDB composite types) ─────
+
+type LinkPreview {
+  url         String
+  title       String?
+  description String?
+  image       String?
+  siteName    String?
+  favicon     String?
+}
+
+type PollOption {
+  id    String
+  text  String
+  votes Int    @default(0)
+}
+
 model User {
   id                      String         @id @default(auto()) @map("_id") @db.ObjectId
   username                String?
@@ -30,6 +47,11 @@ model User {
   admin                   Admin?
   customer                Customer?
   notifications           Notification[]
+
+  // ─── Chat relations ───
+  roomParticipants RoomParticipant[]
+  chats            Chat[]
+  chatReactions    ChatReaction[]
 
   @@index([email, role, status, createdAt])
   @@index([username])
@@ -72,7 +94,6 @@ model Customer {
   disputes       Dispute[]
   watchlists     Watchlist[]
   paymentMethods PaymentMethod[]
-  transactions   Transaction[]
   ItemHistory    ItemHistory[]
   Report         Report[]
   dealsAsBuyer   Deal[]          @relation("DealBuyer")
@@ -97,6 +118,10 @@ model Customer {
   communityReactions CommunityReaction[]
   communityReposts   CommunityRepost[]
   communityStars     CommunityStarredPost[]
+
+  pollVotes    PollVote[]
+  Subscription Subscription[]
+  Payment      Payment[]
 
   @@index([createdAt])
   @@map("customers")
@@ -138,29 +163,47 @@ model BlockedUser {
 // post 
 
 model Post {
-  id         String        @id @default(auto()) @map("_id") @db.ObjectId
-  customerId String        @db.ObjectId
-  customer   Customer      @relation(fields: [customerId], references: [id])
+  id         String     @id @default(auto()) @map("_id") @db.ObjectId
+  customerId String     @db.ObjectId
+  customer   Customer   @relation(fields: [customerId], references: [id])
   type       PostType[]
   text       String?
-  files      File[]
-  reports    Repost[]
-  comments   Comment[]
-  reactions  Reaction[]
-  stars      StarredPost[]
-  createdAt  DateTime      @default(now())
-  updatedAt  DateTime      @updatedAt
-}
 
-model Reaction {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  postId      String   @db.ObjectId
-  post        Post     @relation(fields: [postId], references: [id])
-  reactedById String   @db.ObjectId
-  customer    Customer @relation(fields: [reactedById], references: [id])
+  // ─── Image uploads ───
+  files File[]
+
+  // ─── Link preview (embedded document) ───
+  linkPreview LinkPreview?
+
+  // ─── Poll ───
+  pollQuestion       String?
+  pollOptions        PollOption[]
+  pollExpiresAt      DateTime?
+  pollMultipleChoice Boolean      @default(false)
+
+  // ─── Engagement ───
+  reports   Repost[]
+  comments  Comment[]
+  reactions Reaction[]
+  stars     StarredPost[]
+  pollVotes PollVote[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Reaction {
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  postId      String       @db.ObjectId
+  post        Post         @relation(fields: [postId], references: [id])
+  reactedById String       @db.ObjectId
+  customer    Customer     @relation(fields: [reactedById], references: [id])
+  type        ReactionType @default(LIKE)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([postId, reactedById])
 }
 
 model Repost {
@@ -331,10 +374,20 @@ enum CommunityType {
 }
 
 enum PostType {
+  TEXT
   IMG
   PRODUCT
   POLL
   LINK
+}
+
+enum ReactionType {
+  LIKE
+  LOVE
+  HAHA
+  WOW
+  SAD
+  ANGRY
 }
 
 model Item {
@@ -525,20 +578,92 @@ model PaymentMethod {
   @@map("payment_methods")
 }
 
-model Transaction {
-  id          String            @id @default(auto()) @map("_id") @db.ObjectId
-  customerId  String            @db.ObjectId
-  customer    Customer          @relation(fields: [customerId], references: [id])
-  amount      Float
-  type        TransactionType
-  status      TransactionStatus @default(PENDING)
-  method      String?
-  referenceId String?
+model SubscriptionPlan {
+  id                   String                 @id @default(auto()) @map("_id") @db.ObjectId
+  plan                 SubscribePlan          @default(MONTHLY) // Monthly or Yearly
+  status               SubscriptionPlanStatus @default(ACTIVE)
+  name                 String?                @default("")
+  description          String?                @default("")
+  trialPeriod          Boolean                @default(true) // Is 14-day free trial included?
+  price                Float                  @default(0) // Subscription price
+  stripePriceId        String                 @default("") // Stripe price reference
+  features             String[]               @default([])
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+  enrolledSubscription Subscription[]
+  payments             Payment[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  @@map("subscription_plans")
+}
 
-  @@map("transactions")
+model Subscription {
+  id                   String             @id @default(auto()) @map("_id") @db.ObjectId
+  customerId           String?            @db.ObjectId
+  subscriptionPlanId   String?            @db.ObjectId
+  subscriptionStatus   SubscriptionStatus @default(ACTIVE)
+  stripeSubscriptionId String?
+  stripeCustomerId     String?
+  expiresAt            DateTime?
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+  cancelRequest        Boolean            @default(false)
+  customer             Customer?          @relation(fields: [customerId], references: [id])
+  subscriptionPlan     SubscriptionPlan?  @relation(fields: [subscriptionPlanId], references: [id])
+  payments             Payment[]
+
+  // @@unique([clinicId, subscriptionPlanId])
+  @@map("subscriptions")
+}
+
+model Payment {
+  id                 String            @id @default(auto()) @map("_id") @db.ObjectId
+  customerId         String            @db.ObjectId
+  amount             Float
+  currency           String?           @default("USD")
+  paymentDate        DateTime
+  paymentStatus      PaymentStatus
+  subscriptionId     String?           @db.ObjectId
+  subscriptionPlanId String?           @db.ObjectId
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  customer           Customer          @relation(fields: [customerId], references: [id])
+  subscription       Subscription?     @relation(fields: [subscriptionId], references: [id])
+  subscriptionPlan   SubscriptionPlan? @relation(fields: [subscriptionPlanId], references: [id])
+
+  @@map("payments")
+}
+
+enum SubscriptionStatus {
+  PENDING
+  ACTIVE
+  EXPIRED
+  CANCELLED
+  PAST_DUE
+  INACTIVE
+}
+
+enum SubscribePlan {
+  FREE
+  MONTHLY
+  YEARLY
+}
+
+enum SubscriptionPlanStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum PaymentStatus {
+  REQUIRES_PAYMENT_METHOD
+  REQUIRES_CONFIRMATION
+  REQUIRES_ACTION
+  PROCESSING
+  REQUIRES_CAPTURE
+  CANCELED
+  SUCCEEDED
+  REFUNDED
+  PARTIALLY_REFUNDED
+  FAILED
 }
 
 model PricingConfig {
@@ -664,8 +789,8 @@ model File {
   updatedAt       DateTime       @updatedAt
   Item            Item?          @relation(fields: [itemId], references: [id])
   itemId          String?        @db.ObjectId
-  postId          String         @db.ObjectId
-  post            Post           @relation(fields: [postId], references: [id])
+  postId          String?        @db.ObjectId
+  post            Post?          @relation(fields: [postId], references: [id])
   communityPostId String?        @db.ObjectId
   communityPost   CommunityPost? @relation(fields: [communityPostId], references: [id])
 
@@ -760,4 +885,132 @@ enum FileType {
   DOC
   IMAGE
   VIDEO
+  AUDIO
+}
+
+// ─── Poll Votes ─────────────────────────────────────────
+
+model PollVote {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  postId     String   @db.ObjectId
+  post       Post     @relation(fields: [postId], references: [id])
+  customerId String   @db.ObjectId
+  customer   Customer @relation(fields: [customerId], references: [id])
+  optionId   String
+
+  createdAt DateTime @default(now())
+
+  @@unique([postId, customerId])
+  @@map("poll_votes")
+}
+
+// ─── Chat System ────────────────────────────────────────
+
+enum RoomType {
+  PRIVATE
+  GROUP
+}
+
+enum ChatRole {
+  ADMIN
+  MODERATOR
+  MEMBER
+}
+
+enum ChatType {
+  TEXT
+  IMAGE
+  VIDEO
+  DOCUMENT
+  AUDIO
+  SYSTEM
+}
+
+model Room {
+  id            String            @id @default(auto()) @map("_id") @db.ObjectId
+  name          String?
+  avatar        String?
+  type          RoomType          @default(PRIVATE)
+  creatorId     String            @db.ObjectId
+  participants  RoomParticipant[]
+  messages      Chat[]
+  lastMessage   String?
+  lastMessageAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("rooms")
+}
+
+model RoomParticipant {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  roomId     String    @db.ObjectId
+  room       Room      @relation(fields: [roomId], references: [id])
+  userId     String    @db.ObjectId
+  user       User      @relation(fields: [userId], references: [id])
+  role       ChatRole  @default(MEMBER)
+  joinedAt   DateTime  @default(now())
+  mutedUntil DateTime?
+  lastReadAt DateTime?
+
+  @@unique([roomId, userId])
+  @@map("room_participants")
+}
+
+model Chat {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  roomId    String   @db.ObjectId
+  room      Room     @relation(fields: [roomId], references: [id])
+  senderId  String   @db.ObjectId
+  sender    User     @relation(fields: [senderId], references: [id])
+  message   String?
+  type      ChatType @default(TEXT)
+  isEdited  Boolean  @default(false)
+  isDeleted Boolean  @default(false)
+
+  // ─── Reply threading ───
+  replyToId String? @db.ObjectId
+  replyTo   Chat?   @relation("ChatReply", fields: [replyToId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  replies   Chat[]  @relation("ChatReply")
+
+  // ─── Attachments ───
+  attachments ChatFile[]
+
+  // ─── Reactions ───
+  reactions ChatReaction[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([roomId, createdAt])
+  @@map("chats")
+}
+
+model ChatFile {
+  id     String   @id @default(auto()) @map("_id") @db.ObjectId
+  chatId String   @db.ObjectId
+  chat   Chat     @relation(fields: [chatId], references: [id])
+  url    String
+  name   String?
+  type   FileType @default(IMAGE)
+  size   Int?
+
+  createdAt DateTime @default(now())
+
+  @@map("chat_files")
+}
+
+model ChatReaction {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  chatId String @db.ObjectId
+  chat   Chat   @relation(fields: [chatId], references: [id])
+  userId String @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id])
+  emoji  String
+
+  createdAt DateTime @default(now())
+
+  @@unique([chatId, userId, emoji])
+  @@map("chat_reactions")
 }

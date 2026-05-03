@@ -32,7 +32,7 @@ export class AuthService {
 
     const user = await this.prisma.user.findUnique({
       where: { email },
-      include: { admin: true, Advisor: true, customer: true },
+      include: { admin: true, customer: true },
     });
 
     if (!user) {
@@ -114,9 +114,7 @@ export class AuthService {
 
     // dynamically include only needed relation
     if (user?.role === Role.ADMIN) {
-      baseQuery.include = { admin: true };
-    } else if (user?.role === Role.ADVISOR) {
-      baseQuery.include = { Advisor: true }; // fix casing (Advisor → advisor)
+      baseQuery.include = { admin: true }; // fix casing (Advisor → advisor)
     } else {
       baseQuery.include = { customer: true };
     }
