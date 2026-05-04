@@ -18,7 +18,6 @@ export class FileService {
   constructor(private prisma: PrismaService) {}
 
   async create(createFileDto: CreateFileDto) {
-
     return await this.prisma.file.create({
       data: createFileDto,
     });

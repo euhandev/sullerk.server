@@ -62,7 +62,7 @@ export class AdminController {
     @UploadedFiles() files: Record<string, Express.Multer.File[]>,
   ) {
     let avatar: string | undefined;
-    
+
     const uploadableFiles = files?.avatar;
 
     if (Array.isArray(uploadableFiles) && uploadableFiles?.length > 0) {

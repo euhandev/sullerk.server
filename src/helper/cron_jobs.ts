@@ -35,7 +35,5 @@ export class CronJobService implements OnModuleInit, OnModuleDestroy {
   }
 
   // ✅ NEW: Reset all advisors' weekly capacity every Sunday
-  private async resetAdvisorWeeklyCapacity() {
-    
-  }
+  private async resetAdvisorWeeklyCapacity() {}
 }

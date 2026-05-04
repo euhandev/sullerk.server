@@ -7,7 +7,7 @@ import { CreateCustomerDto } from './dto/create-customer.dto';
 import { CreateUserAdminDto } from './dto/create-admin.dto';
 import { ConfigService } from '@/config/config.service';
 import QueryBuilder from '@/utils/query_builder';
-import { userFilterFields, userSearchFields } from './user.constant';
+import { userFilterFields, userInclude, userSearchFields } from './user.constant';
 import { IGenericResponse } from '@/interface/common';
 import CryptoJS from 'crypto-js';
 
@@ -44,7 +44,9 @@ export class UserService {
         userData.username = await this.generateUniqueUsername(userData.email, tx);
       }
 
-      const userCreation = await tx.user.create({ data: {...userData, username: userData?.username} });
+      const userCreation = await tx.user.create({
+        data: { ...userData, username: userData?.username },
+      });
 
       const adminCreation = await tx.admin.create({
         data: {
@@ -93,7 +95,9 @@ export class UserService {
         userData.username = await this.generateUniqueUsername(userData.email, tx);
       }
 
-      const userCreation = await tx.user.create({ data: {...userData, username: userData?.username} });
+      const userCreation = await tx.user.create({
+        data: { ...userData, username: userData?.username },
+      });
 
       const customerCreation = await tx.customer.create({
         data: {
@@ -154,12 +158,19 @@ export class UserService {
       .sort()
       .paginate()
       .fields()
-      .omit({ password: true })
+      .omit({ password: true, resetPasswordOtp: true, resetPasswordOtpExpires: true })
+      .include(userInclude)
       .execute();
 
     const meta = await queryBuilder.countTotal();
 
-    return { meta, data: result };
+    const map = result?.map((usr) =>
+      usr?.role === Role.ADMIN
+        ? (({ customer, ...rest }) => rest)(usr)
+        : (({ admin, ...rest }) => rest)(usr),
+    );
+
+    return { meta, data: map };
   }
 
   private async generateUniqueUsername(email: string, tx: any): Promise<string> {
@@ -187,7 +198,6 @@ export class UserService {
       counter++;
     }
   }
-
 
   // async userNameExists(username: string) {
   //   const isUsernameExists = await this.prisma.user.findUnique({

@@ -20,7 +20,7 @@ export class AnalyticsService {
     const totalAdmin = await this.prisma.admin.count();
     const totalUser = await this.prisma.user.count();
     const totalActiveUser = await this.prisma.user.count({ where: { status: Status.ACTIVE } });
-    const totalInactiveUser = await this.prisma.user.count({ where: { status: Status.INACTIVE } })
+    const totalInactiveUser = await this.prisma.user.count({ where: { status: Status.INACTIVE } });
 
     return {
       users: {
@@ -29,8 +29,7 @@ export class AnalyticsService {
         totalUsers: totalUser,
         totalActiveUsers: (totalActiveUser / totalUser) * 100,
         totalInactiveUsers: (totalInactiveUser / totalUser) * 100,
-      }
+      },
     };
   }
-
 }

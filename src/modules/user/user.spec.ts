@@ -24,7 +24,9 @@ describe('UsersController (e2e)', () => {
       .useValue(mockUserService)
       .overrideProvider(JwtService)
       .useValue({
-        verifyAsync: jest.fn().mockResolvedValue({ id: '1', role: 'ADMIN', email: 'admin@test.com' }),
+        verifyAsync: jest
+          .fn()
+          .mockResolvedValue({ id: '1', role: 'ADMIN', email: 'admin@test.com' }),
       })
       .compile();
 
@@ -90,9 +92,7 @@ describe('UsersController (e2e)', () => {
         meta: { total: 1, page: 1, lastPage: 1 },
       });
 
-      const response = await request(app.getHttpServer())
-        .get('/users')
-        .expect(200);
+      const response = await request(app.getHttpServer()).get('/users').expect(200);
 
       expect(response.body.message).toEqual('user retrieved successfully');
       expect(response.body.data[0].id).toEqual('user_1');

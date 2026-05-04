@@ -52,5 +52,5 @@ export const userRangeFilter: rangeFilteringPrams[] = [
 // Prisma include configuration
 export const userInclude: Prisma.UserInclude = {
   customer: true,
-  admin: true
+  admin: true,
 };

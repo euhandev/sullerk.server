@@ -25,7 +25,9 @@ describe('AuthController (e2e)', () => {
       .useValue(mockAuthService)
       .overrideProvider(JwtService)
       .useValue({
-        verifyAsync: jest.fn().mockResolvedValue({ id: '1', role: 'ADMIN', email: 'test@test.com' }),
+        verifyAsync: jest
+          .fn()
+          .mockResolvedValue({ id: '1', role: 'ADMIN', email: 'test@test.com' }),
       })
       .compile();
 
