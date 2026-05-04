@@ -6,7 +6,6 @@ import { PrismaModule } from '@/helper/prisma.module';
 import { AdminModule } from '@/modules/admin/admin.module';
 import { AuthGuard } from '@/modules/auth/auth.guard';
 import { AuthModule } from '@/modules/auth/auth.module';
-import { BlogModule } from '@/modules/blog/blog.module';
 import { CustomerModule } from '@/modules/customer/customer.module';
 import { FileModule } from '@/modules/file/file.module';
 import { RolesGuard } from '@/modules/roles/roles.guard';
@@ -53,7 +52,6 @@ import { AnalyticsModule } from '@/modules/analytics/analytics.module';
     UserModule,
     AdminModule,
     CustomerModule,
-    BlogModule,
     FileModule,
     ConfigModule,
     AnalyticsModule,

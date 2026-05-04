@@ -35,7 +35,16 @@ export class UserService {
         throw new ApiError(HttpStatus.CONFLICT, `User email already exists`);
       }
 
-      const userCreation = await tx.user.create({ data: userData });
+      const isUsernameExists = await tx.user.findUnique({ where: { username: userData.username } });
+      if (isUsernameExists) {
+        throw new ApiError(HttpStatus.CONFLICT, `User username already exists`);
+      }
+
+      if (!userData.username) {
+        userData.username = await this.generateUniqueUsername(userData.email, tx);
+      }
+
+      const userCreation = await tx.user.create({ data: {...userData, username: userData?.username} });
 
       const adminCreation = await tx.admin.create({
         data: {
@@ -75,7 +84,16 @@ export class UserService {
         throw new ApiError(HttpStatus.CONFLICT, `User email already exists`);
       }
 
-      const userCreation = await tx.user.create({ data: userData });
+      const isUsernameExists = await tx.user.findUnique({ where: { username: userData.username } });
+      if (isUsernameExists) {
+        throw new ApiError(HttpStatus.CONFLICT, `User username already exists`);
+      }
+
+      if (!userData.username) {
+        userData.username = await this.generateUniqueUsername(userData.email, tx);
+      }
+
+      const userCreation = await tx.user.create({ data: {...userData, username: userData?.username} });
 
       const customerCreation = await tx.customer.create({
         data: {
@@ -144,20 +162,32 @@ export class UserService {
     return { meta, data: result };
   }
 
-  async updatePassword({ id, password }: { id: string; password: string }) {
-    const isUserExists = await this.prisma.user.findUnique({ where: { id } });
+  private async generateUniqueUsername(email: string, tx: any): Promise<string> {
+    let base = email.split('@')[0].toLowerCase();
 
-    if (!isUserExists) {
-      throw new ApiError(HttpStatus.NOT_FOUND, `user not found`);
+    base = base.replace(/[^a-z0-9]/g, '');
+
+    if (!base) {
+      base = 'user';
     }
 
-    return await this.prisma.user.update({
-      where: { id },
-      data: {
-        password: password,
-      },
-    });
+    let username = base;
+    let counter = 1;
+
+    while (true) {
+      const existingUser = await tx.user.findUnique({
+        where: { username },
+      });
+
+      if (!existingUser) {
+        return username;
+      }
+
+      username = `${base}${counter}`;
+      counter++;
+    }
   }
+
 
   // async userNameExists(username: string) {
   //   const isUsernameExists = await this.prisma.user.findUnique({

@@ -4,7 +4,7 @@
 
 Table users {
   id String [pk]
-  username String
+  username String [unique, not null]
   email String [unique, not null]
   contactNo String [not null, default: '']
   password String [not null]
@@ -35,7 +35,6 @@ Table admins {
   user users [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
-  pricingConfigs pricing_configs [not null]
 }
 
 Table customers {
@@ -46,9 +45,10 @@ Table customers {
   gender Gender
   address String [default: '']
   city String [default: '']
-  postcode String [not null]
+  postcode String [default: '']
   state String [default: '']
   country String [default: '']
+  favSport FavSport [default: 'OTHER']
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
   user users [not null]
@@ -58,31 +58,32 @@ Table customers {
   disputes disputes [not null]
   watchlists watchlists [not null]
   paymentMethods payment_methods [not null]
-  ItemHistory ItemHistory [not null]
-  Report Report [not null]
+  ItemHistory item_histories [not null]
+  Report reports [not null]
   dealsAsBuyer deals [not null]
   dealsAsSeller deals [not null]
-  starredItems StarredItem [not null]
+  starredItems starred_items [not null]
   posts Post [not null]
-  reports Repost [not null]
+  reports reposts [not null]
   comments comments [not null]
-  reactions Reaction [not null]
-  stars StarredPost [not null]
+  reactions reactions [not null]
+  stars starred_posts [not null]
   followers Follower [not null]
   followedBy Follower [not null]
   following Following [not null]
   followedByFollowing Following [not null]
   blockedBy BlockedUser [not null]
   blockedUsers BlockedUser [not null]
-  communityMembers CommunityMember [not null]
-  communityPosts CommunityPost [not null]
+  communityMembers community_members [not null]
+  communityPosts community_posts [not null]
   communityComments communitycomments [not null]
-  communityReactions CommunityReaction [not null]
-  communityReposts CommunityRepost [not null]
-  communityStars CommunityStarredPost [not null]
+  communityReactions community_reactions [not null]
+  communityReposts community_reposts [not null]
+  communityStars community_starred_posts [not null]
   pollVotes poll_votes [not null]
-  Subscription subscriptions [not null]
-  Payment payments [not null]
+  subscriptions subscriptions [not null]
+  payments payments [not null]
+  activityLogs activity_logs [not null]
 }
 
 Table Follower {
@@ -119,24 +120,52 @@ Table Post {
   id String [pk]
   customerId String [not null]
   customer customers [not null]
+  aiAnalysis String [default: '']
   type PostType[] [not null]
-  text String
+  text String [default: '']
+  articleUrl String [default: '']
   files files [not null]
-  linkPreview LinkPreview
   pollQuestion String
-  pollOptions PollOption[] [not null]
+  pollOptions pollOptions [not null]
   pollExpiresAt DateTime
   pollMultipleChoice Boolean [not null, default: false]
-  reports Repost [not null]
+  reports reposts [not null]
   comments comments [not null]
-  reactions Reaction [not null]
-  stars StarredPost [not null]
+  reactions reactions [not null]
+  stars starred_posts [not null]
   pollVotes poll_votes [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
 }
 
-Table Reaction {
+Table pollOptions {
+  id String [pk]
+  text String [not null]
+  votes Int [not null, default: 0]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  post Post [not null]
+  postId String [not null]
+  PollVote poll_votes [not null]
+}
+
+Table poll_votes {
+  id String [pk]
+  pollId String [not null]
+  poll Post [not null]
+  customerId String [not null]
+  customer customers [not null]
+  optionId String [not null]
+  option pollOptions [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+
+  indexes {
+    (pollId, customerId) [unique]
+  }
+}
+
+Table reactions {
   id String [pk]
   postId String [not null]
   post Post [not null]
@@ -151,7 +180,7 @@ Table Reaction {
   }
 }
 
-Table Repost {
+Table reposts {
   id String [pk]
   postId String [not null]
   post Post [not null]
@@ -159,9 +188,13 @@ Table Repost {
   customer customers [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
+
+  indexes {
+    (postId, reportedById) [unique]
+  }
 }
 
-Table StarredPost {
+Table starred_posts {
   id String [pk]
   postId String [not null]
   post Post [not null]
@@ -169,6 +202,10 @@ Table StarredPost {
   customer customers [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
+
+  indexes {
+    (postId, reportedById) [unique]
+  }
 }
 
 Table comments {
@@ -185,94 +222,106 @@ Table comments {
   updatedAt DateTime [not null]
 }
 
-Table Community {
+Table communities {
   id String [pk]
   name String [not null]
   description String
   tags String[] [not null]
   type CommunityType [not null]
-  posts CommunityPost [not null]
+  posts community_posts [not null]
   comments communitycomments [not null]
-  reactions CommunityReaction [not null]
-  reposts CommunityRepost [not null]
-  starredPosts CommunityStarredPost [not null]
-  members CommunityMember [not null]
+  reactions community_reactions [not null]
+  reposts community_reposts [not null]
+  starredPosts community_starred_posts [not null]
+  members community_members [not null]
   heroImg String
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
 }
 
-Table CommunityMember {
+Table community_members {
   id String [pk]
   customerId String [not null]
   customer customers [not null]
   communityId String [not null]
-  community Community [not null]
+  community communities [not null]
   userType CommunityUserType [not null]
   status CommunityMemberStatus [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
 }
 
-Table CommunityPost {
+Table community_posts {
   id String [pk]
   customerId String [not null]
   customer customers [not null]
   communityId String [not null]
-  community Community [not null]
+  community communities [not null]
   type PostType[] [not null]
   text String
   files files [not null]
-  reports CommunityRepost [not null]
+  reports community_reposts [not null]
   comments communitycomments [not null]
-  reactions CommunityReaction [not null]
-  stars CommunityStarredPost [not null]
+  reactions community_reactions [not null]
+  stars community_starred_posts [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
 }
 
-Table CommunityReaction {
+Table community_reactions {
   id String [pk]
   postId String [not null]
-  post CommunityPost [not null]
+  post community_posts [not null]
   communityId String [not null]
-  community Community [not null]
+  community communities [not null]
   reactedById String [not null]
   customer customers [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
+
+  indexes {
+    (postId, reactedById) [unique]
+  }
 }
 
-Table CommunityRepost {
+Table community_reposts {
   id String [pk]
   postId String [not null]
-  post CommunityPost [not null]
+  post community_posts [not null]
   reportedById String [not null]
   customer customers [not null]
   communityId String [not null]
-  community Community [not null]
+  community communities [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
+
+  indexes {
+    (postId, reportedById) [unique]
+  }
 }
 
-Table CommunityStarredPost {
+Table community_starred_posts {
   id String [pk]
   postId String [not null]
-  post CommunityPost [not null]
+  post community_posts [not null]
   reportedById String [not null]
   customer customers [not null]
   communityId String [not null]
-  community Community [not null]
+  community communities [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
+
+  indexes {
+    (postId, reportedById) [unique]
+  }
 }
 
 Table communitycomments {
   id String [pk]
   postId String [not null]
-  post CommunityPost [not null]
+  post community_posts [not null]
   communityId String [not null]
-  community Community [not null]
+  community communities [not null]
   customerId String [not null]
   customer customers [not null]
   body String [not null]
@@ -309,12 +358,12 @@ Table items {
   acquiredDate DateTime
   orders orders [not null]
   watchlists watchlists [not null]
-  reports Report [not null]
+  reports reports [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
-  ItemHistories ItemHistory [not null]
+  ItemHistories item_histories [not null]
   dealItems deal_items [not null]
-  starredItems StarredItem [not null]
+  starredItems starred_items [not null]
 }
 
 Table deals {
@@ -341,7 +390,7 @@ Table deal_items {
   updatedAt DateTime [not null]
 }
 
-Table StarredItem {
+Table starred_items {
   id String [pk]
   itemId String [not null]
   item items [not null]
@@ -351,7 +400,7 @@ Table StarredItem {
   updatedAt DateTime [not null]
 }
 
-Table Report {
+Table reports {
   id String [pk]
   itemId String [not null]
   item items [not null]
@@ -363,7 +412,7 @@ Table Report {
   updatedAt DateTime [not null]
 }
 
-Table ItemHistory {
+Table item_histories {
   id String [pk]
   itemId String [not null]
   item items [not null]
@@ -484,10 +533,8 @@ Table payments {
 Table pricing_configs {
   id String [pk]
   key String [unique, not null]
-  value Float [not null]
+  value String [not null]
   description String
-  updatedBy String
-  admin admins
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
 }
@@ -513,19 +560,7 @@ Table files {
   postId String
   post Post
   communityPostId String
-  communityPost CommunityPost
-}
-
-Table blogs {
-  id String [pk]
-  name String [not null, default: '']
-  slug String [unique, not null]
-  writer String [not null, default: '']
-  description String [not null, default: '']
-  url String [default: '']
-  secUrl String [default: '']
-  createdAt DateTime [default: `now()`, not null]
-  updatedAt DateTime [not null]
+  communityPost community_posts
 }
 
 Table notifications {
@@ -539,20 +574,6 @@ Table notifications {
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
   user users [not null]
-}
-
-Table poll_votes {
-  id String [pk]
-  postId String [not null]
-  post Post [not null]
-  customerId String [not null]
-  customer customers [not null]
-  optionId String [not null]
-  createdAt DateTime [default: `now()`, not null]
-
-  indexes {
-    (postId, customerId) [unique]
-  }
 }
 
 Table rooms {
@@ -629,6 +650,19 @@ Table chat_reactions {
   }
 }
 
+Table activity_logs {
+  id String [pk]
+  customerId String
+  customer customers
+  action ActionType [not null]
+  section String
+  description String [not null]
+  ipAddress String
+  userAgent String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
 Table Follower {
   followersId String [ref: > Follower.id]
   followingId String [ref: > Following.id]
@@ -637,6 +671,24 @@ Table Follower {
 Table Following {
   followedbyId String [ref: > Follower.id]
   followedbyfollowingId String [ref: > Following.id]
+}
+
+Enum FavSport {
+  FOOTBALL
+  BASKETBALL
+  RUGBY
+  CRICKET
+  TENNIS
+  BADMINTON
+  VOLLEYBALL
+  BOXING
+  UFC
+  F1
+  BASEBALL
+  HOCKEY
+  GOLF
+  ATHLETICS
+  OTHER
 }
 
 Enum CommunityMemberStatus {
@@ -890,6 +942,13 @@ Enum ChatType {
   SYSTEM
 }
 
+Enum ActionType {
+  LOGIN
+  UPDATE_PROFILE
+  UPDATE_PASSWORD
+  RESET_PASSWORD
+}
+
 Ref: admins.userId - users.id
 
 Ref: customers.userId - users.id
@@ -908,17 +967,25 @@ Ref: BlockedUser.blockedUserId > customers.id
 
 Ref: Post.customerId > customers.id
 
-Ref: Reaction.postId > Post.id
+Ref: pollOptions.postId > Post.id
 
-Ref: Reaction.reactedById > customers.id
+Ref: poll_votes.pollId > Post.id
 
-Ref: Repost.postId > Post.id
+Ref: poll_votes.customerId > customers.id
 
-Ref: Repost.reportedById > customers.id
+Ref: poll_votes.optionId > pollOptions.id
 
-Ref: StarredPost.postId > Post.id
+Ref: reactions.postId > Post.id
 
-Ref: StarredPost.reportedById > customers.id
+Ref: reactions.reactedById > customers.id
+
+Ref: reposts.postId > Post.id
+
+Ref: reposts.reportedById > customers.id
+
+Ref: starred_posts.postId > Post.id
+
+Ref: starred_posts.reportedById > customers.id
 
 Ref: comments.postId > Post.id
 
@@ -926,35 +993,35 @@ Ref: comments.customerId > customers.id
 
 Ref: comments.parentId - comments.id [delete: No Action]
 
-Ref: CommunityMember.customerId > customers.id
+Ref: community_members.customerId > customers.id
 
-Ref: CommunityMember.communityId > Community.id
+Ref: community_members.communityId > communities.id
 
-Ref: CommunityPost.customerId > customers.id
+Ref: community_posts.customerId > customers.id
 
-Ref: CommunityPost.communityId > Community.id
+Ref: community_posts.communityId > communities.id
 
-Ref: CommunityReaction.postId > CommunityPost.id
+Ref: community_reactions.postId > community_posts.id
 
-Ref: CommunityReaction.communityId > Community.id
+Ref: community_reactions.communityId > communities.id
 
-Ref: CommunityReaction.reactedById > customers.id
+Ref: community_reactions.reactedById > customers.id
 
-Ref: CommunityRepost.postId > CommunityPost.id
+Ref: community_reposts.postId > community_posts.id
 
-Ref: CommunityRepost.reportedById > customers.id
+Ref: community_reposts.reportedById > customers.id
 
-Ref: CommunityRepost.communityId > Community.id
+Ref: community_reposts.communityId > communities.id
 
-Ref: CommunityStarredPost.postId > CommunityPost.id
+Ref: community_starred_posts.postId > community_posts.id
 
-Ref: CommunityStarredPost.reportedById > customers.id
+Ref: community_starred_posts.reportedById > customers.id
 
-Ref: CommunityStarredPost.communityId > Community.id
+Ref: community_starred_posts.communityId > communities.id
 
-Ref: communitycomments.postId > CommunityPost.id
+Ref: communitycomments.postId > community_posts.id
 
-Ref: communitycomments.communityId > Community.id
+Ref: communitycomments.communityId > communities.id
 
 Ref: communitycomments.customerId > customers.id
 
@@ -970,17 +1037,17 @@ Ref: deal_items.dealId > deals.id
 
 Ref: deal_items.itemId > items.id
 
-Ref: StarredItem.itemId > items.id
+Ref: starred_items.itemId > items.id
 
-Ref: StarredItem.customerId > customers.id
+Ref: starred_items.customerId > customers.id
 
-Ref: Report.itemId > items.id
+Ref: reports.itemId > items.id
 
-Ref: Report.reportedById > customers.id
+Ref: reports.reportedById > customers.id
 
-Ref: ItemHistory.itemId > items.id
+Ref: item_histories.itemId > items.id
 
-Ref: ItemHistory.customerId > customers.id
+Ref: item_histories.customerId > customers.id
 
 Ref: orders.itemId > items.id
 
@@ -1008,19 +1075,13 @@ Ref: payments.subscriptionId > subscriptions.id
 
 Ref: payments.subscriptionPlanId > subscription_plans.id
 
-Ref: pricing_configs.updatedBy > admins.id
-
 Ref: files.itemId > items.id
 
 Ref: files.postId > Post.id
 
-Ref: files.communityPostId > CommunityPost.id
+Ref: files.communityPostId > community_posts.id
 
 Ref: notifications.userId > users.id
-
-Ref: poll_votes.postId > Post.id
-
-Ref: poll_votes.customerId > customers.id
 
 Ref: room_participants.roomId > rooms.id
 
@@ -1037,3 +1098,5 @@ Ref: chat_files.chatId > chats.id
 Ref: chat_reactions.chatId > chats.id
 
 Ref: chat_reactions.userId > users.id
+
+Ref: activity_logs.customerId > customers.id [delete: Set Null]

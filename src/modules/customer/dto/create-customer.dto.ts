@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BloodGroup, Gender } from '@prisma/client';
+import { BloodGroup, FavSport, Gender } from '@prisma/client';
 import { IsBoolean, IsDateString, IsEnum, IsOptional, IsString } from 'class-validator';
 
 export class CustomerDto {
@@ -29,8 +29,9 @@ export class CustomerDto {
   city?: string;
 
   @ApiProperty({ example: 'SW1A 1AA' })
+  @IsOptional()
   @IsString()
-  postcode: string;
+  postcode?: string;
 
   @ApiProperty({ example: 'Greater London', required: false })
   @IsOptional()
@@ -42,20 +43,10 @@ export class CustomerDto {
   @IsString()
   country?: string;
 
-  @ApiProperty({ example: false, default: false, required: false })
+  @ApiProperty({ enum: FavSport, example: FavSport.FOOTBALL, default: FavSport.OTHER })
   @IsOptional()
-  @IsBoolean()
-  hasAttendedSeminar?: boolean = false;
-
-  @ApiProperty({ example: '2026-02-16T00:00:00.000Z', required: false })
-  @IsOptional()
-  @IsDateString()
-  seminarDate?: string;
-
-  @ApiProperty({ example: 'NHS Trust', required: false })
-  @IsOptional()
-  @IsString()
-  seminarTrust?: string;
+  @IsEnum(FavSport)
+  favSport?: FavSport = FavSport.OTHER;
 }
 
 export class UpdateCustomerDto {

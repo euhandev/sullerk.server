@@ -15,7 +15,7 @@ datasource db {
 
 model User {
   id                      String         @id @default(auto()) @map("_id") @db.ObjectId
-  username                String?
+  username                String
   email                   String         @unique
   contactNo               String         @default("")
   password                String
@@ -39,7 +39,7 @@ model User {
   chatReactions    ChatReaction[]
 
   @@index([email, role, status, createdAt])
-  @@index([username])
+  @@unique([username])
   @@map("users")
 }
 
@@ -53,8 +53,6 @@ model Admin {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  pricingConfigs PricingConfig[]
-
   @@map("admins")
 }
 
@@ -66,9 +64,10 @@ model Customer {
   gender     Gender?
   address    String?     @default("")
   city       String?     @default("")
-  postcode   String
+  postcode   String?     @default("")
   state      String?     @default("")
   country    String?     @default("")
+  favSport   FavSport?   @default(OTHER)
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
   user       User        @relation(fields: [userId], references: [id])
@@ -111,6 +110,24 @@ model Customer {
 
   @@index([createdAt])
   @@map("customers")
+}
+
+enum FavSport {
+  FOOTBALL
+  BASKETBALL
+  RUGBY
+  CRICKET
+  TENNIS
+  BADMINTON
+  VOLLEYBALL
+  BOXING
+  UFC
+  F1
+  BASEBALL
+  HOCKEY
+  GOLF
+  ATHLETICS
+  OTHER
 }
 
 model Follower {
@@ -712,11 +729,8 @@ enum PaymentStatus {
 model PricingConfig {
   id          String  @id @default(auto()) @map("_id") @db.ObjectId
   key         String  @unique
-  value       Float
+  value       String
   description String?
-
-  updatedBy String? @db.ObjectId
-  admin     Admin?  @relation(fields: [updatedBy], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -846,21 +860,6 @@ enum FileAs {
   VIDEO_PROOF
   CERT_COA
   COM_AUTH
-}
-
-model Blog {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  name        String   @default("")
-  slug        String   @unique
-  writer      String   @default("")
-  description String   @default("")
-  url         String?  @default("")
-  secUrl      String?  @default("")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@index([createdAt])
-  @@map("blogs")
 }
 
 model Notification {

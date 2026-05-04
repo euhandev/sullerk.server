@@ -45,8 +45,6 @@ async function bootstrap() {
   app.enableCors({
     origin: [
       'http://localhost:3000',
-      'https://oaktreefinancial.netlify.app',
-      'http://localhost:5173',
     ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
@@ -68,7 +66,7 @@ async function bootstrap() {
   app.use(cookieParser());
 
   const config = new DocumentBuilder()
-    .setTitle('OkeTree Api Documentation')
+    .setTitle('KSMM Api Documentation')
     .setDescription('API documentation')
     .setVersion('0.0.1')
     .setContact('Euhan Sarkar', 'https://github.com/euhandev', 'euhan.dev@gmail.com')
