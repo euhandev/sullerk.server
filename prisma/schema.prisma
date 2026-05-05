@@ -38,8 +38,8 @@ model User {
   chats            Chat[]
   chatReactions    ChatReaction[]
 
-  @@index([email, role, status, createdAt])
   @@unique([username])
+  @@index([email, role, status, createdAt])
   @@map("users")
 }
 
@@ -103,10 +103,10 @@ model Customer {
   communityReposts   CommunityRepost[]
   communityStars     CommunityStarredPost[]
 
-  pollVotes    PollVote[]
+  pollVotes     PollVote[]
   subscriptions Subscription[]
-  payments     Payment[]
-  activityLogs ActivityLog[]
+  payments      Payment[]
+  activityLogs  ActivityLog[]
 
   @@index([createdAt])
   @@map("customers")
@@ -477,13 +477,38 @@ model Item {
   watchlists Watchlist[]
   reports    Report[]
 
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
   ItemHistories ItemHistory[]
   dealItems     DealItem[]
   starredItems  StarredItem[]
+  collections   CollectionItem[]
 
   @@map("items")
+}
+
+model Collection {
+  id          String           @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String
+  items       CollectionItem[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@map("collections")
+}
+
+model CollectionItem {
+  id           String     @id @default(auto()) @map("_id") @db.ObjectId
+  collectionId String     @db.ObjectId
+  collection   Collection @relation(fields: [collectionId], references: [id])
+  itemId       String     @db.ObjectId
+  item         Item       @relation(fields: [itemId], references: [id])
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@unique([collectionId, itemId])
+  @@map("collection_items")
 }
 
 model Deal {
