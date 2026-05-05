@@ -43,7 +43,11 @@ async function bootstrap() {
   app.use(passport.session());
 
   app.enableCors({
-    origin: ['http://localhost:3000', 'http://localhost:5173'],
+    origin: [
+      'http://localhost:3000',
+      'http://localhost:5173',
+      'https://keepsake-memorabilia.vercel.app',
+    ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Origin'],
