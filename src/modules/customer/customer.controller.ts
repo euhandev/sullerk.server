@@ -27,7 +27,7 @@ export class CustomerController {
   ) {}
 
   @Get()
-  @Roles(Role.ADMIN, Role.CUSTOMER, Role.SUPER_ADMIN)
+  @Roles(Role.ADMIN, Role.CUSTOMER, Role.SUPER_ADMIN, Role.CUSTOMER)
   async findAll(@Query() query: Record<string, any>) {
     const result = await this.CustomerService.findAll(query);
     return ResponseService.formatResponse({

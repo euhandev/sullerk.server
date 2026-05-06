@@ -23,6 +23,13 @@ import { AppController } from './app.controller';
 import { ConfigService } from '@/config/config.service';
 import { ConfigModule } from '@/config/config.module';
 import { AnalyticsModule } from '@/modules/analytics/analytics.module';
+import { CommunityModule } from '@/modules/community/community.module';
+import { CommunityMemberModule } from '@/modules/community-member/community-member.module';
+import { CommunityPostModule } from '@/modules/community-post/community-post.module';
+import { CommunityCommentModule } from '@/modules/community-comment/community-comment.module';
+import { CommunityReactionModule } from '@/modules/community-reaction/community-reaction.module';
+import { CommunityRepostModule } from '@/modules/community-repost/community-repost.module';
+import { CommunityStarredPostModule } from '@/modules/community-starred-post/community-starred-post.module';
 
 @Module({
   imports: [
@@ -55,6 +62,13 @@ import { AnalyticsModule } from '@/modules/analytics/analytics.module';
     FileModule,
     ConfigModule,
     AnalyticsModule,
+    CommunityModule,
+    CommunityMemberModule,
+    CommunityPostModule,
+    CommunityCommentModule,
+    CommunityReactionModule,
+    CommunityRepostModule,
+    CommunityStarredPostModule,
   ],
   controllers: [AppController],
   providers: [

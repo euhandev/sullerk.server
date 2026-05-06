@@ -76,7 +76,7 @@ Table customers {
   blockedUsers BlockedUser [not null]
   communityMembers community_members [not null]
   communityPosts community_posts [not null]
-  communityComments communitycomments [not null]
+  communityComments community_comments [not null]
   communityReactions community_reactions [not null]
   communityReposts community_reposts [not null]
   communityStars community_starred_posts [not null]
@@ -229,7 +229,7 @@ Table communities {
   tags String[] [not null]
   type CommunityType [not null]
   posts community_posts [not null]
-  comments communitycomments [not null]
+  comments community_comments [not null]
   reactions community_reactions [not null]
   reposts community_reposts [not null]
   starredPosts community_starred_posts [not null]
@@ -249,6 +249,10 @@ Table community_members {
   status CommunityMemberStatus [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
+
+  indexes {
+    (communityId, customerId) [unique]
+  }
 }
 
 Table community_posts {
@@ -261,7 +265,7 @@ Table community_posts {
   text String
   files files [not null]
   reports community_reposts [not null]
-  comments communitycomments [not null]
+  comments community_comments [not null]
   reactions community_reactions [not null]
   stars community_starred_posts [not null]
   createdAt DateTime [default: `now()`, not null]
@@ -304,7 +308,7 @@ Table community_starred_posts {
   id String [pk]
   postId String [not null]
   post community_posts [not null]
-  reportedById String [not null]
+  starredById String [not null]
   customer customers [not null]
   communityId String [not null]
   community communities [not null]
@@ -312,11 +316,11 @@ Table community_starred_posts {
   updatedAt DateTime [not null]
 
   indexes {
-    (postId, reportedById) [unique]
+    (postId, starredById) [unique]
   }
 }
 
-Table communitycomments {
+Table community_comments {
   id String [pk]
   postId String [not null]
   post community_posts [not null]
@@ -326,8 +330,8 @@ Table communitycomments {
   customer customers [not null]
   body String [not null]
   parentId String
-  parent communitycomments
-  children communitycomments [not null]
+  parent community_comments
+  children community_comments [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
 }
@@ -364,6 +368,30 @@ Table items {
   ItemHistories item_histories [not null]
   dealItems deal_items [not null]
   starredItems starred_items [not null]
+  collections collection_items [not null]
+}
+
+Table collections {
+  id String [pk]
+  name String [not null]
+  description String [not null]
+  items collection_items [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table collection_items {
+  id String [pk]
+  collectionId String [not null]
+  collection collections [not null]
+  itemId String [not null]
+  item items [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+
+  indexes {
+    (collectionId, itemId) [unique]
+  }
 }
 
 Table deals {
@@ -700,7 +728,7 @@ Enum CommunityMemberStatus {
 Enum CommunityUserType {
   ADMIN
   MODERATOR
-  USER
+  MEMBER
 }
 
 Enum CommunityType {
@@ -1015,19 +1043,23 @@ Ref: community_reposts.communityId > communities.id
 
 Ref: community_starred_posts.postId > community_posts.id
 
-Ref: community_starred_posts.reportedById > customers.id
+Ref: community_starred_posts.starredById > customers.id
 
 Ref: community_starred_posts.communityId > communities.id
 
-Ref: communitycomments.postId > community_posts.id
+Ref: community_comments.postId > community_posts.id
 
-Ref: communitycomments.communityId > communities.id
+Ref: community_comments.communityId > communities.id
 
-Ref: communitycomments.customerId > customers.id
+Ref: community_comments.customerId > customers.id
 
-Ref: communitycomments.parentId - communitycomments.id [delete: No Action]
+Ref: community_comments.parentId - community_comments.id [delete: No Action]
 
 Ref: items.ownerId > customers.id
+
+Ref: collection_items.collectionId > collections.id
+
+Ref: collection_items.itemId > items.id
 
 Ref: deals.buyerId > customers.id
 

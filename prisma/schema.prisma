@@ -319,6 +319,7 @@ model CommunityMember {
   createdAt   DateTime              @default(now())
   updatedAt   DateTime              @updatedAt
 
+  @@unique([communityId, customerId])
   @@map("community_members")
 }
 
@@ -331,7 +332,7 @@ enum CommunityMemberStatus {
 enum CommunityUserType {
   ADMIN
   MODERATOR
-  USER
+  MEMBER
 }
 
 model CommunityPost {
@@ -389,15 +390,15 @@ model CommunityStarredPost {
   id           String        @id @default(auto()) @map("_id") @db.ObjectId
   postId       String        @db.ObjectId
   post         CommunityPost @relation(fields: [postId], references: [id])
-  reportedById String        @db.ObjectId
-  customer     Customer      @relation(fields: [reportedById], references: [id])
+  starredById String        @db.ObjectId
+  customer     Customer      @relation(fields: [starredById], references: [id])
   communityId  String        @db.ObjectId
   community    Community     @relation(fields: [communityId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@unique([postId, reportedById])
+  @@unique([postId, starredById])
   @@map("community_starred_posts")
 }
 
@@ -420,7 +421,7 @@ model CommunityComment {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@map("communitycomments")
+  @@map("community_comments")
 }
 
 enum CommunityType {

@@ -9,7 +9,7 @@
                     "description": "",
                     "item": [
                         {
-                            "id": "2d5cab10-8fab-445d-935d-abcf3de6e99a",
+                            "id": "6afd2fcd-37ef-4b29-832c-16256d1c6550",
                             "name": "User Login",
                             "request": {
                                 "name": "User Login",
@@ -46,7 +46,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "b76804fa-6ea8-4b75-8754-9f507c03a935",
+                                    "id": "b079afa1-227d-4c81-adc4-448d1f1118f9",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -97,7 +97,7 @@
                     "description": "",
                     "item": [
                         {
-                            "id": "7cb1c45d-583a-4fb5-8b9e-5ac2055cd402",
+                            "id": "308be7a6-11ff-43e1-bf11-cf58abae8753",
                             "name": "Auth Controller set FCM Token",
                             "request": {
                                 "name": "Auth Controller set FCM Token",
@@ -119,7 +119,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "f8b8800f-9c7d-445b-8272-636cd7b2d307",
+                                    "id": "6d1259dc-67ae-4623-b0b7-e51930b23893",
                                     "name": "201",
                                     "originalRequest": {
                                         "url": {
@@ -155,7 +155,7 @@
                     "description": "",
                     "item": [
                         {
-                            "id": "1a9372cb-88ed-4634-9920-b38aa990c172",
+                            "id": "8f7b2fb0-9c15-4524-9bbe-b5c1afa96d01",
                             "name": "Auth Controller get Profile",
                             "request": {
                                 "name": "Auth Controller get Profile",
@@ -177,7 +177,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "14f098cd-0b32-453e-9da9-545790bd448a",
+                                    "id": "1df85157-d671-4df1-88fe-2ee53a944ac4",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -213,7 +213,7 @@
                     "description": "",
                     "item": [
                         {
-                            "id": "ce9dd535-cacb-4f2f-80f8-6d63764a799e",
+                            "id": "2374f874-2510-47a5-9a9c-4cd5a19f5182",
                             "name": "Auth Controller change Password",
                             "request": {
                                 "name": "Auth Controller change Password",
@@ -235,7 +235,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "350c5282-9321-42fa-a124-44fc095c779b",
+                                    "id": "bfd70150-810b-4cf2-863d-8d75e82ff854",
                                     "name": "201",
                                     "originalRequest": {
                                         "url": {
@@ -271,7 +271,7 @@
                     "description": "",
                     "item": [
                         {
-                            "id": "7c6bfea0-e57f-4f14-be6d-3ebfd3377ba4",
+                            "id": "5eb8c7ba-a36d-48e2-9595-8b1c67544966",
                             "name": "Auth Controller forgot Passwod",
                             "request": {
                                 "name": "Auth Controller forgot Passwod",
@@ -293,7 +293,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "5bac3c28-8633-45f6-a9e7-c16797121018",
+                                    "id": "730e0261-527a-4d8a-a831-ca6595e06cbb",
                                     "name": "201",
                                     "originalRequest": {
                                         "url": {
@@ -329,7 +329,7 @@
                     "description": "",
                     "item": [
                         {
-                            "id": "aea0067e-5637-4c57-ba4f-9a10c02eccd2",
+                            "id": "1b84ac4a-5554-4aed-9758-c1d4ffcc98e9",
                             "name": "Auth Controller reset Password",
                             "request": {
                                 "name": "Auth Controller reset Password",
@@ -351,7 +351,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "a59f138b-f76f-4f78-9145-4a4554c66c0b",
+                                    "id": "affe0805-875a-4b8a-8661-3913098603e1",
                                     "name": "201",
                                     "originalRequest": {
                                         "url": {
@@ -387,7 +387,7 @@
                     "description": "",
                     "item": [
                         {
-                            "id": "6096f5ff-ec14-498f-9b47-7b34bdeb1690",
+                            "id": "cdffb9d2-0e37-4ae0-8561-cbaa85d01f63",
                             "name": "User Logout",
                             "request": {
                                 "name": "User Logout",
@@ -409,7 +409,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "9f19a453-1d10-419b-a439-a99ff583d067",
+                                    "id": "35dc7c23-6fdf-430e-9af4-bcfd47bb49e7",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -451,7 +451,7 @@
                     "description": "",
                     "item": [
                         {
-                            "id": "63bfa7e5-8a76-4172-8eab-1d4c13817084",
+                            "id": "e4aaea16-204d-4c35-ae7d-0569735f93ef",
                             "name": "Users Controller create Admin",
                             "request": {
                                 "name": "Users Controller create Admin",
@@ -488,7 +488,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "caac5849-7354-4b24-a283-a3cc2dbeecb1",
+                                    "id": "8e876f3f-8cdf-4180-b411-ad06a2afaf41",
                                     "name": "201",
                                     "originalRequest": {
                                         "url": {
@@ -539,7 +539,7 @@
                     "description": "",
                     "item": [
                         {
-                            "id": "7f7f1983-9e9e-4e3d-93ee-0e307b29b569",
+                            "id": "038b7fa7-7c68-4753-b641-e4e63ed769f9",
                             "name": "Users Controller create Customer",
                             "request": {
                                 "name": "Users Controller create Customer",
@@ -564,7 +564,7 @@
                                 "method": "POST",
                                 "body": {
                                     "mode": "raw",
-                                    "raw": "{\n  \"email\": \"<string>\",\n  \"password\": \"<string>\",\n  \"customer\": {\n    \"postcode\": \"<string>\",\n    \"fullName\": \"<string>\",\n    \"bloodGroup\": \"A_POSITIVE\",\n    \"gender\": \"OTHERS\",\n    \"address\": \"<string>\",\n    \"city\": \"<string>\",\n    \"state\": \"<string>\",\n    \"country\": \"<string>\",\n    \"hasAttendedSeminar\": false,\n    \"seminarDate\": \"<string>\",\n    \"seminarTrust\": \"<string>\"\n  },\n  \"username\": \"<string>\",\n  \"contactNo\": \"<string>\",\n  \"lang\": \"ENG\",\n  \"role\": \"CUSTOMER\",\n  \"avatar\": \"<string>\",\n  \"status\": \"ACTIVE\",\n  \"fcmToken\": \"<string>\",\n  \"dob\": \"<string>\"\n}",
+                                    "raw": "{\n  \"email\": \"<string>\",\n  \"password\": \"<string>\",\n  \"customer\": {\n    \"postcode\": \"<string>\",\n    \"favSport\": \"OTHER\",\n    \"fullName\": \"<string>\",\n    \"bloodGroup\": \"O_POSITIVE\",\n    \"gender\": \"MALE\",\n    \"address\": \"<string>\",\n    \"city\": \"<string>\",\n    \"state\": \"<string>\",\n    \"country\": \"<string>\"\n  },\n  \"username\": \"<string>\",\n  \"contactNo\": \"<string>\",\n  \"lang\": \"ENG\",\n  \"role\": \"CUSTOMER\",\n  \"avatar\": \"<string>\",\n  \"status\": \"ACTIVE\",\n  \"fcmToken\": \"<string>\",\n  \"dob\": \"<string>\"\n}",
                                     "options": {
                                         "raw": {
                                             "headerFamily": "json",
@@ -576,7 +576,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "2f726486-e71d-4e46-9793-3eb69d57d86a",
+                                    "id": "878a26cc-7470-43c5-bda6-acd238378907",
                                     "name": "201",
                                     "originalRequest": {
                                         "url": {
@@ -599,7 +599,7 @@
                                         "method": "POST",
                                         "body": {
                                             "mode": "raw",
-                                            "raw": "{\n  \"email\": \"<string>\",\n  \"password\": \"<string>\",\n  \"customer\": {\n    \"postcode\": \"<string>\",\n    \"fullName\": \"<string>\",\n    \"bloodGroup\": \"A_POSITIVE\",\n    \"gender\": \"OTHERS\",\n    \"address\": \"<string>\",\n    \"city\": \"<string>\",\n    \"state\": \"<string>\",\n    \"country\": \"<string>\",\n    \"hasAttendedSeminar\": false,\n    \"seminarDate\": \"<string>\",\n    \"seminarTrust\": \"<string>\"\n  },\n  \"username\": \"<string>\",\n  \"contactNo\": \"<string>\",\n  \"lang\": \"ENG\",\n  \"role\": \"CUSTOMER\",\n  \"avatar\": \"<string>\",\n  \"status\": \"ACTIVE\",\n  \"fcmToken\": \"<string>\",\n  \"dob\": \"<string>\"\n}",
+                                            "raw": "{\n  \"email\": \"<string>\",\n  \"password\": \"<string>\",\n  \"customer\": {\n    \"postcode\": \"<string>\",\n    \"favSport\": \"OTHER\",\n    \"fullName\": \"<string>\",\n    \"bloodGroup\": \"O_POSITIVE\",\n    \"gender\": \"MALE\",\n    \"address\": \"<string>\",\n    \"city\": \"<string>\",\n    \"state\": \"<string>\",\n    \"country\": \"<string>\"\n  },\n  \"username\": \"<string>\",\n  \"contactNo\": \"<string>\",\n  \"lang\": \"ENG\",\n  \"role\": \"CUSTOMER\",\n  \"avatar\": \"<string>\",\n  \"status\": \"ACTIVE\",\n  \"fcmToken\": \"<string>\",\n  \"dob\": \"<string>\"\n}",
                                             "options": {
                                                 "raw": {
                                                     "headerFamily": "json",
@@ -623,7 +623,7 @@
                     ]
                 },
                 {
-                    "id": "4cb739f4-eedf-4af1-925e-6c1cbdf34dab",
+                    "id": "5f0f6e26-1f79-4a5c-a3bf-68a428212ce0",
                     "name": "Users Controller get Users",
                     "request": {
                         "name": "Users Controller get Users",
@@ -644,7 +644,7 @@
                     },
                     "response": [
                         {
-                            "id": "2a5d7f08-9d52-44f4-9fc7-b35734dc6d52",
+                            "id": "082ecc70-4135-4ff4-b2b6-cd0f3dd4f648",
                             "name": "200",
                             "originalRequest": {
                                 "url": {
@@ -677,7 +677,7 @@
                     "description": "",
                     "item": [
                         {
-                            "id": "513a08b0-7686-42c3-a52e-e91de36ed0fa",
+                            "id": "cf21a299-3cad-4ca0-ae59-eac2e710b6e4",
                             "name": "Users Controller find One",
                             "request": {
                                 "name": "Users Controller find One",
@@ -710,7 +710,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "fbd7b051-d494-409f-b6fd-501498de2df9",
+                                    "id": "8fd54b65-381a-4057-81f6-6a22629a22b9",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -761,7 +761,7 @@
                             "description": "",
                             "item": [
                                 {
-                                    "id": "b9e48f13-b368-4247-b18a-36ec403c3905",
+                                    "id": "6158e5ec-0526-49b8-95fd-a7f7ecd35fb0",
                                     "name": "Users Controller change Status",
                                     "request": {
                                         "name": "Users Controller change Status",
@@ -795,7 +795,7 @@
                                     },
                                     "response": [
                                         {
-                                            "id": "1b21f8f2-bb55-442e-b81c-dc1ae51a9931",
+                                            "id": "9c0ca3b5-e7ec-4e33-b40e-322abeb9cb43",
                                             "name": "200",
                                             "originalRequest": {
                                                 "url": {
@@ -847,7 +847,7 @@
             "description": "",
             "item": [
                 {
-                    "id": "55047c6b-bc72-42f5-b6af-469a766d158e",
+                    "id": "c1edb640-21c3-4f94-8d81-633ebd3cedb8",
                     "name": "Admin Controller find All",
                     "request": {
                         "name": "Admin Controller find All",
@@ -868,7 +868,7 @@
                     },
                     "response": [
                         {
-                            "id": "66731642-f448-448a-ace7-392248e70f66",
+                            "id": "f2ab81c4-2f2a-4d0b-856c-957674572c47",
                             "name": "200",
                             "originalRequest": {
                                 "url": {
@@ -901,7 +901,7 @@
                     "description": "",
                     "item": [
                         {
-                            "id": "d12307f5-1b53-4e83-ab0b-9b378beddf7d",
+                            "id": "89f5b6f9-f63f-46c5-a984-59255ef331bc",
                             "name": "Admin Controller find One",
                             "request": {
                                 "name": "Admin Controller find One",
@@ -934,7 +934,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "2bd5701d-a197-4820-a676-9c5175960096",
+                                    "id": "97f4282b-13d3-49e8-a937-cbb7a1628620",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -975,7 +975,7 @@
                             }
                         },
                         {
-                            "id": "b2d62d3b-4e33-4321-b7de-231c3f7811a8",
+                            "id": "c48192f2-8aae-4ddb-b52b-41257c6f9ca1",
                             "name": "Admin Controller update",
                             "request": {
                                 "name": "Admin Controller update",
@@ -1023,7 +1023,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "1c32a01b-027f-4737-8cef-711269e7a7f7",
+                                    "id": "96ede2f8-96d1-43c7-b330-49b885467da5",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -1079,7 +1079,7 @@
                             }
                         },
                         {
-                            "id": "ba070eec-3297-4a42-adfd-2cb20fb68334",
+                            "id": "fb29ca33-9ce0-46c7-86de-3458e2939ec8",
                             "name": "Admin Controller remove",
                             "request": {
                                 "name": "Admin Controller remove",
@@ -1112,7 +1112,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "4093d1e5-6148-46fc-9e59-ca0ef2c8f7f5",
+                                    "id": "83e47276-dc67-468a-a1d0-58fd1af27c0f",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -1161,7 +1161,7 @@
             "description": "",
             "item": [
                 {
-                    "id": "cef9f959-e942-46ec-94a5-8595350baebd",
+                    "id": "98cb3932-d925-42d7-b1de-8bc6bd58cea1",
                     "name": "Customer Controller find All",
                     "request": {
                         "name": "Customer Controller find All",
@@ -1182,7 +1182,7 @@
                     },
                     "response": [
                         {
-                            "id": "7b83ec02-f99b-4887-bb48-2f3eb319da45",
+                            "id": "2e5060dd-b899-415e-b6ca-ce1e999e465d",
                             "name": "200",
                             "originalRequest": {
                                 "url": {
@@ -1215,7 +1215,7 @@
                     "description": "",
                     "item": [
                         {
-                            "id": "3a8eb75a-b7d5-4cc7-9020-d1bcee2371ab",
+                            "id": "321ee0da-5c4d-418d-901a-9bac8862b9db",
                             "name": "Customer Controller find One",
                             "request": {
                                 "name": "Customer Controller find One",
@@ -1248,7 +1248,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "79be7e11-c8f8-4d82-9c9e-1ccc7d4c5691",
+                                    "id": "a378a9fb-b63b-4069-8112-6c48aeebc922",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -1289,7 +1289,7 @@
                             }
                         },
                         {
-                            "id": "ea31f416-8dba-4d18-bcbd-731f6a640c9f",
+                            "id": "7320229a-4c69-4029-ae54-01549d022645",
                             "name": "Customer Controller update",
                             "request": {
                                 "name": "Customer Controller update",
@@ -1337,7 +1337,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "45f326ea-1f36-4438-a5c1-facd11cf85b0",
+                                    "id": "ad51b7a9-862e-45ef-bd65-f735ede574e5",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -1393,7 +1393,7 @@
                             }
                         },
                         {
-                            "id": "de113cdb-bc9b-4617-bfb1-f680fde5e1e2",
+                            "id": "c47ed4ca-67ce-4743-a725-9e8f5087535a",
                             "name": "Customer Controller remove",
                             "request": {
                                 "name": "Customer Controller remove",
@@ -1426,406 +1426,12 @@
                             },
                             "response": [
                                 {
-                                    "id": "2c0cd0cd-449b-483b-8bef-09cdd212035f",
+                                    "id": "8d2760f1-f575-4083-b93b-56fc5a999c42",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
                                             "path": [
                                                 "customers",
-                                                ":id"
-                                            ],
-                                            "host": [
-                                                "{{baseUrl}}"
-                                            ],
-                                            "query": [],
-                                            "variable": [
-                                                {
-                                                    "disabled": false,
-                                                    "description": {
-                                                        "content": "(Required) ",
-                                                        "type": "text/plain"
-                                                    },
-                                                    "type": "any",
-                                                    "value": "<string>",
-                                                    "key": "id"
-                                                }
-                                            ]
-                                        },
-                                        "method": "DELETE",
-                                        "body": {}
-                                    },
-                                    "status": "OK",
-                                    "code": 200,
-                                    "header": [],
-                                    "cookie": [],
-                                    "_postman_previewlanguage": "text"
-                                }
-                            ],
-                            "event": [],
-                            "protocolProfileBehavior": {
-                                "disableBodyPruning": true
-                            }
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "blogs",
-            "description": "",
-            "item": [
-                {
-                    "id": "ea270b11-bfa0-4310-a290-d6a7e3708737",
-                    "name": "Blog Controller create",
-                    "request": {
-                        "name": "Blog Controller create",
-                        "description": {},
-                        "url": {
-                            "path": [
-                                "blogs"
-                            ],
-                            "host": [
-                                "{{baseUrl}}"
-                            ],
-                            "query": [],
-                            "variable": []
-                        },
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application/json"
-                            }
-                        ],
-                        "method": "POST",
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\n  \"name\": \"<string>\",\n  \"writer\": \"<string>\",\n  \"description\": \"<string>\",\n  \"slug\": \"<string>\",\n  \"url\": \"<string>\",\n  \"secUrl\": \"<string>\"\n}",
-                            "options": {
-                                "raw": {
-                                    "headerFamily": "json",
-                                    "language": "json"
-                                }
-                            }
-                        },
-                        "auth": null
-                    },
-                    "response": [
-                        {
-                            "id": "e72c6624-39f2-45d5-810b-c91bd236538b",
-                            "name": "201",
-                            "originalRequest": {
-                                "url": {
-                                    "path": [
-                                        "blogs"
-                                    ],
-                                    "host": [
-                                        "{{baseUrl}}"
-                                    ],
-                                    "query": [],
-                                    "variable": []
-                                },
-                                "header": [
-                                    {
-                                        "key": "Content-Type",
-                                        "value": "application/json"
-                                    }
-                                ],
-                                "method": "POST",
-                                "body": {
-                                    "mode": "raw",
-                                    "raw": "{\n  \"name\": \"<string>\",\n  \"writer\": \"<string>\",\n  \"description\": \"<string>\",\n  \"slug\": \"<string>\",\n  \"url\": \"<string>\",\n  \"secUrl\": \"<string>\"\n}",
-                                    "options": {
-                                        "raw": {
-                                            "headerFamily": "json",
-                                            "language": "json"
-                                        }
-                                    }
-                                }
-                            },
-                            "status": "Created",
-                            "code": 201,
-                            "header": [],
-                            "cookie": [],
-                            "_postman_previewlanguage": "text"
-                        }
-                    ],
-                    "event": [],
-                    "protocolProfileBehavior": {
-                        "disableBodyPruning": true
-                    }
-                },
-                {
-                    "id": "1310d4ce-b04c-4247-a1f9-fdce52d336b4",
-                    "name": "Blog Controller find All",
-                    "request": {
-                        "name": "Blog Controller find All",
-                        "description": {},
-                        "url": {
-                            "path": [
-                                "blogs"
-                            ],
-                            "host": [
-                                "{{baseUrl}}"
-                            ],
-                            "query": [],
-                            "variable": []
-                        },
-                        "method": "GET",
-                        "body": {},
-                        "auth": null
-                    },
-                    "response": [
-                        {
-                            "id": "a731a522-a9f6-4d19-bbb8-c4732a83337e",
-                            "name": "200",
-                            "originalRequest": {
-                                "url": {
-                                    "path": [
-                                        "blogs"
-                                    ],
-                                    "host": [
-                                        "{{baseUrl}}"
-                                    ],
-                                    "query": [],
-                                    "variable": []
-                                },
-                                "method": "GET",
-                                "body": {}
-                            },
-                            "status": "OK",
-                            "code": 200,
-                            "header": [],
-                            "cookie": [],
-                            "_postman_previewlanguage": "text"
-                        }
-                    ],
-                    "event": [],
-                    "protocolProfileBehavior": {
-                        "disableBodyPruning": true
-                    }
-                },
-                {
-                    "name": "{id}",
-                    "description": "",
-                    "item": [
-                        {
-                            "id": "879c5251-612f-4c20-951a-05e7a4f2eeb5",
-                            "name": "Blog Controller find One",
-                            "request": {
-                                "name": "Blog Controller find One",
-                                "description": {},
-                                "url": {
-                                    "path": [
-                                        "blogs",
-                                        ":id"
-                                    ],
-                                    "host": [
-                                        "{{baseUrl}}"
-                                    ],
-                                    "query": [],
-                                    "variable": [
-                                        {
-                                            "type": "any",
-                                            "value": "<string>",
-                                            "key": "id",
-                                            "disabled": false,
-                                            "description": {
-                                                "content": "(Required) ",
-                                                "type": "text/plain"
-                                            }
-                                        }
-                                    ]
-                                },
-                                "method": "GET",
-                                "body": {},
-                                "auth": null
-                            },
-                            "response": [
-                                {
-                                    "id": "3b91ce3e-f0f5-4277-bb1d-1474a1f88caf",
-                                    "name": "200",
-                                    "originalRequest": {
-                                        "url": {
-                                            "path": [
-                                                "blogs",
-                                                ":id"
-                                            ],
-                                            "host": [
-                                                "{{baseUrl}}"
-                                            ],
-                                            "query": [],
-                                            "variable": [
-                                                {
-                                                    "disabled": false,
-                                                    "description": {
-                                                        "content": "(Required) ",
-                                                        "type": "text/plain"
-                                                    },
-                                                    "type": "any",
-                                                    "value": "<string>",
-                                                    "key": "id"
-                                                }
-                                            ]
-                                        },
-                                        "method": "GET",
-                                        "body": {}
-                                    },
-                                    "status": "OK",
-                                    "code": 200,
-                                    "header": [],
-                                    "cookie": [],
-                                    "_postman_previewlanguage": "text"
-                                }
-                            ],
-                            "event": [],
-                            "protocolProfileBehavior": {
-                                "disableBodyPruning": true
-                            }
-                        },
-                        {
-                            "id": "02885a0c-6c29-4d98-a2b8-73e949019e19",
-                            "name": "Blog Controller update",
-                            "request": {
-                                "name": "Blog Controller update",
-                                "description": {},
-                                "url": {
-                                    "path": [
-                                        "blogs",
-                                        ":id"
-                                    ],
-                                    "host": [
-                                        "{{baseUrl}}"
-                                    ],
-                                    "query": [],
-                                    "variable": [
-                                        {
-                                            "type": "any",
-                                            "value": "<string>",
-                                            "key": "id",
-                                            "disabled": false,
-                                            "description": {
-                                                "content": "(Required) ",
-                                                "type": "text/plain"
-                                            }
-                                        }
-                                    ]
-                                },
-                                "header": [
-                                    {
-                                        "key": "Content-Type",
-                                        "value": "application/json"
-                                    }
-                                ],
-                                "method": "PATCH",
-                                "body": {
-                                    "mode": "raw",
-                                    "raw": "{\n  \"name\": \"<string>\",\n  \"slug\": \"<string>\",\n  \"writer\": \"<string>\",\n  \"description\": \"<string>\",\n  \"url\": \"<string>\",\n  \"secUrl\": \"<string>\"\n}",
-                                    "options": {
-                                        "raw": {
-                                            "headerFamily": "json",
-                                            "language": "json"
-                                        }
-                                    }
-                                },
-                                "auth": null
-                            },
-                            "response": [
-                                {
-                                    "id": "8a87236e-77b0-4687-bb51-c58d11f10c88",
-                                    "name": "200",
-                                    "originalRequest": {
-                                        "url": {
-                                            "path": [
-                                                "blogs",
-                                                ":id"
-                                            ],
-                                            "host": [
-                                                "{{baseUrl}}"
-                                            ],
-                                            "query": [],
-                                            "variable": [
-                                                {
-                                                    "disabled": false,
-                                                    "description": {
-                                                        "content": "(Required) ",
-                                                        "type": "text/plain"
-                                                    },
-                                                    "type": "any",
-                                                    "value": "<string>",
-                                                    "key": "id"
-                                                }
-                                            ]
-                                        },
-                                        "header": [
-                                            {
-                                                "key": "Content-Type",
-                                                "value": "application/json"
-                                            }
-                                        ],
-                                        "method": "PATCH",
-                                        "body": {
-                                            "mode": "raw",
-                                            "raw": "{\n  \"name\": \"<string>\",\n  \"slug\": \"<string>\",\n  \"writer\": \"<string>\",\n  \"description\": \"<string>\",\n  \"url\": \"<string>\",\n  \"secUrl\": \"<string>\"\n}",
-                                            "options": {
-                                                "raw": {
-                                                    "headerFamily": "json",
-                                                    "language": "json"
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "status": "OK",
-                                    "code": 200,
-                                    "header": [],
-                                    "cookie": [],
-                                    "_postman_previewlanguage": "text"
-                                }
-                            ],
-                            "event": [],
-                            "protocolProfileBehavior": {
-                                "disableBodyPruning": true
-                            }
-                        },
-                        {
-                            "id": "0cfe2302-a9b7-4118-8f1d-fed1bda14856",
-                            "name": "Blog Controller remove",
-                            "request": {
-                                "name": "Blog Controller remove",
-                                "description": {},
-                                "url": {
-                                    "path": [
-                                        "blogs",
-                                        ":id"
-                                    ],
-                                    "host": [
-                                        "{{baseUrl}}"
-                                    ],
-                                    "query": [],
-                                    "variable": [
-                                        {
-                                            "type": "any",
-                                            "value": "<string>",
-                                            "key": "id",
-                                            "disabled": false,
-                                            "description": {
-                                                "content": "(Required) ",
-                                                "type": "text/plain"
-                                            }
-                                        }
-                                    ]
-                                },
-                                "method": "DELETE",
-                                "body": {},
-                                "auth": null
-                            },
-                            "response": [
-                                {
-                                    "id": "40a619a9-781d-453c-9236-0a2e81ead2a9",
-                                    "name": "200",
-                                    "originalRequest": {
-                                        "url": {
-                                            "path": [
-                                                "blogs",
                                                 ":id"
                                             ],
                                             "host": [
@@ -1873,7 +1479,7 @@
                     "description": "",
                     "item": [
                         {
-                            "id": "fa2bf8ba-df6c-4528-89ea-991d33e1871c",
+                            "id": "2a66300e-59d9-429c-b18d-7e248b1b7eb5",
                             "name": "File Controller upload",
                             "request": {
                                 "name": "File Controller upload",
@@ -1895,7 +1501,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "d0afa379-7038-4366-8e03-4c739d2f2d89",
+                                    "id": "be770bc9-b87b-49dc-8970-08115c7f8050",
                                     "name": "201",
                                     "originalRequest": {
                                         "url": {
@@ -1927,7 +1533,7 @@
                     ]
                 },
                 {
-                    "id": "14483588-1945-481d-bd06-93283c0d3d4b",
+                    "id": "97707e98-fde0-40de-9459-95cfc6ceb8e5",
                     "name": "File Controller find All",
                     "request": {
                         "name": "File Controller find All",
@@ -1948,7 +1554,7 @@
                     },
                     "response": [
                         {
-                            "id": "32651aee-26db-49e0-bc05-0dca6d294c7a",
+                            "id": "ae22a8fb-32b9-4e09-a79e-2c5210bc3a73",
                             "name": "200",
                             "originalRequest": {
                                 "url": {
@@ -1977,7 +1583,7 @@
                     }
                 },
                 {
-                    "id": "c94c693a-4985-4d1f-bb2f-482281377221",
+                    "id": "0bd7daab-8c37-46cb-ac22-3f7f2b0d4c19",
                     "name": "File Controller create",
                     "request": {
                         "name": "File Controller create",
@@ -2013,7 +1619,7 @@
                     },
                     "response": [
                         {
-                            "id": "b6cd77d8-4c0c-4976-815b-9383168f2fa1",
+                            "id": "ecd30d9e-186d-46e6-8afb-f5613e40252a",
                             "name": "201",
                             "originalRequest": {
                                 "url": {
@@ -2061,7 +1667,7 @@
                     "description": "",
                     "item": [
                         {
-                            "id": "ff179b6a-ac01-4b97-a8ad-74a9c5628919",
+                            "id": "dc5df881-ce9a-485f-b2f4-1379c8cc26a4",
                             "name": "File Controller find One",
                             "request": {
                                 "name": "File Controller find One",
@@ -2094,7 +1700,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "b5f45f81-5c7c-4f5a-8846-ab4dd5bc6113",
+                                    "id": "9d8da4c8-8cab-41da-aff1-60f2f1328eac",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -2135,7 +1741,7 @@
                             }
                         },
                         {
-                            "id": "a35ece48-288f-4a01-9e1e-628389ea6a42",
+                            "id": "f55a2e18-046e-4e5f-853c-dbc7fc7fd6d6",
                             "name": "File Controller update",
                             "request": {
                                 "name": "File Controller update",
@@ -2183,7 +1789,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "e664b5d5-ceb2-42a3-af79-87e0910e8d90",
+                                    "id": "fbbf88e4-13a6-450a-8e88-8079caa5ba31",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -2239,7 +1845,7 @@
                             }
                         },
                         {
-                            "id": "71b02afa-d11e-4ff6-b0cd-7fd3d6155877",
+                            "id": "c307d624-f75d-4887-ac06-11dc08ce64c5",
                             "name": "File Controller remove",
                             "request": {
                                 "name": "File Controller remove",
@@ -2272,7 +1878,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "982378df-7d6a-44fa-8e6f-bf623345305b",
+                                    "id": "37df671a-4972-4e76-a37c-ce50a8791b91",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -2319,7 +1925,7 @@
                     "description": "",
                     "item": [
                         {
-                            "id": "d785e503-a019-4ee0-93c0-66f8a5c01ca5",
+                            "id": "4d41d5d6-d136-46b0-8f15-193306a54d00",
                             "name": "File Controller delete Files",
                             "request": {
                                 "name": "File Controller delete Files",
@@ -2341,7 +1947,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "b7dbf495-4d72-4f57-8c7e-366cb935159c",
+                                    "id": "f64b7997-1668-460e-8932-e0f1a9964f7b",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -2383,7 +1989,7 @@
                     "description": "",
                     "item": [
                         {
-                            "id": "8fc606aa-4beb-4515-b8e1-3abf2bccb407",
+                            "id": "6d7dba2a-0402-49bc-b4ea-0343a8b93f81",
                             "name": "Analytics Controller admin Analytics",
                             "request": {
                                 "name": "Analytics Controller admin Analytics",
@@ -2405,7 +2011,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "e95f144e-c884-4d96-828f-5310b38926b1",
+                                    "id": "66b9adae-e6ce-479b-b0ca-71e72da43601",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -2437,6 +2043,2476 @@
                     ]
                 }
             ]
+        },
+        {
+            "name": "communities",
+            "description": "",
+            "item": [
+                {
+                    "id": "9ecbbcb8-4a25-45e5-a352-0eca14c6eaae",
+                    "name": "Community Controller create",
+                    "request": {
+                        "name": "Community Controller create",
+                        "description": {},
+                        "url": {
+                            "path": [
+                                "communities"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        },
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "method": "POST",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"<string>\",\n  \"description\": \"<string>\",\n  \"type\": \"<string>\",\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                            "options": {
+                                "raw": {
+                                    "headerFamily": "json",
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "auth": null
+                    },
+                    "response": [
+                        {
+                            "id": "aed6c81a-8e69-4170-a481-9652e52993ea",
+                            "name": "201",
+                            "originalRequest": {
+                                "url": {
+                                    "path": [
+                                        "communities"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "method": "POST",
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"name\": \"<string>\",\n  \"description\": \"<string>\",\n  \"type\": \"<string>\",\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                                    "options": {
+                                        "raw": {
+                                            "headerFamily": "json",
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            },
+                            "status": "Created",
+                            "code": 201,
+                            "header": [],
+                            "cookie": [],
+                            "_postman_previewlanguage": "text"
+                        }
+                    ],
+                    "event": [],
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    }
+                },
+                {
+                    "id": "c3860ed9-97b1-4a2a-9986-4bf43dae08cc",
+                    "name": "Community Controller find All",
+                    "request": {
+                        "name": "Community Controller find All",
+                        "description": {},
+                        "url": {
+                            "path": [
+                                "communities"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        },
+                        "method": "GET",
+                        "body": {},
+                        "auth": null
+                    },
+                    "response": [
+                        {
+                            "id": "b859178d-db47-4d69-a2ac-e19fab3967e4",
+                            "name": "200",
+                            "originalRequest": {
+                                "url": {
+                                    "path": [
+                                        "communities"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "method": "GET",
+                                "body": {}
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "header": [],
+                            "cookie": [],
+                            "_postman_previewlanguage": "text"
+                        }
+                    ],
+                    "event": [],
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    }
+                },
+                {
+                    "name": "{id}",
+                    "description": "",
+                    "item": [
+                        {
+                            "id": "06ecef66-c684-4b4e-8b11-b362fcbc193e",
+                            "name": "Community Controller find One",
+                            "request": {
+                                "name": "Community Controller find One",
+                                "description": {},
+                                "url": {
+                                    "path": [
+                                        "communities",
+                                        ":id"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": [
+                                        {
+                                            "type": "any",
+                                            "value": "<string>",
+                                            "key": "id",
+                                            "disabled": false,
+                                            "description": {
+                                                "content": "(Required) ",
+                                                "type": "text/plain"
+                                            }
+                                        }
+                                    ]
+                                },
+                                "method": "GET",
+                                "body": {},
+                                "auth": null
+                            },
+                            "response": [
+                                {
+                                    "id": "71a2e82c-21e2-41d8-8002-1833de8095d5",
+                                    "name": "200",
+                                    "originalRequest": {
+                                        "url": {
+                                            "path": [
+                                                "communities",
+                                                ":id"
+                                            ],
+                                            "host": [
+                                                "{{baseUrl}}"
+                                            ],
+                                            "query": [],
+                                            "variable": [
+                                                {
+                                                    "disabled": false,
+                                                    "description": {
+                                                        "content": "(Required) ",
+                                                        "type": "text/plain"
+                                                    },
+                                                    "type": "any",
+                                                    "value": "<string>",
+                                                    "key": "id"
+                                                }
+                                            ]
+                                        },
+                                        "method": "GET",
+                                        "body": {}
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "header": [],
+                                    "cookie": [],
+                                    "_postman_previewlanguage": "text"
+                                }
+                            ],
+                            "event": [],
+                            "protocolProfileBehavior": {
+                                "disableBodyPruning": true
+                            }
+                        },
+                        {
+                            "id": "5e47916b-cce0-490d-8cab-8ec9a483c703",
+                            "name": "Community Controller update",
+                            "request": {
+                                "name": "Community Controller update",
+                                "description": {},
+                                "url": {
+                                    "path": [
+                                        "communities",
+                                        ":id"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": [
+                                        {
+                                            "type": "any",
+                                            "value": "<string>",
+                                            "key": "id",
+                                            "disabled": false,
+                                            "description": {
+                                                "content": "(Required) ",
+                                                "type": "text/plain"
+                                            }
+                                        }
+                                    ]
+                                },
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "method": "PATCH",
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"name\": \"<string>\",\n  \"description\": \"<string>\",\n  \"type\": \"<string>\",\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                                    "options": {
+                                        "raw": {
+                                            "headerFamily": "json",
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "auth": null
+                            },
+                            "response": [
+                                {
+                                    "id": "ea23e137-1e87-4dd3-a0cc-7fade1726637",
+                                    "name": "200",
+                                    "originalRequest": {
+                                        "url": {
+                                            "path": [
+                                                "communities",
+                                                ":id"
+                                            ],
+                                            "host": [
+                                                "{{baseUrl}}"
+                                            ],
+                                            "query": [],
+                                            "variable": [
+                                                {
+                                                    "disabled": false,
+                                                    "description": {
+                                                        "content": "(Required) ",
+                                                        "type": "text/plain"
+                                                    },
+                                                    "type": "any",
+                                                    "value": "<string>",
+                                                    "key": "id"
+                                                }
+                                            ]
+                                        },
+                                        "header": [
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "application/json"
+                                            }
+                                        ],
+                                        "method": "PATCH",
+                                        "body": {
+                                            "mode": "raw",
+                                            "raw": "{\n  \"name\": \"<string>\",\n  \"description\": \"<string>\",\n  \"type\": \"<string>\",\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                                            "options": {
+                                                "raw": {
+                                                    "headerFamily": "json",
+                                                    "language": "json"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "header": [],
+                                    "cookie": [],
+                                    "_postman_previewlanguage": "text"
+                                }
+                            ],
+                            "event": [],
+                            "protocolProfileBehavior": {
+                                "disableBodyPruning": true
+                            }
+                        },
+                        {
+                            "id": "5fdcd504-abe3-4d0a-815f-9489a190727c",
+                            "name": "Community Controller remove",
+                            "request": {
+                                "name": "Community Controller remove",
+                                "description": {},
+                                "url": {
+                                    "path": [
+                                        "communities",
+                                        ":id"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": [
+                                        {
+                                            "type": "any",
+                                            "value": "<string>",
+                                            "key": "id",
+                                            "disabled": false,
+                                            "description": {
+                                                "content": "(Required) ",
+                                                "type": "text/plain"
+                                            }
+                                        }
+                                    ]
+                                },
+                                "method": "DELETE",
+                                "body": {},
+                                "auth": null
+                            },
+                            "response": [
+                                {
+                                    "id": "28696396-e5a2-4526-a5d2-6429d7aef1cb",
+                                    "name": "200",
+                                    "originalRequest": {
+                                        "url": {
+                                            "path": [
+                                                "communities",
+                                                ":id"
+                                            ],
+                                            "host": [
+                                                "{{baseUrl}}"
+                                            ],
+                                            "query": [],
+                                            "variable": [
+                                                {
+                                                    "disabled": false,
+                                                    "description": {
+                                                        "content": "(Required) ",
+                                                        "type": "text/plain"
+                                                    },
+                                                    "type": "any",
+                                                    "value": "<string>",
+                                                    "key": "id"
+                                                }
+                                            ]
+                                        },
+                                        "method": "DELETE",
+                                        "body": {}
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "header": [],
+                                    "cookie": [],
+                                    "_postman_previewlanguage": "text"
+                                }
+                            ],
+                            "event": [],
+                            "protocolProfileBehavior": {
+                                "disableBodyPruning": true
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "community-members",
+            "description": "",
+            "item": [
+                {
+                    "id": "12605633-0d48-4d74-851e-459f207fd7bf",
+                    "name": "Community Member Controller create",
+                    "request": {
+                        "name": "Community Member Controller create",
+                        "description": {},
+                        "url": {
+                            "path": [
+                                "community-members"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        },
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "method": "POST",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"customerId\": \"<string>\",\n  \"communityId\": \"<string>\",\n  \"userType\": \"ADMIN\",\n  \"status\": \"BLOCKED\"\n}",
+                            "options": {
+                                "raw": {
+                                    "headerFamily": "json",
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "auth": null
+                    },
+                    "response": [
+                        {
+                            "id": "adf4bf28-f8fe-402f-93d8-ee8d13f7946d",
+                            "name": "201",
+                            "originalRequest": {
+                                "url": {
+                                    "path": [
+                                        "community-members"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "method": "POST",
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"customerId\": \"<string>\",\n  \"communityId\": \"<string>\",\n  \"userType\": \"ADMIN\",\n  \"status\": \"BLOCKED\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "headerFamily": "json",
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            },
+                            "status": "Created",
+                            "code": 201,
+                            "header": [],
+                            "cookie": [],
+                            "_postman_previewlanguage": "text"
+                        }
+                    ],
+                    "event": [],
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    }
+                },
+                {
+                    "id": "c59b9568-f509-439f-b173-9e9eac0e2810",
+                    "name": "Community Member Controller find All",
+                    "request": {
+                        "name": "Community Member Controller find All",
+                        "description": {},
+                        "url": {
+                            "path": [
+                                "community-members"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        },
+                        "method": "GET",
+                        "body": {},
+                        "auth": null
+                    },
+                    "response": [
+                        {
+                            "id": "14acb009-45fd-4732-9b82-24df06658ac3",
+                            "name": "200",
+                            "originalRequest": {
+                                "url": {
+                                    "path": [
+                                        "community-members"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "method": "GET",
+                                "body": {}
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "header": [],
+                            "cookie": [],
+                            "_postman_previewlanguage": "text"
+                        }
+                    ],
+                    "event": [],
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    }
+                },
+                {
+                    "name": "{id}",
+                    "description": "",
+                    "item": [
+                        {
+                            "id": "840a081c-3395-4983-b034-d14d5cf48444",
+                            "name": "Community Member Controller find One",
+                            "request": {
+                                "name": "Community Member Controller find One",
+                                "description": {},
+                                "url": {
+                                    "path": [
+                                        "community-members",
+                                        ":id"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": [
+                                        {
+                                            "type": "any",
+                                            "value": "<string>",
+                                            "key": "id",
+                                            "disabled": false,
+                                            "description": {
+                                                "content": "(Required) ",
+                                                "type": "text/plain"
+                                            }
+                                        }
+                                    ]
+                                },
+                                "method": "GET",
+                                "body": {},
+                                "auth": null
+                            },
+                            "response": [
+                                {
+                                    "id": "09e912a5-a2b3-43a6-bc1d-9df35c6f66c2",
+                                    "name": "200",
+                                    "originalRequest": {
+                                        "url": {
+                                            "path": [
+                                                "community-members",
+                                                ":id"
+                                            ],
+                                            "host": [
+                                                "{{baseUrl}}"
+                                            ],
+                                            "query": [],
+                                            "variable": [
+                                                {
+                                                    "disabled": false,
+                                                    "description": {
+                                                        "content": "(Required) ",
+                                                        "type": "text/plain"
+                                                    },
+                                                    "type": "any",
+                                                    "value": "<string>",
+                                                    "key": "id"
+                                                }
+                                            ]
+                                        },
+                                        "method": "GET",
+                                        "body": {}
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "header": [],
+                                    "cookie": [],
+                                    "_postman_previewlanguage": "text"
+                                }
+                            ],
+                            "event": [],
+                            "protocolProfileBehavior": {
+                                "disableBodyPruning": true
+                            }
+                        },
+                        {
+                            "id": "5f69f24b-7e72-439e-9142-d8bb5ab1fad2",
+                            "name": "Community Member Controller update",
+                            "request": {
+                                "name": "Community Member Controller update",
+                                "description": {},
+                                "url": {
+                                    "path": [
+                                        "community-members",
+                                        ":id"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": [
+                                        {
+                                            "type": "any",
+                                            "value": "<string>",
+                                            "key": "id",
+                                            "disabled": false,
+                                            "description": {
+                                                "content": "(Required) ",
+                                                "type": "text/plain"
+                                            }
+                                        }
+                                    ]
+                                },
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "method": "PATCH",
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"customerId\": \"<string>\",\n  \"communityId\": \"<string>\",\n  \"userType\": \"MODERATOR\",\n  \"status\": \"ACTIVE\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "headerFamily": "json",
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "auth": null
+                            },
+                            "response": [
+                                {
+                                    "id": "309ad2b7-f2ee-4863-9414-bc2b21007978",
+                                    "name": "200",
+                                    "originalRequest": {
+                                        "url": {
+                                            "path": [
+                                                "community-members",
+                                                ":id"
+                                            ],
+                                            "host": [
+                                                "{{baseUrl}}"
+                                            ],
+                                            "query": [],
+                                            "variable": [
+                                                {
+                                                    "disabled": false,
+                                                    "description": {
+                                                        "content": "(Required) ",
+                                                        "type": "text/plain"
+                                                    },
+                                                    "type": "any",
+                                                    "value": "<string>",
+                                                    "key": "id"
+                                                }
+                                            ]
+                                        },
+                                        "header": [
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "application/json"
+                                            }
+                                        ],
+                                        "method": "PATCH",
+                                        "body": {
+                                            "mode": "raw",
+                                            "raw": "{\n  \"customerId\": \"<string>\",\n  \"communityId\": \"<string>\",\n  \"userType\": \"MODERATOR\",\n  \"status\": \"ACTIVE\"\n}",
+                                            "options": {
+                                                "raw": {
+                                                    "headerFamily": "json",
+                                                    "language": "json"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "header": [],
+                                    "cookie": [],
+                                    "_postman_previewlanguage": "text"
+                                }
+                            ],
+                            "event": [],
+                            "protocolProfileBehavior": {
+                                "disableBodyPruning": true
+                            }
+                        },
+                        {
+                            "id": "964a762e-ab43-4ca4-88a7-1e4cca4f609b",
+                            "name": "Community Member Controller remove",
+                            "request": {
+                                "name": "Community Member Controller remove",
+                                "description": {},
+                                "url": {
+                                    "path": [
+                                        "community-members",
+                                        ":id"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": [
+                                        {
+                                            "type": "any",
+                                            "value": "<string>",
+                                            "key": "id",
+                                            "disabled": false,
+                                            "description": {
+                                                "content": "(Required) ",
+                                                "type": "text/plain"
+                                            }
+                                        }
+                                    ]
+                                },
+                                "method": "DELETE",
+                                "body": {},
+                                "auth": null
+                            },
+                            "response": [
+                                {
+                                    "id": "35efaccd-eb00-4a39-b5ea-4c6cf8403fe3",
+                                    "name": "200",
+                                    "originalRequest": {
+                                        "url": {
+                                            "path": [
+                                                "community-members",
+                                                ":id"
+                                            ],
+                                            "host": [
+                                                "{{baseUrl}}"
+                                            ],
+                                            "query": [],
+                                            "variable": [
+                                                {
+                                                    "disabled": false,
+                                                    "description": {
+                                                        "content": "(Required) ",
+                                                        "type": "text/plain"
+                                                    },
+                                                    "type": "any",
+                                                    "value": "<string>",
+                                                    "key": "id"
+                                                }
+                                            ]
+                                        },
+                                        "method": "DELETE",
+                                        "body": {}
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "header": [],
+                                    "cookie": [],
+                                    "_postman_previewlanguage": "text"
+                                }
+                            ],
+                            "event": [],
+                            "protocolProfileBehavior": {
+                                "disableBodyPruning": true
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "community-posts",
+            "description": "",
+            "item": [
+                {
+                    "id": "ee748e10-ffd3-4a7e-bf83-a0c99e58cbe9",
+                    "name": "Community Post Controller create",
+                    "request": {
+                        "name": "Community Post Controller create",
+                        "description": {},
+                        "url": {
+                            "path": [
+                                "community-posts"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        },
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "method": "POST",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"communityId\": \"<string>\",\n  \"type\": [\n    \"PRODUCT\",\n    \"IMG\"\n  ],\n  \"text\": \"<string>\"\n}",
+                            "options": {
+                                "raw": {
+                                    "headerFamily": "json",
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "auth": null
+                    },
+                    "response": [
+                        {
+                            "id": "061e01e2-1061-4156-9cf8-fdb4719cfb18",
+                            "name": "201",
+                            "originalRequest": {
+                                "url": {
+                                    "path": [
+                                        "community-posts"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "method": "POST",
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"communityId\": \"<string>\",\n  \"type\": [\n    \"PRODUCT\",\n    \"IMG\"\n  ],\n  \"text\": \"<string>\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "headerFamily": "json",
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            },
+                            "status": "Created",
+                            "code": 201,
+                            "header": [],
+                            "cookie": [],
+                            "_postman_previewlanguage": "text"
+                        }
+                    ],
+                    "event": [],
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    }
+                },
+                {
+                    "id": "39a749bc-f07b-4e90-a704-92ae327b6fe7",
+                    "name": "Community Post Controller find All",
+                    "request": {
+                        "name": "Community Post Controller find All",
+                        "description": {},
+                        "url": {
+                            "path": [
+                                "community-posts"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        },
+                        "method": "GET",
+                        "body": {},
+                        "auth": null
+                    },
+                    "response": [
+                        {
+                            "id": "1cf1c5a0-f795-433e-ab67-8c103c3992eb",
+                            "name": "200",
+                            "originalRequest": {
+                                "url": {
+                                    "path": [
+                                        "community-posts"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "method": "GET",
+                                "body": {}
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "header": [],
+                            "cookie": [],
+                            "_postman_previewlanguage": "text"
+                        }
+                    ],
+                    "event": [],
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    }
+                },
+                {
+                    "name": "{id}",
+                    "description": "",
+                    "item": [
+                        {
+                            "id": "343f585e-247d-4f34-85e7-617516a3f3f3",
+                            "name": "Community Post Controller find One",
+                            "request": {
+                                "name": "Community Post Controller find One",
+                                "description": {},
+                                "url": {
+                                    "path": [
+                                        "community-posts",
+                                        ":id"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": [
+                                        {
+                                            "type": "any",
+                                            "value": "<string>",
+                                            "key": "id",
+                                            "disabled": false,
+                                            "description": {
+                                                "content": "(Required) ",
+                                                "type": "text/plain"
+                                            }
+                                        }
+                                    ]
+                                },
+                                "method": "GET",
+                                "body": {},
+                                "auth": null
+                            },
+                            "response": [
+                                {
+                                    "id": "4aa21845-0462-4839-b7a1-9cf156f0c37c",
+                                    "name": "200",
+                                    "originalRequest": {
+                                        "url": {
+                                            "path": [
+                                                "community-posts",
+                                                ":id"
+                                            ],
+                                            "host": [
+                                                "{{baseUrl}}"
+                                            ],
+                                            "query": [],
+                                            "variable": [
+                                                {
+                                                    "disabled": false,
+                                                    "description": {
+                                                        "content": "(Required) ",
+                                                        "type": "text/plain"
+                                                    },
+                                                    "type": "any",
+                                                    "value": "<string>",
+                                                    "key": "id"
+                                                }
+                                            ]
+                                        },
+                                        "method": "GET",
+                                        "body": {}
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "header": [],
+                                    "cookie": [],
+                                    "_postman_previewlanguage": "text"
+                                }
+                            ],
+                            "event": [],
+                            "protocolProfileBehavior": {
+                                "disableBodyPruning": true
+                            }
+                        },
+                        {
+                            "id": "bf3ec42c-24f5-4123-a6c6-07f83bbb20ef",
+                            "name": "Community Post Controller update",
+                            "request": {
+                                "name": "Community Post Controller update",
+                                "description": {},
+                                "url": {
+                                    "path": [
+                                        "community-posts",
+                                        ":id"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": [
+                                        {
+                                            "type": "any",
+                                            "value": "<string>",
+                                            "key": "id",
+                                            "disabled": false,
+                                            "description": {
+                                                "content": "(Required) ",
+                                                "type": "text/plain"
+                                            }
+                                        }
+                                    ]
+                                },
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "method": "PATCH",
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"communityId\": \"<string>\",\n  \"type\": [\n    \"PRODUCT\",\n    \"IMG\"\n  ],\n  \"text\": \"<string>\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "headerFamily": "json",
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "auth": null
+                            },
+                            "response": [
+                                {
+                                    "id": "f2b60089-dffd-4195-a252-34ea4204ecea",
+                                    "name": "200",
+                                    "originalRequest": {
+                                        "url": {
+                                            "path": [
+                                                "community-posts",
+                                                ":id"
+                                            ],
+                                            "host": [
+                                                "{{baseUrl}}"
+                                            ],
+                                            "query": [],
+                                            "variable": [
+                                                {
+                                                    "disabled": false,
+                                                    "description": {
+                                                        "content": "(Required) ",
+                                                        "type": "text/plain"
+                                                    },
+                                                    "type": "any",
+                                                    "value": "<string>",
+                                                    "key": "id"
+                                                }
+                                            ]
+                                        },
+                                        "header": [
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "application/json"
+                                            }
+                                        ],
+                                        "method": "PATCH",
+                                        "body": {
+                                            "mode": "raw",
+                                            "raw": "{\n  \"communityId\": \"<string>\",\n  \"type\": [\n    \"PRODUCT\",\n    \"IMG\"\n  ],\n  \"text\": \"<string>\"\n}",
+                                            "options": {
+                                                "raw": {
+                                                    "headerFamily": "json",
+                                                    "language": "json"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "header": [],
+                                    "cookie": [],
+                                    "_postman_previewlanguage": "text"
+                                }
+                            ],
+                            "event": [],
+                            "protocolProfileBehavior": {
+                                "disableBodyPruning": true
+                            }
+                        },
+                        {
+                            "id": "fafe38b8-a8ee-46e8-80c5-ee605b37d0ee",
+                            "name": "Community Post Controller remove",
+                            "request": {
+                                "name": "Community Post Controller remove",
+                                "description": {},
+                                "url": {
+                                    "path": [
+                                        "community-posts",
+                                        ":id"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": [
+                                        {
+                                            "type": "any",
+                                            "value": "<string>",
+                                            "key": "id",
+                                            "disabled": false,
+                                            "description": {
+                                                "content": "(Required) ",
+                                                "type": "text/plain"
+                                            }
+                                        }
+                                    ]
+                                },
+                                "method": "DELETE",
+                                "body": {},
+                                "auth": null
+                            },
+                            "response": [
+                                {
+                                    "id": "a0266bd8-50f7-4c34-80ff-076452b7a651",
+                                    "name": "200",
+                                    "originalRequest": {
+                                        "url": {
+                                            "path": [
+                                                "community-posts",
+                                                ":id"
+                                            ],
+                                            "host": [
+                                                "{{baseUrl}}"
+                                            ],
+                                            "query": [],
+                                            "variable": [
+                                                {
+                                                    "disabled": false,
+                                                    "description": {
+                                                        "content": "(Required) ",
+                                                        "type": "text/plain"
+                                                    },
+                                                    "type": "any",
+                                                    "value": "<string>",
+                                                    "key": "id"
+                                                }
+                                            ]
+                                        },
+                                        "method": "DELETE",
+                                        "body": {}
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "header": [],
+                                    "cookie": [],
+                                    "_postman_previewlanguage": "text"
+                                }
+                            ],
+                            "event": [],
+                            "protocolProfileBehavior": {
+                                "disableBodyPruning": true
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "community-comments",
+            "description": "",
+            "item": [
+                {
+                    "id": "fbafe160-8063-423c-adec-cebb0cce4e60",
+                    "name": "Community Comment Controller create",
+                    "request": {
+                        "name": "Community Comment Controller create",
+                        "description": {},
+                        "url": {
+                            "path": [
+                                "community-comments"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        },
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "method": "POST",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"postId\": \"<string>\",\n  \"communityId\": \"<string>\",\n  \"body\": \"<string>\",\n  \"parentId\": \"<string>\"\n}",
+                            "options": {
+                                "raw": {
+                                    "headerFamily": "json",
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "auth": null
+                    },
+                    "response": [
+                        {
+                            "id": "fa3819b5-aa89-4125-a9e3-0ccd2db82397",
+                            "name": "201",
+                            "originalRequest": {
+                                "url": {
+                                    "path": [
+                                        "community-comments"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "method": "POST",
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"postId\": \"<string>\",\n  \"communityId\": \"<string>\",\n  \"body\": \"<string>\",\n  \"parentId\": \"<string>\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "headerFamily": "json",
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            },
+                            "status": "Created",
+                            "code": 201,
+                            "header": [],
+                            "cookie": [],
+                            "_postman_previewlanguage": "text"
+                        }
+                    ],
+                    "event": [],
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    }
+                },
+                {
+                    "id": "eb426585-f430-4813-b839-4359968e494d",
+                    "name": "Community Comment Controller find All",
+                    "request": {
+                        "name": "Community Comment Controller find All",
+                        "description": {},
+                        "url": {
+                            "path": [
+                                "community-comments"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        },
+                        "method": "GET",
+                        "body": {},
+                        "auth": null
+                    },
+                    "response": [
+                        {
+                            "id": "51d42fea-e423-4f0d-8857-9af3e7ba8703",
+                            "name": "200",
+                            "originalRequest": {
+                                "url": {
+                                    "path": [
+                                        "community-comments"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "method": "GET",
+                                "body": {}
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "header": [],
+                            "cookie": [],
+                            "_postman_previewlanguage": "text"
+                        }
+                    ],
+                    "event": [],
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    }
+                },
+                {
+                    "name": "{id}",
+                    "description": "",
+                    "item": [
+                        {
+                            "id": "abd20ae8-6e37-4e51-8ca1-3a50433529bb",
+                            "name": "Community Comment Controller find One",
+                            "request": {
+                                "name": "Community Comment Controller find One",
+                                "description": {},
+                                "url": {
+                                    "path": [
+                                        "community-comments",
+                                        ":id"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": [
+                                        {
+                                            "type": "any",
+                                            "value": "<string>",
+                                            "key": "id",
+                                            "disabled": false,
+                                            "description": {
+                                                "content": "(Required) ",
+                                                "type": "text/plain"
+                                            }
+                                        }
+                                    ]
+                                },
+                                "method": "GET",
+                                "body": {},
+                                "auth": null
+                            },
+                            "response": [
+                                {
+                                    "id": "d39b4482-7ff1-41a1-a58c-61023371a9d2",
+                                    "name": "200",
+                                    "originalRequest": {
+                                        "url": {
+                                            "path": [
+                                                "community-comments",
+                                                ":id"
+                                            ],
+                                            "host": [
+                                                "{{baseUrl}}"
+                                            ],
+                                            "query": [],
+                                            "variable": [
+                                                {
+                                                    "disabled": false,
+                                                    "description": {
+                                                        "content": "(Required) ",
+                                                        "type": "text/plain"
+                                                    },
+                                                    "type": "any",
+                                                    "value": "<string>",
+                                                    "key": "id"
+                                                }
+                                            ]
+                                        },
+                                        "method": "GET",
+                                        "body": {}
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "header": [],
+                                    "cookie": [],
+                                    "_postman_previewlanguage": "text"
+                                }
+                            ],
+                            "event": [],
+                            "protocolProfileBehavior": {
+                                "disableBodyPruning": true
+                            }
+                        },
+                        {
+                            "id": "37c528b4-c0fe-4d0e-b109-27b459b694c0",
+                            "name": "Community Comment Controller update",
+                            "request": {
+                                "name": "Community Comment Controller update",
+                                "description": {},
+                                "url": {
+                                    "path": [
+                                        "community-comments",
+                                        ":id"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": [
+                                        {
+                                            "type": "any",
+                                            "value": "<string>",
+                                            "key": "id",
+                                            "disabled": false,
+                                            "description": {
+                                                "content": "(Required) ",
+                                                "type": "text/plain"
+                                            }
+                                        }
+                                    ]
+                                },
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "method": "PATCH",
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"postId\": \"<string>\",\n  \"communityId\": \"<string>\",\n  \"body\": \"<string>\",\n  \"parentId\": \"<string>\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "headerFamily": "json",
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "auth": null
+                            },
+                            "response": [
+                                {
+                                    "id": "37d46000-5d7f-4bba-a75b-966cdce6faf7",
+                                    "name": "200",
+                                    "originalRequest": {
+                                        "url": {
+                                            "path": [
+                                                "community-comments",
+                                                ":id"
+                                            ],
+                                            "host": [
+                                                "{{baseUrl}}"
+                                            ],
+                                            "query": [],
+                                            "variable": [
+                                                {
+                                                    "disabled": false,
+                                                    "description": {
+                                                        "content": "(Required) ",
+                                                        "type": "text/plain"
+                                                    },
+                                                    "type": "any",
+                                                    "value": "<string>",
+                                                    "key": "id"
+                                                }
+                                            ]
+                                        },
+                                        "header": [
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "application/json"
+                                            }
+                                        ],
+                                        "method": "PATCH",
+                                        "body": {
+                                            "mode": "raw",
+                                            "raw": "{\n  \"postId\": \"<string>\",\n  \"communityId\": \"<string>\",\n  \"body\": \"<string>\",\n  \"parentId\": \"<string>\"\n}",
+                                            "options": {
+                                                "raw": {
+                                                    "headerFamily": "json",
+                                                    "language": "json"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "header": [],
+                                    "cookie": [],
+                                    "_postman_previewlanguage": "text"
+                                }
+                            ],
+                            "event": [],
+                            "protocolProfileBehavior": {
+                                "disableBodyPruning": true
+                            }
+                        },
+                        {
+                            "id": "b599dd9b-3104-44b3-8ec3-d437f061f647",
+                            "name": "Community Comment Controller remove",
+                            "request": {
+                                "name": "Community Comment Controller remove",
+                                "description": {},
+                                "url": {
+                                    "path": [
+                                        "community-comments",
+                                        ":id"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": [
+                                        {
+                                            "type": "any",
+                                            "value": "<string>",
+                                            "key": "id",
+                                            "disabled": false,
+                                            "description": {
+                                                "content": "(Required) ",
+                                                "type": "text/plain"
+                                            }
+                                        }
+                                    ]
+                                },
+                                "method": "DELETE",
+                                "body": {},
+                                "auth": null
+                            },
+                            "response": [
+                                {
+                                    "id": "adf81967-3b31-4000-90f3-1c8c7b9fe898",
+                                    "name": "200",
+                                    "originalRequest": {
+                                        "url": {
+                                            "path": [
+                                                "community-comments",
+                                                ":id"
+                                            ],
+                                            "host": [
+                                                "{{baseUrl}}"
+                                            ],
+                                            "query": [],
+                                            "variable": [
+                                                {
+                                                    "disabled": false,
+                                                    "description": {
+                                                        "content": "(Required) ",
+                                                        "type": "text/plain"
+                                                    },
+                                                    "type": "any",
+                                                    "value": "<string>",
+                                                    "key": "id"
+                                                }
+                                            ]
+                                        },
+                                        "method": "DELETE",
+                                        "body": {}
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "header": [],
+                                    "cookie": [],
+                                    "_postman_previewlanguage": "text"
+                                }
+                            ],
+                            "event": [],
+                            "protocolProfileBehavior": {
+                                "disableBodyPruning": true
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "community-reactions",
+            "description": "",
+            "item": [
+                {
+                    "name": "toggle",
+                    "description": "",
+                    "item": [
+                        {
+                            "id": "e1ccdef0-683d-4712-b464-6ec1a064bf83",
+                            "name": "Community Reaction Controller toggle",
+                            "request": {
+                                "name": "Community Reaction Controller toggle",
+                                "description": {},
+                                "url": {
+                                    "path": [
+                                        "community-reactions",
+                                        "toggle"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "method": "POST",
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"postId\": \"<string>\",\n  \"communityId\": \"<string>\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "headerFamily": "json",
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "auth": null
+                            },
+                            "response": [
+                                {
+                                    "id": "50a98887-a493-4917-b4c6-928f8025685c",
+                                    "name": "201",
+                                    "originalRequest": {
+                                        "url": {
+                                            "path": [
+                                                "community-reactions",
+                                                "toggle"
+                                            ],
+                                            "host": [
+                                                "{{baseUrl}}"
+                                            ],
+                                            "query": [],
+                                            "variable": []
+                                        },
+                                        "header": [
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "application/json"
+                                            }
+                                        ],
+                                        "method": "POST",
+                                        "body": {
+                                            "mode": "raw",
+                                            "raw": "{\n  \"postId\": \"<string>\",\n  \"communityId\": \"<string>\"\n}",
+                                            "options": {
+                                                "raw": {
+                                                    "headerFamily": "json",
+                                                    "language": "json"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "status": "Created",
+                                    "code": 201,
+                                    "header": [],
+                                    "cookie": [],
+                                    "_postman_previewlanguage": "text"
+                                }
+                            ],
+                            "event": [],
+                            "protocolProfileBehavior": {
+                                "disableBodyPruning": true
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "745be437-463b-4766-bf65-6be9c0320756",
+                    "name": "Community Reaction Controller find All",
+                    "request": {
+                        "name": "Community Reaction Controller find All",
+                        "description": {},
+                        "url": {
+                            "path": [
+                                "community-reactions"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        },
+                        "method": "GET",
+                        "body": {},
+                        "auth": null
+                    },
+                    "response": [
+                        {
+                            "id": "d6219e33-4966-4c84-bb22-7017363fb364",
+                            "name": "200",
+                            "originalRequest": {
+                                "url": {
+                                    "path": [
+                                        "community-reactions"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "method": "GET",
+                                "body": {}
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "header": [],
+                            "cookie": [],
+                            "_postman_previewlanguage": "text"
+                        }
+                    ],
+                    "event": [],
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    }
+                },
+                {
+                    "name": "{id}",
+                    "description": "",
+                    "item": [
+                        {
+                            "id": "e96252a5-8b4e-42ca-9f9d-67b7e87af40f",
+                            "name": "Community Reaction Controller find One",
+                            "request": {
+                                "name": "Community Reaction Controller find One",
+                                "description": {},
+                                "url": {
+                                    "path": [
+                                        "community-reactions",
+                                        ":id"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": [
+                                        {
+                                            "type": "any",
+                                            "value": "<string>",
+                                            "key": "id",
+                                            "disabled": false,
+                                            "description": {
+                                                "content": "(Required) ",
+                                                "type": "text/plain"
+                                            }
+                                        }
+                                    ]
+                                },
+                                "method": "GET",
+                                "body": {},
+                                "auth": null
+                            },
+                            "response": [
+                                {
+                                    "id": "fd465ae9-25c1-4795-a82b-7ccb602cd1c6",
+                                    "name": "200",
+                                    "originalRequest": {
+                                        "url": {
+                                            "path": [
+                                                "community-reactions",
+                                                ":id"
+                                            ],
+                                            "host": [
+                                                "{{baseUrl}}"
+                                            ],
+                                            "query": [],
+                                            "variable": [
+                                                {
+                                                    "disabled": false,
+                                                    "description": {
+                                                        "content": "(Required) ",
+                                                        "type": "text/plain"
+                                                    },
+                                                    "type": "any",
+                                                    "value": "<string>",
+                                                    "key": "id"
+                                                }
+                                            ]
+                                        },
+                                        "method": "GET",
+                                        "body": {}
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "header": [],
+                                    "cookie": [],
+                                    "_postman_previewlanguage": "text"
+                                }
+                            ],
+                            "event": [],
+                            "protocolProfileBehavior": {
+                                "disableBodyPruning": true
+                            }
+                        },
+                        {
+                            "id": "428cf5ae-2655-409c-88ba-f987d07d5a49",
+                            "name": "Community Reaction Controller remove",
+                            "request": {
+                                "name": "Community Reaction Controller remove",
+                                "description": {},
+                                "url": {
+                                    "path": [
+                                        "community-reactions",
+                                        ":id"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": [
+                                        {
+                                            "type": "any",
+                                            "value": "<string>",
+                                            "key": "id",
+                                            "disabled": false,
+                                            "description": {
+                                                "content": "(Required) ",
+                                                "type": "text/plain"
+                                            }
+                                        }
+                                    ]
+                                },
+                                "method": "DELETE",
+                                "body": {},
+                                "auth": null
+                            },
+                            "response": [
+                                {
+                                    "id": "01e690a3-a4eb-4dbd-ac6a-c554adf633bb",
+                                    "name": "200",
+                                    "originalRequest": {
+                                        "url": {
+                                            "path": [
+                                                "community-reactions",
+                                                ":id"
+                                            ],
+                                            "host": [
+                                                "{{baseUrl}}"
+                                            ],
+                                            "query": [],
+                                            "variable": [
+                                                {
+                                                    "disabled": false,
+                                                    "description": {
+                                                        "content": "(Required) ",
+                                                        "type": "text/plain"
+                                                    },
+                                                    "type": "any",
+                                                    "value": "<string>",
+                                                    "key": "id"
+                                                }
+                                            ]
+                                        },
+                                        "method": "DELETE",
+                                        "body": {}
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "header": [],
+                                    "cookie": [],
+                                    "_postman_previewlanguage": "text"
+                                }
+                            ],
+                            "event": [],
+                            "protocolProfileBehavior": {
+                                "disableBodyPruning": true
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "community-reposts",
+            "description": "",
+            "item": [
+                {
+                    "name": "toggle",
+                    "description": "",
+                    "item": [
+                        {
+                            "id": "66024a75-4de9-4722-bf11-ffac4781a0ff",
+                            "name": "Community Repost Controller toggle",
+                            "request": {
+                                "name": "Community Repost Controller toggle",
+                                "description": {},
+                                "url": {
+                                    "path": [
+                                        "community-reposts",
+                                        "toggle"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "method": "POST",
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"postId\": \"<string>\",\n  \"communityId\": \"<string>\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "headerFamily": "json",
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "auth": null
+                            },
+                            "response": [
+                                {
+                                    "id": "b6384417-33f2-42ee-a2e4-3e6d776c41ff",
+                                    "name": "201",
+                                    "originalRequest": {
+                                        "url": {
+                                            "path": [
+                                                "community-reposts",
+                                                "toggle"
+                                            ],
+                                            "host": [
+                                                "{{baseUrl}}"
+                                            ],
+                                            "query": [],
+                                            "variable": []
+                                        },
+                                        "header": [
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "application/json"
+                                            }
+                                        ],
+                                        "method": "POST",
+                                        "body": {
+                                            "mode": "raw",
+                                            "raw": "{\n  \"postId\": \"<string>\",\n  \"communityId\": \"<string>\"\n}",
+                                            "options": {
+                                                "raw": {
+                                                    "headerFamily": "json",
+                                                    "language": "json"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "status": "Created",
+                                    "code": 201,
+                                    "header": [],
+                                    "cookie": [],
+                                    "_postman_previewlanguage": "text"
+                                }
+                            ],
+                            "event": [],
+                            "protocolProfileBehavior": {
+                                "disableBodyPruning": true
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "c4c17c6c-adc7-4f5b-a118-2e776e2329c5",
+                    "name": "Community Repost Controller find All",
+                    "request": {
+                        "name": "Community Repost Controller find All",
+                        "description": {},
+                        "url": {
+                            "path": [
+                                "community-reposts"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        },
+                        "method": "GET",
+                        "body": {},
+                        "auth": null
+                    },
+                    "response": [
+                        {
+                            "id": "1fda2d0a-68d5-4780-ab43-f7ccba19d896",
+                            "name": "200",
+                            "originalRequest": {
+                                "url": {
+                                    "path": [
+                                        "community-reposts"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "method": "GET",
+                                "body": {}
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "header": [],
+                            "cookie": [],
+                            "_postman_previewlanguage": "text"
+                        }
+                    ],
+                    "event": [],
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    }
+                },
+                {
+                    "name": "{id}",
+                    "description": "",
+                    "item": [
+                        {
+                            "id": "eb5cde36-fa84-4749-a579-d9fe9795f9d9",
+                            "name": "Community Repost Controller find One",
+                            "request": {
+                                "name": "Community Repost Controller find One",
+                                "description": {},
+                                "url": {
+                                    "path": [
+                                        "community-reposts",
+                                        ":id"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": [
+                                        {
+                                            "type": "any",
+                                            "value": "<string>",
+                                            "key": "id",
+                                            "disabled": false,
+                                            "description": {
+                                                "content": "(Required) ",
+                                                "type": "text/plain"
+                                            }
+                                        }
+                                    ]
+                                },
+                                "method": "GET",
+                                "body": {},
+                                "auth": null
+                            },
+                            "response": [
+                                {
+                                    "id": "4e5d7a5a-aa59-4e7b-b485-d7f2ec858836",
+                                    "name": "200",
+                                    "originalRequest": {
+                                        "url": {
+                                            "path": [
+                                                "community-reposts",
+                                                ":id"
+                                            ],
+                                            "host": [
+                                                "{{baseUrl}}"
+                                            ],
+                                            "query": [],
+                                            "variable": [
+                                                {
+                                                    "disabled": false,
+                                                    "description": {
+                                                        "content": "(Required) ",
+                                                        "type": "text/plain"
+                                                    },
+                                                    "type": "any",
+                                                    "value": "<string>",
+                                                    "key": "id"
+                                                }
+                                            ]
+                                        },
+                                        "method": "GET",
+                                        "body": {}
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "header": [],
+                                    "cookie": [],
+                                    "_postman_previewlanguage": "text"
+                                }
+                            ],
+                            "event": [],
+                            "protocolProfileBehavior": {
+                                "disableBodyPruning": true
+                            }
+                        },
+                        {
+                            "id": "4ddec9a3-f9c1-49df-8793-0a833632fe58",
+                            "name": "Community Repost Controller remove",
+                            "request": {
+                                "name": "Community Repost Controller remove",
+                                "description": {},
+                                "url": {
+                                    "path": [
+                                        "community-reposts",
+                                        ":id"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": [
+                                        {
+                                            "type": "any",
+                                            "value": "<string>",
+                                            "key": "id",
+                                            "disabled": false,
+                                            "description": {
+                                                "content": "(Required) ",
+                                                "type": "text/plain"
+                                            }
+                                        }
+                                    ]
+                                },
+                                "method": "DELETE",
+                                "body": {},
+                                "auth": null
+                            },
+                            "response": [
+                                {
+                                    "id": "5c3f85a9-0494-44da-8908-d393045d1a95",
+                                    "name": "200",
+                                    "originalRequest": {
+                                        "url": {
+                                            "path": [
+                                                "community-reposts",
+                                                ":id"
+                                            ],
+                                            "host": [
+                                                "{{baseUrl}}"
+                                            ],
+                                            "query": [],
+                                            "variable": [
+                                                {
+                                                    "disabled": false,
+                                                    "description": {
+                                                        "content": "(Required) ",
+                                                        "type": "text/plain"
+                                                    },
+                                                    "type": "any",
+                                                    "value": "<string>",
+                                                    "key": "id"
+                                                }
+                                            ]
+                                        },
+                                        "method": "DELETE",
+                                        "body": {}
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "header": [],
+                                    "cookie": [],
+                                    "_postman_previewlanguage": "text"
+                                }
+                            ],
+                            "event": [],
+                            "protocolProfileBehavior": {
+                                "disableBodyPruning": true
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "community-starred-posts",
+            "description": "",
+            "item": [
+                {
+                    "name": "toggle",
+                    "description": "",
+                    "item": [
+                        {
+                            "id": "863ca02b-ad05-4fd5-b30c-8ec7c35d3f8a",
+                            "name": "Community Starred Post Controller toggle",
+                            "request": {
+                                "name": "Community Starred Post Controller toggle",
+                                "description": {},
+                                "url": {
+                                    "path": [
+                                        "community-starred-posts",
+                                        "toggle"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "method": "POST",
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"postId\": \"<string>\",\n  \"communityId\": \"<string>\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "headerFamily": "json",
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "auth": null
+                            },
+                            "response": [
+                                {
+                                    "id": "bc18c98c-5f2d-40b5-b72d-6951cad614fd",
+                                    "name": "201",
+                                    "originalRequest": {
+                                        "url": {
+                                            "path": [
+                                                "community-starred-posts",
+                                                "toggle"
+                                            ],
+                                            "host": [
+                                                "{{baseUrl}}"
+                                            ],
+                                            "query": [],
+                                            "variable": []
+                                        },
+                                        "header": [
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "application/json"
+                                            }
+                                        ],
+                                        "method": "POST",
+                                        "body": {
+                                            "mode": "raw",
+                                            "raw": "{\n  \"postId\": \"<string>\",\n  \"communityId\": \"<string>\"\n}",
+                                            "options": {
+                                                "raw": {
+                                                    "headerFamily": "json",
+                                                    "language": "json"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "status": "Created",
+                                    "code": 201,
+                                    "header": [],
+                                    "cookie": [],
+                                    "_postman_previewlanguage": "text"
+                                }
+                            ],
+                            "event": [],
+                            "protocolProfileBehavior": {
+                                "disableBodyPruning": true
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "cf0a4a78-261b-4038-9c76-347d1121ea8f",
+                    "name": "Community Starred Post Controller find All",
+                    "request": {
+                        "name": "Community Starred Post Controller find All",
+                        "description": {},
+                        "url": {
+                            "path": [
+                                "community-starred-posts"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        },
+                        "method": "GET",
+                        "body": {},
+                        "auth": null
+                    },
+                    "response": [
+                        {
+                            "id": "9bca418b-720a-4caa-8764-f66333c4ac81",
+                            "name": "200",
+                            "originalRequest": {
+                                "url": {
+                                    "path": [
+                                        "community-starred-posts"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "method": "GET",
+                                "body": {}
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "header": [],
+                            "cookie": [],
+                            "_postman_previewlanguage": "text"
+                        }
+                    ],
+                    "event": [],
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    }
+                },
+                {
+                    "name": "{id}",
+                    "description": "",
+                    "item": [
+                        {
+                            "id": "b8e17d13-7ccf-46b4-8721-b4672f6b7eaa",
+                            "name": "Community Starred Post Controller find One",
+                            "request": {
+                                "name": "Community Starred Post Controller find One",
+                                "description": {},
+                                "url": {
+                                    "path": [
+                                        "community-starred-posts",
+                                        ":id"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": [
+                                        {
+                                            "type": "any",
+                                            "value": "<string>",
+                                            "key": "id",
+                                            "disabled": false,
+                                            "description": {
+                                                "content": "(Required) ",
+                                                "type": "text/plain"
+                                            }
+                                        }
+                                    ]
+                                },
+                                "method": "GET",
+                                "body": {},
+                                "auth": null
+                            },
+                            "response": [
+                                {
+                                    "id": "56807da8-c4c0-4fe5-9a53-2f6de0ba9cec",
+                                    "name": "200",
+                                    "originalRequest": {
+                                        "url": {
+                                            "path": [
+                                                "community-starred-posts",
+                                                ":id"
+                                            ],
+                                            "host": [
+                                                "{{baseUrl}}"
+                                            ],
+                                            "query": [],
+                                            "variable": [
+                                                {
+                                                    "disabled": false,
+                                                    "description": {
+                                                        "content": "(Required) ",
+                                                        "type": "text/plain"
+                                                    },
+                                                    "type": "any",
+                                                    "value": "<string>",
+                                                    "key": "id"
+                                                }
+                                            ]
+                                        },
+                                        "method": "GET",
+                                        "body": {}
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "header": [],
+                                    "cookie": [],
+                                    "_postman_previewlanguage": "text"
+                                }
+                            ],
+                            "event": [],
+                            "protocolProfileBehavior": {
+                                "disableBodyPruning": true
+                            }
+                        },
+                        {
+                            "id": "4adeb412-d083-4ee8-b1ac-ea2f238a86db",
+                            "name": "Community Starred Post Controller remove",
+                            "request": {
+                                "name": "Community Starred Post Controller remove",
+                                "description": {},
+                                "url": {
+                                    "path": [
+                                        "community-starred-posts",
+                                        ":id"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": [
+                                        {
+                                            "type": "any",
+                                            "value": "<string>",
+                                            "key": "id",
+                                            "disabled": false,
+                                            "description": {
+                                                "content": "(Required) ",
+                                                "type": "text/plain"
+                                            }
+                                        }
+                                    ]
+                                },
+                                "method": "DELETE",
+                                "body": {},
+                                "auth": null
+                            },
+                            "response": [
+                                {
+                                    "id": "5d3c11af-3109-4628-91e6-c066f0ee5f98",
+                                    "name": "200",
+                                    "originalRequest": {
+                                        "url": {
+                                            "path": [
+                                                "community-starred-posts",
+                                                ":id"
+                                            ],
+                                            "host": [
+                                                "{{baseUrl}}"
+                                            ],
+                                            "query": [],
+                                            "variable": [
+                                                {
+                                                    "disabled": false,
+                                                    "description": {
+                                                        "content": "(Required) ",
+                                                        "type": "text/plain"
+                                                    },
+                                                    "type": "any",
+                                                    "value": "<string>",
+                                                    "key": "id"
+                                                }
+                                            ]
+                                        },
+                                        "method": "DELETE",
+                                        "body": {}
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "header": [],
+                                    "cookie": [],
+                                    "_postman_previewlanguage": "text"
+                                }
+                            ],
+                            "event": [],
+                            "protocolProfileBehavior": {
+                                "disableBodyPruning": true
+                            }
+                        }
+                    ]
+                }
+            ]
         }
     ],
     "event": [],
@@ -2447,7 +4523,7 @@
         }
     ],
     "info": {
-        "_postman_id": "9e9774e2-2ca2-4cd9-841c-85712a5cc1ab",
+        "_postman_id": "1d5caa5f-10d0-4f7a-a737-9e64b5f0f4cd",
         "name": "KSMM Api Documentation",
         "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
         "description": {
