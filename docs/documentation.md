@@ -115,3 +115,7 @@ Based on the required features, the `schema.prisma` has been updated with the fo
 - **PaymentMethod:** Stores linked user financial accounts for deposits/withdrawals.
 - **Transaction:** Global financial ledger for payments, payouts, and fees.
 - **PricingConfig:** Admin-controlled parameters for the valuation engine.
+- **Post:** Social media content with polls and media attachments.
+
+## 6. API Reference
+- [Post API Documentation](posts-api-guide.md)

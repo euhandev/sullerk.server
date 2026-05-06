@@ -5,6 +5,17 @@ import prettierConfig from 'eslint-config-prettier';
 import eslintPluginPrettier from 'eslint-plugin-prettier';
 
 export default [
+  {
+    ignores: [
+      'scratch/**',
+      'dist/**',
+      'node_modules/**',
+      'tmp/**',
+      'files/**',
+      'coverage/**',
+      'jest.config.ts',
+    ],
+  },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
@@ -25,6 +36,14 @@ export default [
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          ignoreRestSiblings: true,
+        },
+      ],
 
       // Prettier integration
       'prettier/prettier': [

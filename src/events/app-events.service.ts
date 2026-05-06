@@ -24,4 +24,8 @@ export class AppEvents {
   async bidDeleted(data: any) {
     await this.emitter.emit('bid-deleted', data);
   }
+
+  async fileDeleted(data: { url: string; key?: string }) {
+    await this.emitter.emit('file-deleted', data);
+  }
 }

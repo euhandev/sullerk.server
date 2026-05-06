@@ -7,7 +7,9 @@ Table users {
   username String [unique, not null]
   email String [unique, not null]
   contactNo String [not null, default: '']
-  password String [not null]
+  password String
+  provider AuthProvider [not null, default: 'LOCAL']
+  googleId String [unique]
   lang Lang [not null, default: 'ENG']
   role Role [not null, default: 'CUSTOMER']
   avatar String [default: '']
@@ -52,17 +54,17 @@ Table customers {
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
   user users [not null]
-  items items [not null]
+  listings listings [not null]
   ordersAsBuyer orders [not null]
   ordersAsSeller orders [not null]
   disputes disputes [not null]
   watchlists watchlists [not null]
   paymentMethods payment_methods [not null]
-  ItemHistory item_histories [not null]
+  listingHistory listing_histories [not null]
   Report reports [not null]
   dealsAsBuyer deals [not null]
   dealsAsSeller deals [not null]
-  starredItems starred_items [not null]
+  starredListings starred_listings [not null]
   posts Post [not null]
   reports reposts [not null]
   comments comments [not null]
@@ -122,9 +124,11 @@ Table Post {
   customer customers [not null]
   aiAnalysis String [default: '']
   type PostType[] [not null]
-  text String [default: '']
-  articleUrl String [default: '']
-  files files [not null]
+  description String [default: '']
+  images FileItem[] [not null]
+  externalLink String [default: '']
+  listingId String
+  listing listings
   pollQuestion String
   pollOptions pollOptions [not null]
   pollExpiresAt DateTime
@@ -136,6 +140,7 @@ Table Post {
   pollVotes poll_votes [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
+  files files [not null]
 }
 
 Table pollOptions {
@@ -177,6 +182,21 @@ Table reactions {
 
   indexes {
     (postId, reactedById) [unique]
+  }
+}
+
+Table deal_listings {
+  id String [pk]
+  dealId String [not null]
+  deal deals [not null]
+  listingId String [not null]
+  listing listings [not null]
+  type DealListingType [not null, default: 'MINE']
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+
+  indexes {
+    (dealId, listingId) [unique]
   }
 }
 
@@ -336,27 +356,35 @@ Table community_comments {
   updatedAt DateTime [not null]
 }
 
-Table items {
+Table listings {
   id String [pk]
   title String
   sport String [not null]
   teamOrCountry String [not null]
-  playerName String
-  category ItemCategory [not null]
+  playerOrManagerName String
+  category ListingCategory [not null]
   seasonOrYear String [not null]
   kitType String
   description String [not null]
-  photos files [not null]
   signatureType SignatureType [not null, default: 'NONE']
-  photoProofLevel ProofLevel [not null, default: 'NONE']
-  authentication String
-  videoEvidence VideoEvidence [not null, default: 'NONE']
+  photoProofType PhotoProofType [not null, default: 'NONE']
+  videoProofType VideoProofType [not null, default: 'NONE']
+  coaStatus COAStatus [not null, default: 'NO_COA']
+  companyAuthentication String [default: 'Not Authenticated']
   format SaleFormat [not null, default: 'BUY_NOW']
-  baseValue Float [not null, default: 0]
+  photos FileItem[] [not null]
+  proofPhotos FileItem[] [not null]
+  proofVideos FileItem[] [not null]
+  coaFiles FileItem[] [not null]
+  files files [not null]
+  isTradingEnable Boolean [not null, default: false]
+  isHoldPrice Boolean [not null, default: false]
+  isPauseListing Boolean [not null, default: false]
+  estimatedBaseValue Float [not null, default: 0]
   initialPrice Float [not null, default: 0]
   allowOffers Boolean [not null, default: false]
   autoPriceAdjust Boolean [not null, default: false]
-  status ItemStatus [not null, default: 'PENDING']
+  status ListingStatus [not null, default: 'PENDING']
   ownerId String [not null]
   owner customers [not null]
   acquiredDate DateTime
@@ -365,32 +393,33 @@ Table items {
   reports reports [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
-  ItemHistories item_histories [not null]
-  dealItems deal_items [not null]
-  starredItems starred_items [not null]
-  collections collection_items [not null]
+  ListingHistories listing_histories [not null]
+  dealListings deal_listings [not null]
+  starredListings starred_listings [not null]
+  collections collection_listings [not null]
+  posts Post [not null]
 }
 
 Table collections {
   id String [pk]
   name String [not null]
   description String [not null]
-  items collection_items [not null]
+  listings collection_listings [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
 }
 
-Table collection_items {
+Table collection_listings {
   id String [pk]
   collectionId String [not null]
   collection collections [not null]
-  itemId String [not null]
-  item items [not null]
+  listingId String [not null]
+  listing listings [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
 
   indexes {
-    (collectionId, itemId) [unique]
+    (collectionId, listingId) [unique]
   }
 }
 
@@ -402,36 +431,15 @@ Table deals {
   seller customers [not null]
   note String
   status DealStatus [not null, default: 'APPROTCHED']
-  items deal_items [not null]
-  createdAt DateTime [default: `now()`, not null]
-  updatedAt DateTime [not null]
-}
-
-Table deal_items {
-  id String [pk]
-  dealId String [not null]
-  deal deals [not null]
-  itemId String [not null]
-  item items [not null]
-  type DealItemType [not null, default: 'MINE']
-  createdAt DateTime [default: `now()`, not null]
-  updatedAt DateTime [not null]
-}
-
-Table starred_items {
-  id String [pk]
-  itemId String [not null]
-  item items [not null]
-  customerId String [not null]
-  customer customers [not null]
+  listings deal_listings [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
 }
 
 Table reports {
   id String [pk]
-  itemId String [not null]
-  item items [not null]
+  listingId String [not null]
+  listing listings [not null]
   reportedById String [not null]
   customer customers [not null]
   reportNote String [not null]
@@ -440,25 +448,39 @@ Table reports {
   updatedAt DateTime [not null]
 }
 
-Table item_histories {
+Table starred_listings {
   id String [pk]
-  itemId String [not null]
-  item items [not null]
+  customerId String [not null]
+  customer customers [not null]
+  listingId String [not null]
+  listing listings [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+
+  indexes {
+    (customerId, listingId) [unique]
+  }
+}
+
+Table listing_histories {
+  id String [pk]
+  listingId String [not null]
+  listing listings [not null]
   customerId String [not null]
   customer customers [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
 
   indexes {
-    (itemId, customerId) [unique]
+    (listingId, customerId) [unique]
   }
 }
 
 Table orders {
   id String [pk]
   orderNumber String [unique, not null]
-  itemId String [not null]
-  item items [not null]
+  listingId String [not null]
+  listing listings [not null]
   buyerId String [not null]
   buyer customers [not null]
   sellerId String [not null]
@@ -489,12 +511,12 @@ Table watchlists {
   id String [pk]
   customerId String [not null]
   customer customers [not null]
-  itemId String [not null]
-  item items [not null]
+  listingId String [not null]
+  listing listings [not null]
   createdAt DateTime [default: `now()`, not null]
 
   indexes {
-    (customerId, itemId) [unique]
+    (customerId, listingId) [unique]
   }
 }
 
@@ -579,12 +601,16 @@ Table files {
   id String [pk]
   name String
   url String [not null]
+  key String
   type FileType [not null, default: 'DOC']
-  as FileAs [not null, default: 'NONE']
+  purpose FileAs [not null, default: 'PHOTOS']
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
-  Item items
-  itemId String
+  listing listings
+  listingId String
+  uploadedById String
+  isPending Boolean [not null, default: false]
+  context FileContext [not null, default: 'CREATE']
   postId String
   post Post
   communityPostId String
@@ -744,6 +770,14 @@ Enum PostType {
   LINK
 }
 
+Enum AuthProvider {
+  LOCAL
+  GOOGLE
+  APPLE
+  FACEBOOK
+  GITHUB
+}
+
 Enum ReactionType {
   LIKE
   LOVE
@@ -759,7 +793,7 @@ Enum DealStatus {
   REJECTED
 }
 
-Enum DealItemType {
+Enum DealListingType {
   MINE
   OTHERS
 }
@@ -803,7 +837,7 @@ Enum PaymentStatus {
   FAILED
 }
 
-Enum ItemCategory {
+Enum ListingCategory {
   SHIRT
   BOOTS
   CARD
@@ -820,18 +854,24 @@ Enum SignatureType {
   DEDICATED
 }
 
-Enum ProofLevel {
+Enum PhotoProofType {
   NONE
   PARTIAL
   FULL
   WITH_ATHLETE
 }
 
-Enum VideoEvidence {
+Enum VideoProofType {
   NONE
-  ITEM
+  LISTING
   SIGNING
   WITH_ATHLETE
+}
+
+Enum COAStatus {
+  NO_COA
+  COA_INCLUDED
+  SELF_CERTIFIED
 }
 
 Enum SaleFormat {
@@ -840,7 +880,7 @@ Enum SaleFormat {
   BUY_AND_TRADE
 }
 
-Enum ItemStatus {
+Enum ListingStatus {
   ACTIVE
   PAUSED
   PENDING
@@ -892,11 +932,16 @@ Enum TransactionStatus {
 }
 
 Enum FileAs {
-  NONE
-  PHOTO_PROOF
-  VIDEO_PROOF
-  CERT_COA
+  PHOTOS
+  PROOF_PHOTO
+  PROOF_VIDEO
+  COA_FILE
   COM_AUTH
+}
+
+Enum FileContext {
+  CREATE
+  EDIT
 }
 
 Enum NotificationType {
@@ -995,6 +1040,8 @@ Ref: BlockedUser.blockedUserId > customers.id
 
 Ref: Post.customerId > customers.id
 
+Ref: Post.listingId > listings.id
+
 Ref: pollOptions.postId > Post.id
 
 Ref: poll_votes.pollId > Post.id
@@ -1006,6 +1053,10 @@ Ref: poll_votes.optionId > pollOptions.id
 Ref: reactions.postId > Post.id
 
 Ref: reactions.reactedById > customers.id
+
+Ref: deal_listings.dealId > deals.id
+
+Ref: deal_listings.listingId > listings.id
 
 Ref: reposts.postId > Post.id
 
@@ -1055,33 +1106,29 @@ Ref: community_comments.customerId > customers.id
 
 Ref: community_comments.parentId - community_comments.id [delete: No Action]
 
-Ref: items.ownerId > customers.id
+Ref: listings.ownerId > customers.id
 
-Ref: collection_items.collectionId > collections.id
+Ref: collection_listings.collectionId > collections.id
 
-Ref: collection_items.itemId > items.id
+Ref: collection_listings.listingId > listings.id
 
 Ref: deals.buyerId > customers.id
 
 Ref: deals.sellerId > customers.id
 
-Ref: deal_items.dealId > deals.id
-
-Ref: deal_items.itemId > items.id
-
-Ref: starred_items.itemId > items.id
-
-Ref: starred_items.customerId > customers.id
-
-Ref: reports.itemId > items.id
+Ref: reports.listingId > listings.id
 
 Ref: reports.reportedById > customers.id
 
-Ref: item_histories.itemId > items.id
+Ref: starred_listings.customerId > customers.id
 
-Ref: item_histories.customerId > customers.id
+Ref: starred_listings.listingId > listings.id
 
-Ref: orders.itemId > items.id
+Ref: listing_histories.listingId > listings.id
+
+Ref: listing_histories.customerId > customers.id
+
+Ref: orders.listingId > listings.id
 
 Ref: orders.buyerId > customers.id
 
@@ -1093,7 +1140,7 @@ Ref: disputes.raisedById > customers.id
 
 Ref: watchlists.customerId > customers.id
 
-Ref: watchlists.itemId > items.id
+Ref: watchlists.listingId > listings.id
 
 Ref: payment_methods.customerId > customers.id
 
@@ -1107,7 +1154,7 @@ Ref: payments.subscriptionId > subscriptions.id
 
 Ref: payments.subscriptionPlanId > subscription_plans.id
 
-Ref: files.itemId > items.id
+Ref: files.listingId > listings.id
 
 Ref: files.postId > Post.id
 

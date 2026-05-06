@@ -10,6 +10,7 @@ import {
   UseInterceptors,
   UploadedFiles,
 } from '@nestjs/common';
+
 import { CustomerService } from './customer.service';
 import { Roles } from '../roles/roles.decorator';
 import { ResponseService } from '@/utils/response';
@@ -18,7 +19,10 @@ import { ParseFormDataInterceptor } from '@/helper/form_data_interceptor';
 import { FileService } from '@/helper/file.service';
 import { Role } from '@prisma/client';
 import { FileInterceptorInmemory } from '@/helper/file_interceptor_inmemorty';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Customers')
+@ApiBearerAuth('JWT-auth')
 @Controller('customers')
 export class CustomerController {
   constructor(
@@ -66,7 +70,7 @@ export class CustomerController {
 
     if (Array.isArray(uploadableFile) && uploadableFile.length > 0) {
       const uploaded = await this.fileService.uploadMultipleToCloudinary(uploadableFile, 'avatars');
-      avatar = uploaded[0];
+      avatar = uploaded[0].url;
     }
 
     const result = await this.CustomerService.update(id, updateCustomerDto, avatar);

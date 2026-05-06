@@ -1,6 +1,118 @@
 {
     "item": [
         {
+            "name": "/",
+            "description": "",
+            "item": [
+                {
+                    "id": "d82b92b2-5062-4162-b3c7-9bc8169782e8",
+                    "name": "Welcome Message",
+                    "request": {
+                        "name": "Welcome Message",
+                        "description": {},
+                        "url": {
+                            "path": [
+                                ""
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        },
+                        "method": "GET",
+                        "body": {},
+                        "auth": null
+                    },
+                    "response": [
+                        {
+                            "id": "ba1f5bf2-8358-4ac6-99e7-e6ec4caadc49",
+                            "name": "200",
+                            "originalRequest": {
+                                "url": {
+                                    "path": [
+                                        ""
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "method": "GET",
+                                "body": {}
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "header": [],
+                            "cookie": [],
+                            "_postman_previewlanguage": "text"
+                        }
+                    ],
+                    "event": [],
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    }
+                }
+            ]
+        },
+        {
+            "name": "health",
+            "description": "",
+            "item": [
+                {
+                    "id": "35fe7d31-54b5-48f3-9f00-d442490b68fd",
+                    "name": "Server Health Check",
+                    "request": {
+                        "name": "Server Health Check",
+                        "description": {},
+                        "url": {
+                            "path": [
+                                "health"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        },
+                        "method": "GET",
+                        "body": {},
+                        "auth": null
+                    },
+                    "response": [
+                        {
+                            "id": "8d3f7392-b597-4d4b-a387-ae9878b737b9",
+                            "name": "200",
+                            "originalRequest": {
+                                "url": {
+                                    "path": [
+                                        "health"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "method": "GET",
+                                "body": {}
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "header": [],
+                            "cookie": [],
+                            "_postman_previewlanguage": "text"
+                        }
+                    ],
+                    "event": [],
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    }
+                }
+            ]
+        },
+        {
             "name": "auth",
             "description": "",
             "item": [
@@ -9,7 +121,7 @@
                     "description": "",
                     "item": [
                         {
-                            "id": "6afd2fcd-37ef-4b29-832c-16256d1c6550",
+                            "id": "e68c5843-6cb6-471a-9f25-4aa21b99ee17",
                             "name": "User Login",
                             "request": {
                                 "name": "User Login",
@@ -46,7 +158,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "b079afa1-227d-4c81-adc4-448d1f1118f9",
+                                    "id": "0fe2e01b-1556-4c2b-98d4-c408235d94fc",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -97,7 +209,7 @@
                     "description": "",
                     "item": [
                         {
-                            "id": "308be7a6-11ff-43e1-bf11-cf58abae8753",
+                            "id": "968579d0-cc6b-45f4-9bc1-cf76e1aa703b",
                             "name": "Auth Controller set FCM Token",
                             "request": {
                                 "name": "Auth Controller set FCM Token",
@@ -119,7 +231,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "6d1259dc-67ae-4623-b0b7-e51930b23893",
+                                    "id": "f05a06da-0300-4e88-ade1-7c3f6b06a171",
                                     "name": "201",
                                     "originalRequest": {
                                         "url": {
@@ -155,7 +267,7 @@
                     "description": "",
                     "item": [
                         {
-                            "id": "8f7b2fb0-9c15-4524-9bbe-b5c1afa96d01",
+                            "id": "7e79f120-55c5-4ded-9db3-c506672b960a",
                             "name": "Auth Controller get Profile",
                             "request": {
                                 "name": "Auth Controller get Profile",
@@ -177,7 +289,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "1df85157-d671-4df1-88fe-2ee53a944ac4",
+                                    "id": "3e416e1c-fb38-4170-9a81-9adfcd851642",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -213,7 +325,7 @@
                     "description": "",
                     "item": [
                         {
-                            "id": "2374f874-2510-47a5-9a9c-4cd5a19f5182",
+                            "id": "3348fb45-d0d1-4b36-9b9d-f892ca827930",
                             "name": "Auth Controller change Password",
                             "request": {
                                 "name": "Auth Controller change Password",
@@ -235,7 +347,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "bfd70150-810b-4cf2-863d-8d75e82ff854",
+                                    "id": "f6c69f27-0287-42a6-9e70-416ec3b28218",
                                     "name": "201",
                                     "originalRequest": {
                                         "url": {
@@ -271,7 +383,7 @@
                     "description": "",
                     "item": [
                         {
-                            "id": "5eb8c7ba-a36d-48e2-9595-8b1c67544966",
+                            "id": "bfeb7f33-cf27-4ae8-90fc-4a8e96ed70ea",
                             "name": "Auth Controller forgot Passwod",
                             "request": {
                                 "name": "Auth Controller forgot Passwod",
@@ -293,7 +405,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "730e0261-527a-4d8a-a831-ca6595e06cbb",
+                                    "id": "a2220d7f-a54c-44a1-8e4f-a5cc69abcd30",
                                     "name": "201",
                                     "originalRequest": {
                                         "url": {
@@ -329,7 +441,7 @@
                     "description": "",
                     "item": [
                         {
-                            "id": "1b84ac4a-5554-4aed-9758-c1d4ffcc98e9",
+                            "id": "e4162ee7-716a-450b-a881-44da02c41901",
                             "name": "Auth Controller reset Password",
                             "request": {
                                 "name": "Auth Controller reset Password",
@@ -351,7 +463,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "affe0805-875a-4b8a-8661-3913098603e1",
+                                    "id": "3a7d51bf-7f09-471e-bf20-3c5fdaa85b5d",
                                     "name": "201",
                                     "originalRequest": {
                                         "url": {
@@ -387,7 +499,7 @@
                     "description": "",
                     "item": [
                         {
-                            "id": "cdffb9d2-0e37-4ae0-8561-cbaa85d01f63",
+                            "id": "6500243d-98c2-4400-b904-f5628c666c7e",
                             "name": "User Logout",
                             "request": {
                                 "name": "User Logout",
@@ -409,7 +521,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "35dc7c23-6fdf-430e-9af4-bcfd47bb49e7",
+                                    "id": "dda7c41b-65ef-43a8-8188-ed83ae585271",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -439,6 +551,124 @@
                             }
                         }
                     ]
+                },
+                {
+                    "name": "google",
+                    "description": "",
+                    "item": [
+                        {
+                            "id": "a6e1ca3c-3273-4cb7-8ad0-a73c77373f75",
+                            "name": "Initiate Google Login",
+                            "request": {
+                                "name": "Initiate Google Login",
+                                "description": {},
+                                "url": {
+                                    "path": [
+                                        "auth",
+                                        "google"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "method": "GET",
+                                "body": {},
+                                "auth": null
+                            },
+                            "response": [
+                                {
+                                    "id": "a67d083a-4fa6-4d37-9e5d-4e9d68a5880e",
+                                    "name": "200",
+                                    "originalRequest": {
+                                        "url": {
+                                            "path": [
+                                                "auth",
+                                                "google"
+                                            ],
+                                            "host": [
+                                                "{{baseUrl}}"
+                                            ],
+                                            "query": [],
+                                            "variable": []
+                                        },
+                                        "method": "GET",
+                                        "body": {}
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "header": [],
+                                    "cookie": [],
+                                    "_postman_previewlanguage": "text"
+                                }
+                            ],
+                            "event": [],
+                            "protocolProfileBehavior": {
+                                "disableBodyPruning": true
+                            }
+                        },
+                        {
+                            "name": "callback",
+                            "description": "",
+                            "item": [
+                                {
+                                    "id": "64f5a9a9-d033-41f7-9d27-1232c6d74442",
+                                    "name": "Google Login Callback",
+                                    "request": {
+                                        "name": "Google Login Callback",
+                                        "description": {},
+                                        "url": {
+                                            "path": [
+                                                "auth",
+                                                "google",
+                                                "callback"
+                                            ],
+                                            "host": [
+                                                "{{baseUrl}}"
+                                            ],
+                                            "query": [],
+                                            "variable": []
+                                        },
+                                        "method": "GET",
+                                        "body": {},
+                                        "auth": null
+                                    },
+                                    "response": [
+                                        {
+                                            "id": "a0d34abd-9050-491f-9b69-b9df21539cfe",
+                                            "name": "200",
+                                            "originalRequest": {
+                                                "url": {
+                                                    "path": [
+                                                        "auth",
+                                                        "google",
+                                                        "callback"
+                                                    ],
+                                                    "host": [
+                                                        "{{baseUrl}}"
+                                                    ],
+                                                    "query": [],
+                                                    "variable": []
+                                                },
+                                                "method": "GET",
+                                                "body": {}
+                                            },
+                                            "status": "OK",
+                                            "code": 200,
+                                            "header": [],
+                                            "cookie": [],
+                                            "_postman_previewlanguage": "text"
+                                        }
+                                    ],
+                                    "event": [],
+                                    "protocolProfileBehavior": {
+                                        "disableBodyPruning": true
+                                    }
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -451,7 +681,7 @@
                     "description": "",
                     "item": [
                         {
-                            "id": "e4aaea16-204d-4c35-ae7d-0569735f93ef",
+                            "id": "a1ded291-3c67-40fe-ae9b-a03b213382a6",
                             "name": "Users Controller create Admin",
                             "request": {
                                 "name": "Users Controller create Admin",
@@ -488,7 +718,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "8e876f3f-8cdf-4180-b411-ad06a2afaf41",
+                                    "id": "9b27f985-2b65-4a93-9bdf-5b556cb5c245",
                                     "name": "201",
                                     "originalRequest": {
                                         "url": {
@@ -539,7 +769,7 @@
                     "description": "",
                     "item": [
                         {
-                            "id": "038b7fa7-7c68-4753-b641-e4e63ed769f9",
+                            "id": "def16040-b205-4abb-9cda-7689242408e4",
                             "name": "Users Controller create Customer",
                             "request": {
                                 "name": "Users Controller create Customer",
@@ -564,7 +794,7 @@
                                 "method": "POST",
                                 "body": {
                                     "mode": "raw",
-                                    "raw": "{\n  \"email\": \"<string>\",\n  \"password\": \"<string>\",\n  \"customer\": {\n    \"postcode\": \"<string>\",\n    \"favSport\": \"OTHER\",\n    \"fullName\": \"<string>\",\n    \"bloodGroup\": \"O_POSITIVE\",\n    \"gender\": \"MALE\",\n    \"address\": \"<string>\",\n    \"city\": \"<string>\",\n    \"state\": \"<string>\",\n    \"country\": \"<string>\"\n  },\n  \"username\": \"<string>\",\n  \"contactNo\": \"<string>\",\n  \"lang\": \"ENG\",\n  \"role\": \"CUSTOMER\",\n  \"avatar\": \"<string>\",\n  \"status\": \"ACTIVE\",\n  \"fcmToken\": \"<string>\",\n  \"dob\": \"<string>\"\n}",
+                                    "raw": "{\n  \"email\": \"<string>\",\n  \"password\": \"<string>\",\n  \"customer\": {\n    \"postcode\": \"<string>\",\n    \"favSport\": \"OTHER\",\n    \"fullName\": \"<string>\",\n    \"bloodGroup\": \"O_NEGATIVE\",\n    \"gender\": \"OTHERS\",\n    \"address\": \"<string>\",\n    \"city\": \"<string>\",\n    \"state\": \"<string>\",\n    \"country\": \"<string>\"\n  },\n  \"username\": \"<string>\",\n  \"contactNo\": \"<string>\",\n  \"lang\": \"ENG\",\n  \"role\": \"CUSTOMER\",\n  \"avatar\": \"<string>\",\n  \"status\": \"ACTIVE\",\n  \"fcmToken\": \"<string>\",\n  \"dob\": \"<string>\"\n}",
                                     "options": {
                                         "raw": {
                                             "headerFamily": "json",
@@ -576,7 +806,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "878a26cc-7470-43c5-bda6-acd238378907",
+                                    "id": "e6859e27-4ad1-4a9e-a00b-d70d121a44fd",
                                     "name": "201",
                                     "originalRequest": {
                                         "url": {
@@ -599,7 +829,7 @@
                                         "method": "POST",
                                         "body": {
                                             "mode": "raw",
-                                            "raw": "{\n  \"email\": \"<string>\",\n  \"password\": \"<string>\",\n  \"customer\": {\n    \"postcode\": \"<string>\",\n    \"favSport\": \"OTHER\",\n    \"fullName\": \"<string>\",\n    \"bloodGroup\": \"O_POSITIVE\",\n    \"gender\": \"MALE\",\n    \"address\": \"<string>\",\n    \"city\": \"<string>\",\n    \"state\": \"<string>\",\n    \"country\": \"<string>\"\n  },\n  \"username\": \"<string>\",\n  \"contactNo\": \"<string>\",\n  \"lang\": \"ENG\",\n  \"role\": \"CUSTOMER\",\n  \"avatar\": \"<string>\",\n  \"status\": \"ACTIVE\",\n  \"fcmToken\": \"<string>\",\n  \"dob\": \"<string>\"\n}",
+                                            "raw": "{\n  \"email\": \"<string>\",\n  \"password\": \"<string>\",\n  \"customer\": {\n    \"postcode\": \"<string>\",\n    \"favSport\": \"OTHER\",\n    \"fullName\": \"<string>\",\n    \"bloodGroup\": \"O_NEGATIVE\",\n    \"gender\": \"OTHERS\",\n    \"address\": \"<string>\",\n    \"city\": \"<string>\",\n    \"state\": \"<string>\",\n    \"country\": \"<string>\"\n  },\n  \"username\": \"<string>\",\n  \"contactNo\": \"<string>\",\n  \"lang\": \"ENG\",\n  \"role\": \"CUSTOMER\",\n  \"avatar\": \"<string>\",\n  \"status\": \"ACTIVE\",\n  \"fcmToken\": \"<string>\",\n  \"dob\": \"<string>\"\n}",
                                             "options": {
                                                 "raw": {
                                                     "headerFamily": "json",
@@ -623,7 +853,7 @@
                     ]
                 },
                 {
-                    "id": "5f0f6e26-1f79-4a5c-a3bf-68a428212ce0",
+                    "id": "e31a5889-e6d6-4c99-af97-dd6309dea04f",
                     "name": "Users Controller get Users",
                     "request": {
                         "name": "Users Controller get Users",
@@ -644,7 +874,7 @@
                     },
                     "response": [
                         {
-                            "id": "082ecc70-4135-4ff4-b2b6-cd0f3dd4f648",
+                            "id": "842a91df-0eec-47b1-a74a-843a9a0a3eb8",
                             "name": "200",
                             "originalRequest": {
                                 "url": {
@@ -677,7 +907,7 @@
                     "description": "",
                     "item": [
                         {
-                            "id": "cf21a299-3cad-4ca0-ae59-eac2e710b6e4",
+                            "id": "49331f46-593c-4e47-b4d6-1d1ebaeba61a",
                             "name": "Users Controller find One",
                             "request": {
                                 "name": "Users Controller find One",
@@ -710,7 +940,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "8fd54b65-381a-4057-81f6-6a22629a22b9",
+                                    "id": "6ea66999-a544-4bbc-90aa-a7aaf7c77f50",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -761,7 +991,7 @@
                             "description": "",
                             "item": [
                                 {
-                                    "id": "6158e5ec-0526-49b8-95fd-a7f7ecd35fb0",
+                                    "id": "71a58860-eac1-4528-8bc5-6d0755f8581d",
                                     "name": "Users Controller change Status",
                                     "request": {
                                         "name": "Users Controller change Status",
@@ -795,7 +1025,7 @@
                                     },
                                     "response": [
                                         {
-                                            "id": "9c0ca3b5-e7ec-4e33-b40e-322abeb9cb43",
+                                            "id": "6c5979f2-316a-4c0b-8a71-3e8289428c6b",
                                             "name": "200",
                                             "originalRequest": {
                                                 "url": {
@@ -839,108 +1069,29 @@
                             ]
                         }
                     ]
-                }
-            ]
-        },
-        {
-            "name": "admins",
-            "description": "",
-            "item": [
-                {
-                    "id": "c1edb640-21c3-4f94-8d81-633ebd3cedb8",
-                    "name": "Admin Controller find All",
-                    "request": {
-                        "name": "Admin Controller find All",
-                        "description": {},
-                        "url": {
-                            "path": [
-                                "admins"
-                            ],
-                            "host": [
-                                "{{baseUrl}}"
-                            ],
-                            "query": [],
-                            "variable": []
-                        },
-                        "method": "GET",
-                        "body": {},
-                        "auth": null
-                    },
-                    "response": [
-                        {
-                            "id": "f2ab81c4-2f2a-4d0b-856c-957674572c47",
-                            "name": "200",
-                            "originalRequest": {
-                                "url": {
-                                    "path": [
-                                        "admins"
-                                    ],
-                                    "host": [
-                                        "{{baseUrl}}"
-                                    ],
-                                    "query": [],
-                                    "variable": []
-                                },
-                                "method": "GET",
-                                "body": {}
-                            },
-                            "status": "OK",
-                            "code": 200,
-                            "header": [],
-                            "cookie": [],
-                            "_postman_previewlanguage": "text"
-                        }
-                    ],
-                    "event": [],
-                    "protocolProfileBehavior": {
-                        "disableBodyPruning": true
-                    }
                 },
                 {
-                    "name": "{id}",
+                    "name": "follow",
                     "description": "",
                     "item": [
                         {
-                            "id": "89f5b6f9-f63f-46c5-a984-59255ef331bc",
-                            "name": "Admin Controller find One",
-                            "request": {
-                                "name": "Admin Controller find One",
-                                "description": {},
-                                "url": {
-                                    "path": [
-                                        "admins",
-                                        ":id"
-                                    ],
-                                    "host": [
-                                        "{{baseUrl}}"
-                                    ],
-                                    "query": [],
-                                    "variable": [
-                                        {
-                                            "type": "any",
-                                            "value": "<string>",
-                                            "key": "id",
-                                            "disabled": false,
-                                            "description": {
-                                                "content": "(Required) ",
-                                                "type": "text/plain"
-                                            }
-                                        }
-                                    ]
-                                },
-                                "method": "GET",
-                                "body": {},
-                                "auth": null
-                            },
-                            "response": [
+                            "name": "{identifier}",
+                            "description": "",
+                            "item": [
                                 {
-                                    "id": "97f4282b-13d3-49e8-a937-cbb7a1628620",
-                                    "name": "200",
-                                    "originalRequest": {
+                                    "id": "99debcaa-b870-423c-92aa-703498a74412",
+                                    "name": "Follow a user",
+                                    "request": {
+                                        "name": "Follow a user",
+                                        "description": {
+                                            "content": "Provide either the User ID, Customer ID, or Email address as the identifier.",
+                                            "type": "text/plain"
+                                        },
                                         "url": {
                                             "path": [
-                                                "admins",
-                                                ":id"
+                                                "users",
+                                                "follow",
+                                                ":identifier"
                                             ],
                                             "host": [
                                                 "{{baseUrl}}"
@@ -948,177 +1099,90 @@
                                             "query": [],
                                             "variable": [
                                                 {
+                                                    "type": "any",
+                                                    "value": "<string>",
+                                                    "key": "identifier",
                                                     "disabled": false,
                                                     "description": {
                                                         "content": "(Required) ",
                                                         "type": "text/plain"
-                                                    },
-                                                    "type": "any",
-                                                    "value": "<string>",
-                                                    "key": "id"
+                                                    }
                                                 }
                                             ]
                                         },
-                                        "method": "GET",
-                                        "body": {}
+                                        "method": "POST",
+                                        "body": {},
+                                        "auth": null
                                     },
-                                    "status": "OK",
-                                    "code": 200,
-                                    "header": [],
-                                    "cookie": [],
-                                    "_postman_previewlanguage": "text"
-                                }
-                            ],
-                            "event": [],
-                            "protocolProfileBehavior": {
-                                "disableBodyPruning": true
-                            }
-                        },
-                        {
-                            "id": "c48192f2-8aae-4ddb-b52b-41257c6f9ca1",
-                            "name": "Admin Controller update",
-                            "request": {
-                                "name": "Admin Controller update",
-                                "description": {},
-                                "url": {
-                                    "path": [
-                                        "admins",
-                                        ":id"
-                                    ],
-                                    "host": [
-                                        "{{baseUrl}}"
-                                    ],
-                                    "query": [],
-                                    "variable": [
+                                    "response": [
                                         {
-                                            "type": "any",
-                                            "value": "<string>",
-                                            "key": "id",
-                                            "disabled": false,
-                                            "description": {
-                                                "content": "(Required) ",
-                                                "type": "text/plain"
-                                            }
+                                            "id": "a085d565-59ef-4a33-a91b-e3cd91319170",
+                                            "name": "201",
+                                            "originalRequest": {
+                                                "url": {
+                                                    "path": [
+                                                        "users",
+                                                        "follow",
+                                                        ":identifier"
+                                                    ],
+                                                    "host": [
+                                                        "{{baseUrl}}"
+                                                    ],
+                                                    "query": [],
+                                                    "variable": [
+                                                        {
+                                                            "disabled": false,
+                                                            "description": {
+                                                                "content": "(Required) ",
+                                                                "type": "text/plain"
+                                                            },
+                                                            "type": "any",
+                                                            "value": "<string>",
+                                                            "key": "identifier"
+                                                        }
+                                                    ]
+                                                },
+                                                "method": "POST",
+                                                "body": {}
+                                            },
+                                            "status": "Created",
+                                            "code": 201,
+                                            "header": [],
+                                            "cookie": [],
+                                            "_postman_previewlanguage": "text"
                                         }
-                                    ]
-                                },
-                                "header": [
-                                    {
-                                        "key": "Content-Type",
-                                        "value": "application/json"
+                                    ],
+                                    "event": [],
+                                    "protocolProfileBehavior": {
+                                        "disableBodyPruning": true
                                     }
-                                ],
-                                "method": "PATCH",
-                                "body": {
-                                    "mode": "raw",
-                                    "raw": "{}",
-                                    "options": {
-                                        "raw": {
-                                            "headerFamily": "json",
-                                            "language": "json"
-                                        }
-                                    }
-                                },
-                                "auth": null
-                            },
-                            "response": [
-                                {
-                                    "id": "96ede2f8-96d1-43c7-b330-49b885467da5",
-                                    "name": "200",
-                                    "originalRequest": {
-                                        "url": {
-                                            "path": [
-                                                "admins",
-                                                ":id"
-                                            ],
-                                            "host": [
-                                                "{{baseUrl}}"
-                                            ],
-                                            "query": [],
-                                            "variable": [
-                                                {
-                                                    "disabled": false,
-                                                    "description": {
-                                                        "content": "(Required) ",
-                                                        "type": "text/plain"
-                                                    },
-                                                    "type": "any",
-                                                    "value": "<string>",
-                                                    "key": "id"
-                                                }
-                                            ]
-                                        },
-                                        "header": [
-                                            {
-                                                "key": "Content-Type",
-                                                "value": "application/json"
-                                            }
-                                        ],
-                                        "method": "PATCH",
-                                        "body": {
-                                            "mode": "raw",
-                                            "raw": "{}",
-                                            "options": {
-                                                "raw": {
-                                                    "headerFamily": "json",
-                                                    "language": "json"
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "status": "OK",
-                                    "code": 200,
-                                    "header": [],
-                                    "cookie": [],
-                                    "_postman_previewlanguage": "text"
                                 }
-                            ],
-                            "event": [],
-                            "protocolProfileBehavior": {
-                                "disableBodyPruning": true
-                            }
-                        },
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "unfollow",
+                    "description": "",
+                    "item": [
                         {
-                            "id": "fb29ca33-9ce0-46c7-86de-3458e2939ec8",
-                            "name": "Admin Controller remove",
-                            "request": {
-                                "name": "Admin Controller remove",
-                                "description": {},
-                                "url": {
-                                    "path": [
-                                        "admins",
-                                        ":id"
-                                    ],
-                                    "host": [
-                                        "{{baseUrl}}"
-                                    ],
-                                    "query": [],
-                                    "variable": [
-                                        {
-                                            "type": "any",
-                                            "value": "<string>",
-                                            "key": "id",
-                                            "disabled": false,
-                                            "description": {
-                                                "content": "(Required) ",
-                                                "type": "text/plain"
-                                            }
-                                        }
-                                    ]
-                                },
-                                "method": "DELETE",
-                                "body": {},
-                                "auth": null
-                            },
-                            "response": [
+                            "name": "{identifier}",
+                            "description": "",
+                            "item": [
                                 {
-                                    "id": "83e47276-dc67-468a-a1d0-58fd1af27c0f",
-                                    "name": "200",
-                                    "originalRequest": {
+                                    "id": "53d627fb-a4b1-43ee-8cb3-3168b952eb7d",
+                                    "name": "Unfollow a user",
+                                    "request": {
+                                        "name": "Unfollow a user",
+                                        "description": {
+                                            "content": "Provide either the User ID, Customer ID, or Email address as the identifier.",
+                                            "type": "text/plain"
+                                        },
                                         "url": {
                                             "path": [
-                                                "admins",
-                                                ":id"
+                                                "users",
+                                                "unfollow",
+                                                ":identifier"
                                             ],
                                             "host": [
                                                 "{{baseUrl}}"
@@ -1126,31 +1190,247 @@
                                             "query": [],
                                             "variable": [
                                                 {
+                                                    "type": "any",
+                                                    "value": "<string>",
+                                                    "key": "identifier",
                                                     "disabled": false,
                                                     "description": {
                                                         "content": "(Required) ",
                                                         "type": "text/plain"
-                                                    },
-                                                    "type": "any",
-                                                    "value": "<string>",
-                                                    "key": "id"
+                                                    }
                                                 }
                                             ]
                                         },
-                                        "method": "DELETE",
-                                        "body": {}
+                                        "method": "POST",
+                                        "body": {},
+                                        "auth": null
                                     },
-                                    "status": "OK",
-                                    "code": 200,
-                                    "header": [],
-                                    "cookie": [],
-                                    "_postman_previewlanguage": "text"
+                                    "response": [
+                                        {
+                                            "id": "2a09f3d0-1d7f-4e61-ad7b-01f93fb6b502",
+                                            "name": "201",
+                                            "originalRequest": {
+                                                "url": {
+                                                    "path": [
+                                                        "users",
+                                                        "unfollow",
+                                                        ":identifier"
+                                                    ],
+                                                    "host": [
+                                                        "{{baseUrl}}"
+                                                    ],
+                                                    "query": [],
+                                                    "variable": [
+                                                        {
+                                                            "disabled": false,
+                                                            "description": {
+                                                                "content": "(Required) ",
+                                                                "type": "text/plain"
+                                                            },
+                                                            "type": "any",
+                                                            "value": "<string>",
+                                                            "key": "identifier"
+                                                        }
+                                                    ]
+                                                },
+                                                "method": "POST",
+                                                "body": {}
+                                            },
+                                            "status": "Created",
+                                            "code": 201,
+                                            "header": [],
+                                            "cookie": [],
+                                            "_postman_previewlanguage": "text"
+                                        }
+                                    ],
+                                    "event": [],
+                                    "protocolProfileBehavior": {
+                                        "disableBodyPruning": true
+                                    }
                                 }
-                            ],
-                            "event": [],
-                            "protocolProfileBehavior": {
-                                "disableBodyPruning": true
-                            }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "block",
+                    "description": "",
+                    "item": [
+                        {
+                            "name": "{identifier}",
+                            "description": "",
+                            "item": [
+                                {
+                                    "id": "051b687c-2448-4bad-b2bf-28c97d9b0910",
+                                    "name": "Block a user",
+                                    "request": {
+                                        "name": "Block a user",
+                                        "description": {
+                                            "content": "Provide either the User ID, Customer ID, or Email address as the identifier.",
+                                            "type": "text/plain"
+                                        },
+                                        "url": {
+                                            "path": [
+                                                "users",
+                                                "block",
+                                                ":identifier"
+                                            ],
+                                            "host": [
+                                                "{{baseUrl}}"
+                                            ],
+                                            "query": [],
+                                            "variable": [
+                                                {
+                                                    "type": "any",
+                                                    "value": "<string>",
+                                                    "key": "identifier",
+                                                    "disabled": false,
+                                                    "description": {
+                                                        "content": "(Required) ",
+                                                        "type": "text/plain"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "method": "POST",
+                                        "body": {},
+                                        "auth": null
+                                    },
+                                    "response": [
+                                        {
+                                            "id": "8b667157-bf80-4f67-b7b6-f189c649b9ca",
+                                            "name": "201",
+                                            "originalRequest": {
+                                                "url": {
+                                                    "path": [
+                                                        "users",
+                                                        "block",
+                                                        ":identifier"
+                                                    ],
+                                                    "host": [
+                                                        "{{baseUrl}}"
+                                                    ],
+                                                    "query": [],
+                                                    "variable": [
+                                                        {
+                                                            "disabled": false,
+                                                            "description": {
+                                                                "content": "(Required) ",
+                                                                "type": "text/plain"
+                                                            },
+                                                            "type": "any",
+                                                            "value": "<string>",
+                                                            "key": "identifier"
+                                                        }
+                                                    ]
+                                                },
+                                                "method": "POST",
+                                                "body": {}
+                                            },
+                                            "status": "Created",
+                                            "code": 201,
+                                            "header": [],
+                                            "cookie": [],
+                                            "_postman_previewlanguage": "text"
+                                        }
+                                    ],
+                                    "event": [],
+                                    "protocolProfileBehavior": {
+                                        "disableBodyPruning": true
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "unblock",
+                    "description": "",
+                    "item": [
+                        {
+                            "name": "{identifier}",
+                            "description": "",
+                            "item": [
+                                {
+                                    "id": "2fcf7c97-ee29-4788-9c61-42bfc3fe34e7",
+                                    "name": "Unblock a user",
+                                    "request": {
+                                        "name": "Unblock a user",
+                                        "description": {
+                                            "content": "Provide either the User ID, Customer ID, or Email address as the identifier.",
+                                            "type": "text/plain"
+                                        },
+                                        "url": {
+                                            "path": [
+                                                "users",
+                                                "unblock",
+                                                ":identifier"
+                                            ],
+                                            "host": [
+                                                "{{baseUrl}}"
+                                            ],
+                                            "query": [],
+                                            "variable": [
+                                                {
+                                                    "type": "any",
+                                                    "value": "<string>",
+                                                    "key": "identifier",
+                                                    "disabled": false,
+                                                    "description": {
+                                                        "content": "(Required) ",
+                                                        "type": "text/plain"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "method": "POST",
+                                        "body": {},
+                                        "auth": null
+                                    },
+                                    "response": [
+                                        {
+                                            "id": "e4c9f994-dee9-402b-8a3c-c3479e00ac7a",
+                                            "name": "201",
+                                            "originalRequest": {
+                                                "url": {
+                                                    "path": [
+                                                        "users",
+                                                        "unblock",
+                                                        ":identifier"
+                                                    ],
+                                                    "host": [
+                                                        "{{baseUrl}}"
+                                                    ],
+                                                    "query": [],
+                                                    "variable": [
+                                                        {
+                                                            "disabled": false,
+                                                            "description": {
+                                                                "content": "(Required) ",
+                                                                "type": "text/plain"
+                                                            },
+                                                            "type": "any",
+                                                            "value": "<string>",
+                                                            "key": "identifier"
+                                                        }
+                                                    ]
+                                                },
+                                                "method": "POST",
+                                                "body": {}
+                                            },
+                                            "status": "Created",
+                                            "code": 201,
+                                            "header": [],
+                                            "cookie": [],
+                                            "_postman_previewlanguage": "text"
+                                        }
+                                    ],
+                                    "event": [],
+                                    "protocolProfileBehavior": {
+                                        "disableBodyPruning": true
+                                    }
+                                }
+                            ]
                         }
                     ]
                 }
@@ -1161,7 +1441,7 @@
             "description": "",
             "item": [
                 {
-                    "id": "98cb3932-d925-42d7-b1de-8bc6bd58cea1",
+                    "id": "2c60e330-5c35-43f4-afb7-ca30ba9c4471",
                     "name": "Customer Controller find All",
                     "request": {
                         "name": "Customer Controller find All",
@@ -1182,7 +1462,7 @@
                     },
                     "response": [
                         {
-                            "id": "2e5060dd-b899-415e-b6ca-ce1e999e465d",
+                            "id": "09d6b2a3-535e-43a2-893a-7f6d73bb0a42",
                             "name": "200",
                             "originalRequest": {
                                 "url": {
@@ -1215,7 +1495,7 @@
                     "description": "",
                     "item": [
                         {
-                            "id": "321ee0da-5c4d-418d-901a-9bac8862b9db",
+                            "id": "397fcbd2-0b71-493f-9391-f7142da0fde4",
                             "name": "Customer Controller find One",
                             "request": {
                                 "name": "Customer Controller find One",
@@ -1248,7 +1528,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "a378a9fb-b63b-4069-8112-6c48aeebc922",
+                                    "id": "cdfbc2ab-f9cc-4ef5-ba69-06a2c680c0ed",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -1289,7 +1569,7 @@
                             }
                         },
                         {
-                            "id": "7320229a-4c69-4029-ae54-01549d022645",
+                            "id": "c76ade4b-6e68-4f11-985b-994a48a783fb",
                             "name": "Customer Controller update",
                             "request": {
                                 "name": "Customer Controller update",
@@ -1337,7 +1617,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "ad51b7a9-862e-45ef-bd65-f735ede574e5",
+                                    "id": "a6c4a8ba-25d5-4867-a9ab-1d6e16b22bd9",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -1393,7 +1673,7 @@
                             }
                         },
                         {
-                            "id": "c47ed4ca-67ce-4743-a725-9e8f5087535a",
+                            "id": "4ae85a96-6701-4abd-b1ba-6b05ed31812d",
                             "name": "Customer Controller remove",
                             "request": {
                                 "name": "Customer Controller remove",
@@ -1426,12 +1706,326 @@
                             },
                             "response": [
                                 {
-                                    "id": "8d2760f1-f575-4083-b93b-56fc5a999c42",
+                                    "id": "0b80b033-e953-437c-bf17-1bd54e424aed",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
                                             "path": [
                                                 "customers",
+                                                ":id"
+                                            ],
+                                            "host": [
+                                                "{{baseUrl}}"
+                                            ],
+                                            "query": [],
+                                            "variable": [
+                                                {
+                                                    "disabled": false,
+                                                    "description": {
+                                                        "content": "(Required) ",
+                                                        "type": "text/plain"
+                                                    },
+                                                    "type": "any",
+                                                    "value": "<string>",
+                                                    "key": "id"
+                                                }
+                                            ]
+                                        },
+                                        "method": "DELETE",
+                                        "body": {}
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "header": [],
+                                    "cookie": [],
+                                    "_postman_previewlanguage": "text"
+                                }
+                            ],
+                            "event": [],
+                            "protocolProfileBehavior": {
+                                "disableBodyPruning": true
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "admins",
+            "description": "",
+            "item": [
+                {
+                    "id": "dfe70280-5850-49ad-aab3-21d759926b43",
+                    "name": "Admin Controller find All",
+                    "request": {
+                        "name": "Admin Controller find All",
+                        "description": {},
+                        "url": {
+                            "path": [
+                                "admins"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        },
+                        "method": "GET",
+                        "body": {},
+                        "auth": null
+                    },
+                    "response": [
+                        {
+                            "id": "00481680-0140-49a0-9d5f-d35e8a1363e9",
+                            "name": "200",
+                            "originalRequest": {
+                                "url": {
+                                    "path": [
+                                        "admins"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "method": "GET",
+                                "body": {}
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "header": [],
+                            "cookie": [],
+                            "_postman_previewlanguage": "text"
+                        }
+                    ],
+                    "event": [],
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    }
+                },
+                {
+                    "name": "{id}",
+                    "description": "",
+                    "item": [
+                        {
+                            "id": "b5a63651-e0b2-46c0-9ef6-d3b665d063d0",
+                            "name": "Admin Controller find One",
+                            "request": {
+                                "name": "Admin Controller find One",
+                                "description": {},
+                                "url": {
+                                    "path": [
+                                        "admins",
+                                        ":id"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": [
+                                        {
+                                            "type": "any",
+                                            "value": "<string>",
+                                            "key": "id",
+                                            "disabled": false,
+                                            "description": {
+                                                "content": "(Required) ",
+                                                "type": "text/plain"
+                                            }
+                                        }
+                                    ]
+                                },
+                                "method": "GET",
+                                "body": {},
+                                "auth": null
+                            },
+                            "response": [
+                                {
+                                    "id": "3718167d-19b3-49b6-a182-2185ecb94905",
+                                    "name": "200",
+                                    "originalRequest": {
+                                        "url": {
+                                            "path": [
+                                                "admins",
+                                                ":id"
+                                            ],
+                                            "host": [
+                                                "{{baseUrl}}"
+                                            ],
+                                            "query": [],
+                                            "variable": [
+                                                {
+                                                    "disabled": false,
+                                                    "description": {
+                                                        "content": "(Required) ",
+                                                        "type": "text/plain"
+                                                    },
+                                                    "type": "any",
+                                                    "value": "<string>",
+                                                    "key": "id"
+                                                }
+                                            ]
+                                        },
+                                        "method": "GET",
+                                        "body": {}
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "header": [],
+                                    "cookie": [],
+                                    "_postman_previewlanguage": "text"
+                                }
+                            ],
+                            "event": [],
+                            "protocolProfileBehavior": {
+                                "disableBodyPruning": true
+                            }
+                        },
+                        {
+                            "id": "6a8a7615-3663-4766-9687-684d4e53607d",
+                            "name": "Admin Controller update",
+                            "request": {
+                                "name": "Admin Controller update",
+                                "description": {},
+                                "url": {
+                                    "path": [
+                                        "admins",
+                                        ":id"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": [
+                                        {
+                                            "type": "any",
+                                            "value": "<string>",
+                                            "key": "id",
+                                            "disabled": false,
+                                            "description": {
+                                                "content": "(Required) ",
+                                                "type": "text/plain"
+                                            }
+                                        }
+                                    ]
+                                },
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "method": "PATCH",
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{}",
+                                    "options": {
+                                        "raw": {
+                                            "headerFamily": "json",
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "auth": null
+                            },
+                            "response": [
+                                {
+                                    "id": "7af066f4-dc46-4a7f-ade6-a24640e82f11",
+                                    "name": "200",
+                                    "originalRequest": {
+                                        "url": {
+                                            "path": [
+                                                "admins",
+                                                ":id"
+                                            ],
+                                            "host": [
+                                                "{{baseUrl}}"
+                                            ],
+                                            "query": [],
+                                            "variable": [
+                                                {
+                                                    "disabled": false,
+                                                    "description": {
+                                                        "content": "(Required) ",
+                                                        "type": "text/plain"
+                                                    },
+                                                    "type": "any",
+                                                    "value": "<string>",
+                                                    "key": "id"
+                                                }
+                                            ]
+                                        },
+                                        "header": [
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "application/json"
+                                            }
+                                        ],
+                                        "method": "PATCH",
+                                        "body": {
+                                            "mode": "raw",
+                                            "raw": "{}",
+                                            "options": {
+                                                "raw": {
+                                                    "headerFamily": "json",
+                                                    "language": "json"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "header": [],
+                                    "cookie": [],
+                                    "_postman_previewlanguage": "text"
+                                }
+                            ],
+                            "event": [],
+                            "protocolProfileBehavior": {
+                                "disableBodyPruning": true
+                            }
+                        },
+                        {
+                            "id": "fee106f0-2281-4f3a-bbef-f53d14cc35fb",
+                            "name": "Admin Controller remove",
+                            "request": {
+                                "name": "Admin Controller remove",
+                                "description": {},
+                                "url": {
+                                    "path": [
+                                        "admins",
+                                        ":id"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": [
+                                        {
+                                            "type": "any",
+                                            "value": "<string>",
+                                            "key": "id",
+                                            "disabled": false,
+                                            "description": {
+                                                "content": "(Required) ",
+                                                "type": "text/plain"
+                                            }
+                                        }
+                                    ]
+                                },
+                                "method": "DELETE",
+                                "body": {},
+                                "auth": null
+                            },
+                            "response": [
+                                {
+                                    "id": "f3d5b1c0-81a3-4b9e-b8f7-4ab734337d58",
+                                    "name": "200",
+                                    "originalRequest": {
+                                        "url": {
+                                            "path": [
+                                                "admins",
                                                 ":id"
                                             ],
                                             "host": [
@@ -1479,7 +2073,7 @@
                     "description": "",
                     "item": [
                         {
-                            "id": "2a66300e-59d9-429c-b18d-7e248b1b7eb5",
+                            "id": "7fb3db9a-50c6-4489-a2c7-a0c1bdc7161b",
                             "name": "File Controller upload",
                             "request": {
                                 "name": "File Controller upload",
@@ -1501,7 +2095,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "be770bc9-b87b-49dc-8970-08115c7f8050",
+                                    "id": "53a96019-e5b2-4cc3-8b3b-6fb8817a9a14",
                                     "name": "201",
                                     "originalRequest": {
                                         "url": {
@@ -1533,7 +2127,7 @@
                     ]
                 },
                 {
-                    "id": "97707e98-fde0-40de-9459-95cfc6ceb8e5",
+                    "id": "9e1480f7-258f-4b54-b379-7fcfb039eef6",
                     "name": "File Controller find All",
                     "request": {
                         "name": "File Controller find All",
@@ -1554,7 +2148,7 @@
                     },
                     "response": [
                         {
-                            "id": "ae22a8fb-32b9-4e09-a79e-2c5210bc3a73",
+                            "id": "fca6971c-088d-403a-9840-dc4ee30265b3",
                             "name": "200",
                             "originalRequest": {
                                 "url": {
@@ -1583,7 +2177,7 @@
                     }
                 },
                 {
-                    "id": "0bd7daab-8c37-46cb-ac22-3f7f2b0d4c19",
+                    "id": "d6cb4cbb-a261-49d4-97e8-71850e0b3c99",
                     "name": "File Controller create",
                     "request": {
                         "name": "File Controller create",
@@ -1619,7 +2213,7 @@
                     },
                     "response": [
                         {
-                            "id": "ecd30d9e-186d-46e6-8afb-f5613e40252a",
+                            "id": "30a48161-4d99-4ed4-9851-b4933a80f9f6",
                             "name": "201",
                             "originalRequest": {
                                 "url": {
@@ -1667,7 +2261,7 @@
                     "description": "",
                     "item": [
                         {
-                            "id": "dc5df881-ce9a-485f-b2f4-1379c8cc26a4",
+                            "id": "52152dc3-a496-4eb7-96d2-2b84dfa686d3",
                             "name": "File Controller find One",
                             "request": {
                                 "name": "File Controller find One",
@@ -1700,7 +2294,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "9d8da4c8-8cab-41da-aff1-60f2f1328eac",
+                                    "id": "4178999f-39b8-4076-99ac-9a1322e5ef81",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -1741,7 +2335,7 @@
                             }
                         },
                         {
-                            "id": "f55a2e18-046e-4e5f-853c-dbc7fc7fd6d6",
+                            "id": "d7d92611-3cc7-4fc9-861c-b9e14e4fa976",
                             "name": "File Controller update",
                             "request": {
                                 "name": "File Controller update",
@@ -1789,7 +2383,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "fbbf88e4-13a6-450a-8e88-8079caa5ba31",
+                                    "id": "670d52b0-811e-4e9d-815a-1a047ddfbc99",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -1845,7 +2439,7 @@
                             }
                         },
                         {
-                            "id": "c307d624-f75d-4887-ac06-11dc08ce64c5",
+                            "id": "ab1753bd-e2f6-408d-961d-a97522977abf",
                             "name": "File Controller remove",
                             "request": {
                                 "name": "File Controller remove",
@@ -1878,7 +2472,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "37df671a-4972-4e76-a37c-ce50a8791b91",
+                                    "id": "018c8c37-bbcc-4c3e-8aa9-79d2627d1a8d",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -1925,7 +2519,7 @@
                     "description": "",
                     "item": [
                         {
-                            "id": "4d41d5d6-d136-46b0-8f15-193306a54d00",
+                            "id": "016ea43c-ca83-420b-b0ac-028ca7de4197",
                             "name": "File Controller delete Files",
                             "request": {
                                 "name": "File Controller delete Files",
@@ -1947,7 +2541,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "f64b7997-1668-460e-8932-e0f1a9964f7b",
+                                    "id": "9cf8064c-a668-49c7-96d9-91c41ab43cc3",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -1989,7 +2583,7 @@
                     "description": "",
                     "item": [
                         {
-                            "id": "6d7dba2a-0402-49bc-b4ea-0343a8b93f81",
+                            "id": "34f59316-4719-46b5-838f-f8f38f7ac9cc",
                             "name": "Analytics Controller admin Analytics",
                             "request": {
                                 "name": "Analytics Controller admin Analytics",
@@ -2011,7 +2605,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "66b9adae-e6ce-479b-b0ca-71e72da43601",
+                                    "id": "d3c53957-ec23-41df-bc31-48a23488280f",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -2045,11 +2639,717 @@
             ]
         },
         {
+            "name": "listings",
+            "description": "",
+            "item": [
+                {
+                    "name": "upload",
+                    "description": "",
+                    "item": [
+                        {
+                            "id": "67d41d0d-4c41-4454-bce0-e03bd4154073",
+                            "name": "Upload listing media (Step 1)",
+                            "request": {
+                                "name": "Upload listing media (Step 1)",
+                                "description": {
+                                    "content": "\n      Uploads a single media file and records its purpose (PHOTOS, PROOF_PHOTO, PROOF_VIDEO, COA_FILE).\n      Returns a detailed file object including its unique database ID and URL.\n      \n      **CURL EXAMPLE:**\n      ```bash\n      curl -X POST \"http://localhost:8989/api/v1/listings/upload\" \\\n        -H \"Authorization: Bearer YOUR_ACCESS_TOKEN\" \\\n        -H \"Content-Type: multipart/form-data\" \\\n        -F \"file=@/path/to/image.jpg\" \\\n        -F \"purpose=PHOTOS\" \\\n        -F \"context=CREATE\"\n      ```\n    ",
+                                    "type": "text/plain"
+                                },
+                                "url": {
+                                    "path": [
+                                        "listings",
+                                        "upload"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "multipart/form-data"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "method": "POST",
+                                "body": {
+                                    "mode": "formdata",
+                                    "formdata": [
+                                        {
+                                            "description": {
+                                                "content": "(Required) The media file to upload",
+                                                "type": "text/plain"
+                                            },
+                                            "key": "file",
+                                            "type": "file"
+                                        },
+                                        {
+                                            "description": {
+                                                "content": "(Required) Where this file will be used",
+                                                "type": "text/plain"
+                                            },
+                                            "key": "purpose",
+                                            "value": "COA_FILE",
+                                            "type": "text"
+                                        },
+                                        {
+                                            "description": {
+                                                "content": "Operational context of upload",
+                                                "type": "text/plain"
+                                            },
+                                            "key": "context",
+                                            "value": "CREATE",
+                                            "type": "text"
+                                        }
+                                    ]
+                                },
+                                "auth": null
+                            },
+                            "response": [
+                                {
+                                    "id": "f2b59111-407c-47ed-b7b6-165612858584",
+                                    "name": "File uploaded successfully",
+                                    "originalRequest": {
+                                        "url": {
+                                            "path": [
+                                                "listings",
+                                                "upload"
+                                            ],
+                                            "host": [
+                                                "{{baseUrl}}"
+                                            ],
+                                            "query": [],
+                                            "variable": []
+                                        },
+                                        "header": [
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "multipart/form-data"
+                                            },
+                                            {
+                                                "key": "Accept",
+                                                "value": "application/json"
+                                            }
+                                        ],
+                                        "method": "POST",
+                                        "body": {
+                                            "mode": "formdata",
+                                            "formdata": [
+                                                {
+                                                    "description": {
+                                                        "content": "(Required) The media file to upload",
+                                                        "type": "text/plain"
+                                                    },
+                                                    "key": "file",
+                                                    "type": "file"
+                                                },
+                                                {
+                                                    "description": {
+                                                        "content": "(Required) Where this file will be used",
+                                                        "type": "text/plain"
+                                                    },
+                                                    "key": "purpose",
+                                                    "value": "COA_FILE",
+                                                    "type": "text"
+                                                },
+                                                {
+                                                    "description": {
+                                                        "content": "Operational context of upload",
+                                                        "type": "text/plain"
+                                                    },
+                                                    "key": "context",
+                                                    "value": "CREATE",
+                                                    "type": "text"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "header": [
+                                        {
+                                            "key": "Content-Type",
+                                            "value": "application/json"
+                                        }
+                                    ],
+                                    "body": "{\n  \"success\": \"<boolean>\",\n  \"message\": \"<string>\",\n  \"data\": [\n    {\n      \"id\": \"<string>\",\n      \"url\": \"<string>\",\n      \"key\": \"<string>\",\n      \"name\": \"<string>\",\n      \"purpose\": \"<string>\",\n      \"isPending\": \"<boolean>\",\n      \"context\": \"<string>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"url\": \"<string>\",\n      \"key\": \"<string>\",\n      \"name\": \"<string>\",\n      \"purpose\": \"<string>\",\n      \"isPending\": \"<boolean>\",\n      \"context\": \"<string>\"\n    }\n  ]\n}",
+                                    "cookie": [],
+                                    "_postman_previewlanguage": "json"
+                                }
+                            ],
+                            "event": [],
+                            "protocolProfileBehavior": {
+                                "disableBodyPruning": true
+                            }
+                        },
+                        {
+                            "name": "{id}",
+                            "description": "",
+                            "item": [
+                                {
+                                    "id": "522ad9a2-0353-4ba1-81da-f692d5de0661",
+                                    "name": "Delete a pending file manually",
+                                    "request": {
+                                        "name": "Delete a pending file manually",
+                                        "description": {
+                                            "content": "\n      Removes an uploaded file from both the database and cloud storage.\n      Only pending files owned by the current user can be deleted.\n\n      **CURL EXAMPLE:**\n      ```bash\n      curl -X DELETE \"http://localhost:8989/api/v1/listings/upload/69fae180e0c772d77befd5b8\" \\\n        -H \"Authorization: Bearer YOUR_ACCESS_TOKEN\"\n      ```\n    ",
+                                            "type": "text/plain"
+                                        },
+                                        "url": {
+                                            "path": [
+                                                "listings",
+                                                "upload",
+                                                ":id"
+                                            ],
+                                            "host": [
+                                                "{{baseUrl}}"
+                                            ],
+                                            "query": [],
+                                            "variable": [
+                                                {
+                                                    "type": "any",
+                                                    "value": "<string>",
+                                                    "key": "id",
+                                                    "disabled": false,
+                                                    "description": {
+                                                        "content": "(Required) ",
+                                                        "type": "text/plain"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "header": [
+                                            {
+                                                "key": "Accept",
+                                                "value": "application/json"
+                                            }
+                                        ],
+                                        "method": "DELETE",
+                                        "body": {},
+                                        "auth": null
+                                    },
+                                    "response": [
+                                        {
+                                            "id": "2461a702-9d77-47b1-af2e-e3c83db0388d",
+                                            "name": "File deleted successfully",
+                                            "originalRequest": {
+                                                "url": {
+                                                    "path": [
+                                                        "listings",
+                                                        "upload",
+                                                        ":id"
+                                                    ],
+                                                    "host": [
+                                                        "{{baseUrl}}"
+                                                    ],
+                                                    "query": [],
+                                                    "variable": [
+                                                        {
+                                                            "disabled": false,
+                                                            "description": {
+                                                                "content": "(Required) ",
+                                                                "type": "text/plain"
+                                                            },
+                                                            "type": "any",
+                                                            "value": "<string>",
+                                                            "key": "id"
+                                                        }
+                                                    ]
+                                                },
+                                                "header": [
+                                                    {
+                                                        "key": "Accept",
+                                                        "value": "application/json"
+                                                    }
+                                                ],
+                                                "method": "DELETE",
+                                                "body": {}
+                                            },
+                                            "status": "OK",
+                                            "code": 200,
+                                            "header": [
+                                                {
+                                                    "key": "Content-Type",
+                                                    "value": "application/json"
+                                                }
+                                            ],
+                                            "body": "",
+                                            "cookie": [],
+                                            "_postman_previewlanguage": "json"
+                                        }
+                                    ],
+                                    "event": [],
+                                    "protocolProfileBehavior": {
+                                        "disableBodyPruning": true
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "f681c863-b24b-407a-90c2-2ff46134d65e",
+                    "name": "Create a new listing (Step 2)",
+                    "request": {
+                        "name": "Create a new listing (Step 2)",
+                        "description": {
+                            "content": "\n      Finalizes the listing creation using FileItem objects {fileId, url} from Step 1.\n      The system verifies these IDs against the user's uploaded files.\n      Unused pending files for this user will be automatically deleted from storage.\n      \n      **CURL EXAMPLE:**\n      ```bash\n      curl -X POST \"http://localhost:8989/api/v1/listings\" \\\n        -H \"Authorization: Bearer YOUR_ACCESS_TOKEN\" \\\n        -H \"Content-Type: application/json\" \\\n        -d '{\n          \"sport\": \"Football\",\n          \"teamOrCountry\": \"Argentina\",\n          \"playerOrManagerName\": \"Lionel Messi\",\n          \"category\": \"SHIRT\",\n          \"title\": \"Signed Manchester United Jersey 2023\",\n          \"seasonOrYear\": \"2023/24\",\n          \"description\": \"Authentic signed home shirt.\",\n          \"initialPrice\": 500,\n          \"allowOffers\": true,\n          \"autoPriceAdjust\": false,\n          \"acquiredDate\": \"2024-05-01\",\n          \"photos\": [\n            { \"fileId\": \"69fae180e0c772d77befd5b8\", \"url\": \"http://localhost:8989/api/v1/files/img1.webp\" },\n            { \"fileId\": \"69fae180e0c772d77befd5b9\", \"url\": \"http://localhost:8989/api/v1/files/img2.webp\" }\n          ],\n          \"proofPhoto\": [\n            { \"fileId\": \"69fae210e0c772d77befd5b9\", \"url\": \"http://localhost:8989/api/v1/files/proof.webp\" }\n          ],\n          \"proofVideo\": [\n            { \"fileId\": \"69fae440e0c772d77befd5d5\", \"url\": \"http://localhost:8989/api/v1/files/signing_video.mp4\" }\n          ],\n          \"coaFile\": [\n            { \"fileId\": \"69fae330e0c772d77befd5c1\", \"url\": \"http://localhost:8989/api/v1/files/coa.pdf\" }\n          ]\n        }'\n      ```\n    ",
+                            "type": "text/plain"
+                        },
+                        "url": {
+                            "path": [
+                                "listings"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        },
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "method": "POST",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"sport\": \"<string>\",\n  \"category\": \"GLOVES\",\n  \"title\": \"<string>\",\n  \"teamOrCountry\": \"<string>\",\n  \"playerOrManagerName\": \"<string>\",\n  \"seasonOrYear\": \"<string>\",\n  \"kitType\": \"<string>\",\n  \"description\": \"<string>\",\n  \"signatureType\": \"NONE\",\n  \"photoProofType\": \"NONE\",\n  \"videoProofType\": \"WITH_ATHLETE\",\n  \"coaStatus\": \"SELF_CERTIFIED\",\n  \"companyAuthentication\": \"<string>\",\n  \"format\": \"BUY_NOW\",\n  \"isTradingEnable\": \"<boolean>\",\n  \"isHoldPrice\": \"<boolean>\",\n  \"isPauseListing\": \"<boolean>\",\n  \"estimatedBaseValue\": \"<number>\",\n  \"initialPrice\": \"<number>\",\n  \"allowOffers\": \"<boolean>\",\n  \"autoPriceAdjust\": \"<boolean>\",\n  \"acquiredDate\": \"<string>\",\n  \"photos\": [\n    {\n      \"fileId\": \"<string>\",\n      \"url\": \"<string>\"\n    },\n    {\n      \"fileId\": \"<string>\",\n      \"url\": \"<string>\"\n    }\n  ],\n  \"proofPhoto\": [\n    {\n      \"fileId\": \"<string>\",\n      \"url\": \"<string>\"\n    },\n    {\n      \"fileId\": \"<string>\",\n      \"url\": \"<string>\"\n    }\n  ],\n  \"proofVideo\": [\n    {\n      \"fileId\": \"<string>\",\n      \"url\": \"<string>\"\n    },\n    {\n      \"fileId\": \"<string>\",\n      \"url\": \"<string>\"\n    }\n  ],\n  \"coaFile\": [\n    {\n      \"fileId\": \"<string>\",\n      \"url\": \"<string>\"\n    },\n    {\n      \"fileId\": \"<string>\",\n      \"url\": \"<string>\"\n    }\n  ]\n}",
+                            "options": {
+                                "raw": {
+                                    "headerFamily": "json",
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "auth": null
+                    },
+                    "response": [
+                        {
+                            "id": "a98c8752-efa8-4e1d-aa2b-f6841d91b249",
+                            "name": "Listing created successfully",
+                            "originalRequest": {
+                                "url": {
+                                    "path": [
+                                        "listings"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "method": "POST",
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"sport\": \"<string>\",\n  \"category\": \"GLOVES\",\n  \"title\": \"<string>\",\n  \"teamOrCountry\": \"<string>\",\n  \"playerOrManagerName\": \"<string>\",\n  \"seasonOrYear\": \"<string>\",\n  \"kitType\": \"<string>\",\n  \"description\": \"<string>\",\n  \"signatureType\": \"NONE\",\n  \"photoProofType\": \"NONE\",\n  \"videoProofType\": \"WITH_ATHLETE\",\n  \"coaStatus\": \"SELF_CERTIFIED\",\n  \"companyAuthentication\": \"<string>\",\n  \"format\": \"BUY_NOW\",\n  \"isTradingEnable\": \"<boolean>\",\n  \"isHoldPrice\": \"<boolean>\",\n  \"isPauseListing\": \"<boolean>\",\n  \"estimatedBaseValue\": \"<number>\",\n  \"initialPrice\": \"<number>\",\n  \"allowOffers\": \"<boolean>\",\n  \"autoPriceAdjust\": \"<boolean>\",\n  \"acquiredDate\": \"<string>\",\n  \"photos\": [\n    {\n      \"fileId\": \"<string>\",\n      \"url\": \"<string>\"\n    },\n    {\n      \"fileId\": \"<string>\",\n      \"url\": \"<string>\"\n    }\n  ],\n  \"proofPhoto\": [\n    {\n      \"fileId\": \"<string>\",\n      \"url\": \"<string>\"\n    },\n    {\n      \"fileId\": \"<string>\",\n      \"url\": \"<string>\"\n    }\n  ],\n  \"proofVideo\": [\n    {\n      \"fileId\": \"<string>\",\n      \"url\": \"<string>\"\n    },\n    {\n      \"fileId\": \"<string>\",\n      \"url\": \"<string>\"\n    }\n  ],\n  \"coaFile\": [\n    {\n      \"fileId\": \"<string>\",\n      \"url\": \"<string>\"\n    },\n    {\n      \"fileId\": \"<string>\",\n      \"url\": \"<string>\"\n    }\n  ]\n}",
+                                    "options": {
+                                        "raw": {
+                                            "headerFamily": "json",
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            },
+                            "status": "Created",
+                            "code": 201,
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "body": "{\n  \"success\": \"<boolean>\",\n  \"message\": \"<string>\",\n  \"data\": {\n    \"id\": \"<string>\",\n    \"sport\": \"<string>\",\n    \"teamOrCountry\": \"<string>\",\n    \"category\": \"GLOVES\",\n    \"description\": \"<string>\",\n    \"photos\": [\n      {\n        \"fileId\": \"<string>\",\n        \"url\": \"<string>\"\n      },\n      {\n        \"fileId\": \"<string>\",\n        \"url\": \"<string>\"\n      }\n    ],\n    \"proofPhotos\": [\n      {\n        \"fileId\": \"<string>\",\n        \"url\": \"<string>\"\n      },\n      {\n        \"fileId\": \"<string>\",\n        \"url\": \"<string>\"\n      }\n    ],\n    \"proofVideos\": [\n      {\n        \"fileId\": \"<string>\",\n        \"url\": \"<string>\"\n      },\n      {\n        \"fileId\": \"<string>\",\n        \"url\": \"<string>\"\n      }\n    ],\n    \"coaFiles\": [\n      {\n        \"fileId\": \"<string>\",\n        \"url\": \"<string>\"\n      },\n      {\n        \"fileId\": \"<string>\",\n        \"url\": \"<string>\"\n      }\n    ],\n    \"initialPrice\": \"<number>\",\n    \"status\": \"<string>\",\n    \"createdAt\": \"<dateTime>\"\n  }\n}",
+                            "cookie": [],
+                            "_postman_previewlanguage": "json"
+                        }
+                    ],
+                    "event": [],
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    }
+                }
+            ]
+        },
+        {
+            "name": "posts",
+            "description": "",
+            "item": [
+                {
+                    "name": "upload",
+                    "description": "",
+                    "item": [
+                        {
+                            "id": "2ffb98bb-57b5-4357-9846-677d03b52339",
+                            "name": "Upload post media (Step 1)",
+                            "request": {
+                                "name": "Upload post media (Step 1)",
+                                "description": {
+                                    "content": "\n      Uploads a single file for a post (PHOTOS, PROOF_PHOTO, etc).\n      Returns a detailed file object including its unique database ID and URL.\n\n      **CURL EXAMPLE:**\n      ```bash\n      curl -X POST \"http://localhost:8989/api/v1/posts/upload\" \\\n        -H \"Authorization: Bearer YOUR_ACCESS_TOKEN\" \\\n        -H \"Content-Type: multipart/form-data\" \\\n        -F \"file=@/path/to/image.jpg\" \\\n        -F \"purpose=PHOTOS\" \\\n        -F \"context=CREATE\"\n      ```\n    ",
+                                    "type": "text/plain"
+                                },
+                                "url": {
+                                    "path": [
+                                        "posts",
+                                        "upload"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "multipart/form-data"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "method": "POST",
+                                "body": {
+                                    "mode": "formdata",
+                                    "formdata": [
+                                        {
+                                            "description": {
+                                                "content": "(Required) The media file",
+                                                "type": "text/plain"
+                                            },
+                                            "key": "file",
+                                            "type": "file"
+                                        },
+                                        {
+                                            "description": {
+                                                "content": "(Required) ",
+                                                "type": "text/plain"
+                                            },
+                                            "key": "purpose",
+                                            "value": "PHOTOS",
+                                            "type": "text"
+                                        },
+                                        {
+                                            "description": {
+                                                "content": "",
+                                                "type": "text/plain"
+                                            },
+                                            "key": "context",
+                                            "value": "CREATE",
+                                            "type": "text"
+                                        }
+                                    ]
+                                },
+                                "auth": null
+                            },
+                            "response": [
+                                {
+                                    "id": "4008bfce-868f-4a65-8221-218fa26398ba",
+                                    "name": "File uploaded successfully",
+                                    "originalRequest": {
+                                        "url": {
+                                            "path": [
+                                                "posts",
+                                                "upload"
+                                            ],
+                                            "host": [
+                                                "{{baseUrl}}"
+                                            ],
+                                            "query": [],
+                                            "variable": []
+                                        },
+                                        "header": [
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "multipart/form-data"
+                                            },
+                                            {
+                                                "key": "Accept",
+                                                "value": "application/json"
+                                            }
+                                        ],
+                                        "method": "POST",
+                                        "body": {
+                                            "mode": "formdata",
+                                            "formdata": [
+                                                {
+                                                    "description": {
+                                                        "content": "(Required) The media file",
+                                                        "type": "text/plain"
+                                                    },
+                                                    "key": "file",
+                                                    "type": "file"
+                                                },
+                                                {
+                                                    "description": {
+                                                        "content": "(Required) ",
+                                                        "type": "text/plain"
+                                                    },
+                                                    "key": "purpose",
+                                                    "value": "PHOTOS",
+                                                    "type": "text"
+                                                },
+                                                {
+                                                    "description": {
+                                                        "content": "",
+                                                        "type": "text/plain"
+                                                    },
+                                                    "key": "context",
+                                                    "value": "CREATE",
+                                                    "type": "text"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "header": [
+                                        {
+                                            "key": "Content-Type",
+                                            "value": "application/json"
+                                        }
+                                    ],
+                                    "body": "{\n  \"success\": \"<boolean>\",\n  \"message\": \"<string>\",\n  \"data\": [\n    {\n      \"id\": \"<string>\",\n      \"url\": \"<string>\",\n      \"purpose\": \"<string>\",\n      \"isPending\": \"<boolean>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"url\": \"<string>\",\n      \"purpose\": \"<string>\",\n      \"isPending\": \"<boolean>\"\n    }\n  ]\n}",
+                                    "cookie": [],
+                                    "_postman_previewlanguage": "json"
+                                }
+                            ],
+                            "event": [],
+                            "protocolProfileBehavior": {
+                                "disableBodyPruning": true
+                            }
+                        },
+                        {
+                            "name": "{id}",
+                            "description": "",
+                            "item": [
+                                {
+                                    "id": "37509357-5335-44d9-8f99-f61e6572a96c",
+                                    "name": "Delete a pending post file",
+                                    "request": {
+                                        "name": "Delete a pending post file",
+                                        "description": {
+                                            "content": "\n      Removes a pending uploaded file from storage and database.\n      Only files owned by the user and marked as pending can be deleted.\n\n      **CURL EXAMPLE:**\n      ```bash\n      curl -X DELETE \"http://localhost:8989/api/v1/posts/upload/69fb040e3915f10779259593\" \\\n        -H \"Authorization: Bearer YOUR_ACCESS_TOKEN\"\n      ```\n    ",
+                                            "type": "text/plain"
+                                        },
+                                        "url": {
+                                            "path": [
+                                                "posts",
+                                                "upload",
+                                                ":id"
+                                            ],
+                                            "host": [
+                                                "{{baseUrl}}"
+                                            ],
+                                            "query": [],
+                                            "variable": [
+                                                {
+                                                    "type": "any",
+                                                    "value": "<string>",
+                                                    "key": "id",
+                                                    "disabled": false,
+                                                    "description": {
+                                                        "content": "(Required) ",
+                                                        "type": "text/plain"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "header": [
+                                            {
+                                                "key": "Accept",
+                                                "value": "application/json"
+                                            }
+                                        ],
+                                        "method": "DELETE",
+                                        "body": {},
+                                        "auth": null
+                                    },
+                                    "response": [
+                                        {
+                                            "id": "5bcda0ca-d6e6-4a3b-98d0-c7dfec8ddfe9",
+                                            "name": "File deleted successfully",
+                                            "originalRequest": {
+                                                "url": {
+                                                    "path": [
+                                                        "posts",
+                                                        "upload",
+                                                        ":id"
+                                                    ],
+                                                    "host": [
+                                                        "{{baseUrl}}"
+                                                    ],
+                                                    "query": [],
+                                                    "variable": [
+                                                        {
+                                                            "disabled": false,
+                                                            "description": {
+                                                                "content": "(Required) ",
+                                                                "type": "text/plain"
+                                                            },
+                                                            "type": "any",
+                                                            "value": "<string>",
+                                                            "key": "id"
+                                                        }
+                                                    ]
+                                                },
+                                                "header": [
+                                                    {
+                                                        "key": "Accept",
+                                                        "value": "application/json"
+                                                    }
+                                                ],
+                                                "method": "DELETE",
+                                                "body": {}
+                                            },
+                                            "status": "OK",
+                                            "code": 200,
+                                            "header": [
+                                                {
+                                                    "key": "Content-Type",
+                                                    "value": "application/json"
+                                                }
+                                            ],
+                                            "body": "",
+                                            "cookie": [],
+                                            "_postman_previewlanguage": "json"
+                                        }
+                                    ],
+                                    "event": [],
+                                    "protocolProfileBehavior": {
+                                        "disableBodyPruning": true
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "fff30a7f-1f69-4a23-8979-b226f8804806",
+                    "name": "Create a new post (Step 2)",
+                    "request": {
+                        "name": "Create a new post (Step 2)",
+                        "description": {
+                            "content": "\n      Finalizes post creation with description, images, poll, and links.\n      The system verifies image IDs against the user's uploaded files.\n\n      **CURL EXAMPLE:**\n      ```bash\n      curl -X POST \"http://localhost:8989/api/v1/posts\" \\\n        -H \"Authorization: Bearer YOUR_ACCESS_TOKEN\" \\\n        -H \"Content-Type: application/json\" \\\n        -d '{\n          \"description\": \"This is a test post with a poll and an image.\",\n          \"images\": [\n            {\n              \"fileId\": \"69fb040e3915f10779259593\",\n              \"url\": \"http://localhost:8989/api/v1/files/image.webp\"\n            }\n          ],\n          \"poll\": {\n            \"question\": \"Which sport is the best?\",\n            \"options\": [\n              { \"text\": \"Football\" },\n              { \"text\": \"Basketball\" }\n            ],\n            \"multipleChoice\": false\n          }\n        }'\n      ```\n    ",
+                            "type": "text/plain"
+                        },
+                        "url": {
+                            "path": [
+                                "posts"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        },
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "method": "POST",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"description\": \"<string>\",\n  \"images\": [\n    {\n      \"fileId\": \"<string>\",\n      \"url\": \"<string>\"\n    },\n    {\n      \"fileId\": \"<string>\",\n      \"url\": \"<string>\"\n    }\n  ],\n  \"listingId\": \"<string>\",\n  \"externalLink\": \"<string>\",\n  \"poll\": {\n    \"question\": \"<string>\",\n    \"options\": [\n      {\n        \"text\": \"<string>\"\n      },\n      {\n        \"text\": \"<string>\"\n      }\n    ],\n    \"multipleChoice\": false,\n    \"expiresAt\": \"<string>\"\n  }\n}",
+                            "options": {
+                                "raw": {
+                                    "headerFamily": "json",
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "auth": null
+                    },
+                    "response": [
+                        {
+                            "id": "7a0106e4-7420-4d99-b3a7-c65cb748dc3d",
+                            "name": "Post created successfully",
+                            "originalRequest": {
+                                "url": {
+                                    "path": [
+                                        "posts"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "method": "POST",
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"description\": \"<string>\",\n  \"images\": [\n    {\n      \"fileId\": \"<string>\",\n      \"url\": \"<string>\"\n    },\n    {\n      \"fileId\": \"<string>\",\n      \"url\": \"<string>\"\n    }\n  ],\n  \"listingId\": \"<string>\",\n  \"externalLink\": \"<string>\",\n  \"poll\": {\n    \"question\": \"<string>\",\n    \"options\": [\n      {\n        \"text\": \"<string>\"\n      },\n      {\n        \"text\": \"<string>\"\n      }\n    ],\n    \"multipleChoice\": false,\n    \"expiresAt\": \"<string>\"\n  }\n}",
+                                    "options": {
+                                        "raw": {
+                                            "headerFamily": "json",
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            },
+                            "status": "Created",
+                            "code": 201,
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "body": "{\n  \"success\": \"<boolean>\",\n  \"message\": \"<string>\",\n  \"data\": {\n    \"id\": \"<string>\",\n    \"description\": \"<string>\",\n    \"images\": [\n      {\n        \"fileId\": \"<string>\",\n        \"url\": \"<string>\"\n      },\n      {\n        \"fileId\": \"<string>\",\n        \"url\": \"<string>\"\n      }\n    ],\n    \"pollQuestion\": \"<string>\",\n    \"pollOptions\": [\n      {\n        \"id\": \"<string>\",\n        \"text\": \"<string>\",\n        \"votes\": \"<number>\"\n      },\n      {\n        \"id\": \"<string>\",\n        \"text\": \"<string>\",\n        \"votes\": \"<number>\"\n      }\n    ],\n    \"pollMultipleChoice\": \"<boolean>\",\n    \"createdAt\": \"<string>\"\n  }\n}",
+                            "cookie": [],
+                            "_postman_previewlanguage": "json"
+                        }
+                    ],
+                    "event": [],
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    }
+                }
+            ]
+        },
+        {
             "name": "communities",
             "description": "",
             "item": [
                 {
-                    "id": "9ecbbcb8-4a25-45e5-a352-0eca14c6eaae",
+                    "id": "1e366592-e343-4bcc-8b79-a5eedefaa713",
                     "name": "Community Controller create",
                     "request": {
                         "name": "Community Controller create",
@@ -2085,7 +3385,7 @@
                     },
                     "response": [
                         {
-                            "id": "aed6c81a-8e69-4170-a481-9652e52993ea",
+                            "id": "c8b310b0-908e-4818-b609-d9f3823ca69f",
                             "name": "201",
                             "originalRequest": {
                                 "url": {
@@ -2129,7 +3429,7 @@
                     }
                 },
                 {
-                    "id": "c3860ed9-97b1-4a2a-9986-4bf43dae08cc",
+                    "id": "0eff9884-c750-4480-acc7-ef70dfc6c29f",
                     "name": "Community Controller find All",
                     "request": {
                         "name": "Community Controller find All",
@@ -2150,7 +3450,7 @@
                     },
                     "response": [
                         {
-                            "id": "b859178d-db47-4d69-a2ac-e19fab3967e4",
+                            "id": "51b34567-addb-46e8-8bf6-4e1e4fd82a40",
                             "name": "200",
                             "originalRequest": {
                                 "url": {
@@ -2183,7 +3483,7 @@
                     "description": "",
                     "item": [
                         {
-                            "id": "06ecef66-c684-4b4e-8b11-b362fcbc193e",
+                            "id": "600507ff-e544-44a4-8890-df353db403be",
                             "name": "Community Controller find One",
                             "request": {
                                 "name": "Community Controller find One",
@@ -2216,7 +3516,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "71a2e82c-21e2-41d8-8002-1833de8095d5",
+                                    "id": "aea41495-7af5-431e-895e-2752b037cb96",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -2257,7 +3557,7 @@
                             }
                         },
                         {
-                            "id": "5e47916b-cce0-490d-8cab-8ec9a483c703",
+                            "id": "7f0dd9e9-6bb0-46ff-939b-96f4de369c64",
                             "name": "Community Controller update",
                             "request": {
                                 "name": "Community Controller update",
@@ -2305,7 +3605,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "ea23e137-1e87-4dd3-a0cc-7fade1726637",
+                                    "id": "cc79a212-cdd8-48f7-bb4e-214d5c4f546d",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -2361,7 +3661,7 @@
                             }
                         },
                         {
-                            "id": "5fdcd504-abe3-4d0a-815f-9489a190727c",
+                            "id": "a84d83fb-bbe6-419f-86ee-99c3e05cc153",
                             "name": "Community Controller remove",
                             "request": {
                                 "name": "Community Controller remove",
@@ -2394,7 +3694,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "28696396-e5a2-4526-a5d2-6429d7aef1cb",
+                                    "id": "f18bca39-8d73-4abc-8306-0eaf8f8a34be",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -2443,7 +3743,7 @@
             "description": "",
             "item": [
                 {
-                    "id": "12605633-0d48-4d74-851e-459f207fd7bf",
+                    "id": "1b2b9cd0-c265-4f92-9c6d-ddd41e794d2c",
                     "name": "Community Member Controller create",
                     "request": {
                         "name": "Community Member Controller create",
@@ -2467,7 +3767,7 @@
                         "method": "POST",
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n  \"customerId\": \"<string>\",\n  \"communityId\": \"<string>\",\n  \"userType\": \"ADMIN\",\n  \"status\": \"BLOCKED\"\n}",
+                            "raw": "{\n  \"customerId\": \"<string>\",\n  \"communityId\": \"<string>\",\n  \"userType\": \"MODERATOR\",\n  \"status\": \"BLOCKED\"\n}",
                             "options": {
                                 "raw": {
                                     "headerFamily": "json",
@@ -2479,7 +3779,7 @@
                     },
                     "response": [
                         {
-                            "id": "adf4bf28-f8fe-402f-93d8-ee8d13f7946d",
+                            "id": "ce2f17ba-d85b-495f-96fd-0dbee6469806",
                             "name": "201",
                             "originalRequest": {
                                 "url": {
@@ -2501,7 +3801,7 @@
                                 "method": "POST",
                                 "body": {
                                     "mode": "raw",
-                                    "raw": "{\n  \"customerId\": \"<string>\",\n  \"communityId\": \"<string>\",\n  \"userType\": \"ADMIN\",\n  \"status\": \"BLOCKED\"\n}",
+                                    "raw": "{\n  \"customerId\": \"<string>\",\n  \"communityId\": \"<string>\",\n  \"userType\": \"MODERATOR\",\n  \"status\": \"BLOCKED\"\n}",
                                     "options": {
                                         "raw": {
                                             "headerFamily": "json",
@@ -2523,7 +3823,7 @@
                     }
                 },
                 {
-                    "id": "c59b9568-f509-439f-b173-9e9eac0e2810",
+                    "id": "58215ba5-ba7f-4f5f-adda-f2b980233805",
                     "name": "Community Member Controller find All",
                     "request": {
                         "name": "Community Member Controller find All",
@@ -2544,7 +3844,7 @@
                     },
                     "response": [
                         {
-                            "id": "14acb009-45fd-4732-9b82-24df06658ac3",
+                            "id": "3000d174-cfa9-4285-b81c-9e50e9edae98",
                             "name": "200",
                             "originalRequest": {
                                 "url": {
@@ -2573,11 +3873,99 @@
                     }
                 },
                 {
+                    "name": "community",
+                    "description": "",
+                    "item": [
+                        {
+                            "name": "{communityId}",
+                            "description": "",
+                            "item": [
+                                {
+                                    "id": "3c918652-9c25-47d6-8af5-10bb5370bc63",
+                                    "name": "Community Member Controller find By Community",
+                                    "request": {
+                                        "name": "Community Member Controller find By Community",
+                                        "description": {},
+                                        "url": {
+                                            "path": [
+                                                "community-members",
+                                                "community",
+                                                ":communityId"
+                                            ],
+                                            "host": [
+                                                "{{baseUrl}}"
+                                            ],
+                                            "query": [],
+                                            "variable": [
+                                                {
+                                                    "type": "any",
+                                                    "value": "<string>",
+                                                    "key": "communityId",
+                                                    "disabled": false,
+                                                    "description": {
+                                                        "content": "(Required) ",
+                                                        "type": "text/plain"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "method": "GET",
+                                        "body": {},
+                                        "auth": null
+                                    },
+                                    "response": [
+                                        {
+                                            "id": "5324b3d5-3e12-4d7b-8b96-ecd9f882f1a7",
+                                            "name": "200",
+                                            "originalRequest": {
+                                                "url": {
+                                                    "path": [
+                                                        "community-members",
+                                                        "community",
+                                                        ":communityId"
+                                                    ],
+                                                    "host": [
+                                                        "{{baseUrl}}"
+                                                    ],
+                                                    "query": [],
+                                                    "variable": [
+                                                        {
+                                                            "disabled": false,
+                                                            "description": {
+                                                                "content": "(Required) ",
+                                                                "type": "text/plain"
+                                                            },
+                                                            "type": "any",
+                                                            "value": "<string>",
+                                                            "key": "communityId"
+                                                        }
+                                                    ]
+                                                },
+                                                "method": "GET",
+                                                "body": {}
+                                            },
+                                            "status": "OK",
+                                            "code": 200,
+                                            "header": [],
+                                            "cookie": [],
+                                            "_postman_previewlanguage": "text"
+                                        }
+                                    ],
+                                    "event": [],
+                                    "protocolProfileBehavior": {
+                                        "disableBodyPruning": true
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
                     "name": "{id}",
                     "description": "",
                     "item": [
                         {
-                            "id": "840a081c-3395-4983-b034-d14d5cf48444",
+                            "id": "56dba10d-a785-4861-bc7e-ee70e2ce1ca9",
                             "name": "Community Member Controller find One",
                             "request": {
                                 "name": "Community Member Controller find One",
@@ -2610,7 +3998,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "09e912a5-a2b3-43a6-bc1d-9df35c6f66c2",
+                                    "id": "02b6e115-9d5f-422a-8689-2180058673fc",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -2651,7 +4039,7 @@
                             }
                         },
                         {
-                            "id": "5f69f24b-7e72-439e-9142-d8bb5ab1fad2",
+                            "id": "19aeeb63-6f55-4f0c-8af4-cd8799183a2e",
                             "name": "Community Member Controller update",
                             "request": {
                                 "name": "Community Member Controller update",
@@ -2687,7 +4075,7 @@
                                 "method": "PATCH",
                                 "body": {
                                     "mode": "raw",
-                                    "raw": "{\n  \"customerId\": \"<string>\",\n  \"communityId\": \"<string>\",\n  \"userType\": \"MODERATOR\",\n  \"status\": \"ACTIVE\"\n}",
+                                    "raw": "{\n  \"customerId\": \"<string>\",\n  \"communityId\": \"<string>\",\n  \"userType\": \"MEMBER\",\n  \"status\": \"PENDING\"\n}",
                                     "options": {
                                         "raw": {
                                             "headerFamily": "json",
@@ -2699,7 +4087,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "309ad2b7-f2ee-4863-9414-bc2b21007978",
+                                    "id": "df1f93dd-9e9c-44c9-9dba-507aeccb349b",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -2733,7 +4121,7 @@
                                         "method": "PATCH",
                                         "body": {
                                             "mode": "raw",
-                                            "raw": "{\n  \"customerId\": \"<string>\",\n  \"communityId\": \"<string>\",\n  \"userType\": \"MODERATOR\",\n  \"status\": \"ACTIVE\"\n}",
+                                            "raw": "{\n  \"customerId\": \"<string>\",\n  \"communityId\": \"<string>\",\n  \"userType\": \"MEMBER\",\n  \"status\": \"PENDING\"\n}",
                                             "options": {
                                                 "raw": {
                                                     "headerFamily": "json",
@@ -2755,7 +4143,7 @@
                             }
                         },
                         {
-                            "id": "964a762e-ab43-4ca4-88a7-1e4cca4f609b",
+                            "id": "b199bd74-51b0-4b4c-8f0b-3f10644d49a8",
                             "name": "Community Member Controller remove",
                             "request": {
                                 "name": "Community Member Controller remove",
@@ -2788,7 +4176,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "35efaccd-eb00-4a39-b5ea-4c6cf8403fe3",
+                                    "id": "a5586a65-9a88-468c-8f77-ddb22e5e8786",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -2837,7 +4225,7 @@
             "description": "",
             "item": [
                 {
-                    "id": "ee748e10-ffd3-4a7e-bf83-a0c99e58cbe9",
+                    "id": "7696951d-c96c-44a5-8547-5b489625c69a",
                     "name": "Community Post Controller create",
                     "request": {
                         "name": "Community Post Controller create",
@@ -2861,7 +4249,7 @@
                         "method": "POST",
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n  \"communityId\": \"<string>\",\n  \"type\": [\n    \"PRODUCT\",\n    \"IMG\"\n  ],\n  \"text\": \"<string>\"\n}",
+                            "raw": "{\n  \"communityId\": \"<string>\",\n  \"type\": [\n    \"LINK\",\n    \"IMG\"\n  ],\n  \"text\": \"<string>\"\n}",
                             "options": {
                                 "raw": {
                                     "headerFamily": "json",
@@ -2873,7 +4261,7 @@
                     },
                     "response": [
                         {
-                            "id": "061e01e2-1061-4156-9cf8-fdb4719cfb18",
+                            "id": "bd3979f9-85fc-4a49-8ca7-cba7c9e97272",
                             "name": "201",
                             "originalRequest": {
                                 "url": {
@@ -2895,7 +4283,7 @@
                                 "method": "POST",
                                 "body": {
                                     "mode": "raw",
-                                    "raw": "{\n  \"communityId\": \"<string>\",\n  \"type\": [\n    \"PRODUCT\",\n    \"IMG\"\n  ],\n  \"text\": \"<string>\"\n}",
+                                    "raw": "{\n  \"communityId\": \"<string>\",\n  \"type\": [\n    \"LINK\",\n    \"IMG\"\n  ],\n  \"text\": \"<string>\"\n}",
                                     "options": {
                                         "raw": {
                                             "headerFamily": "json",
@@ -2917,7 +4305,7 @@
                     }
                 },
                 {
-                    "id": "39a749bc-f07b-4e90-a704-92ae327b6fe7",
+                    "id": "35929065-6024-4600-aec5-3decdf9b0778",
                     "name": "Community Post Controller find All",
                     "request": {
                         "name": "Community Post Controller find All",
@@ -2938,7 +4326,7 @@
                     },
                     "response": [
                         {
-                            "id": "1cf1c5a0-f795-433e-ab67-8c103c3992eb",
+                            "id": "9d54f9a2-e107-45a7-9886-103d4a6a3210",
                             "name": "200",
                             "originalRequest": {
                                 "url": {
@@ -2971,7 +4359,7 @@
                     "description": "",
                     "item": [
                         {
-                            "id": "343f585e-247d-4f34-85e7-617516a3f3f3",
+                            "id": "a110b667-8290-4255-a080-78d1d6d390b3",
                             "name": "Community Post Controller find One",
                             "request": {
                                 "name": "Community Post Controller find One",
@@ -3004,7 +4392,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "4aa21845-0462-4839-b7a1-9cf156f0c37c",
+                                    "id": "5b9df2eb-f8b1-48de-ad4f-d21e5cda634f",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -3045,7 +4433,7 @@
                             }
                         },
                         {
-                            "id": "bf3ec42c-24f5-4123-a6c6-07f83bbb20ef",
+                            "id": "0fd85ee8-077c-4341-84e4-5ad0be929bc2",
                             "name": "Community Post Controller update",
                             "request": {
                                 "name": "Community Post Controller update",
@@ -3081,7 +4469,7 @@
                                 "method": "PATCH",
                                 "body": {
                                     "mode": "raw",
-                                    "raw": "{\n  \"communityId\": \"<string>\",\n  \"type\": [\n    \"PRODUCT\",\n    \"IMG\"\n  ],\n  \"text\": \"<string>\"\n}",
+                                    "raw": "{\n  \"communityId\": \"<string>\",\n  \"type\": [\n    \"PRODUCT\",\n    \"TEXT\"\n  ],\n  \"text\": \"<string>\"\n}",
                                     "options": {
                                         "raw": {
                                             "headerFamily": "json",
@@ -3093,7 +4481,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "f2b60089-dffd-4195-a252-34ea4204ecea",
+                                    "id": "a439b1e4-6dd9-4dfc-97b6-3c731b30242d",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -3127,7 +4515,7 @@
                                         "method": "PATCH",
                                         "body": {
                                             "mode": "raw",
-                                            "raw": "{\n  \"communityId\": \"<string>\",\n  \"type\": [\n    \"PRODUCT\",\n    \"IMG\"\n  ],\n  \"text\": \"<string>\"\n}",
+                                            "raw": "{\n  \"communityId\": \"<string>\",\n  \"type\": [\n    \"PRODUCT\",\n    \"TEXT\"\n  ],\n  \"text\": \"<string>\"\n}",
                                             "options": {
                                                 "raw": {
                                                     "headerFamily": "json",
@@ -3149,7 +4537,7 @@
                             }
                         },
                         {
-                            "id": "fafe38b8-a8ee-46e8-80c5-ee605b37d0ee",
+                            "id": "73adec2b-a767-4713-893d-902c24421226",
                             "name": "Community Post Controller remove",
                             "request": {
                                 "name": "Community Post Controller remove",
@@ -3182,7 +4570,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "a0266bd8-50f7-4c34-80ff-076452b7a651",
+                                    "id": "a0d78e4e-b6ac-4199-a342-c9631c959e6f",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -3231,7 +4619,7 @@
             "description": "",
             "item": [
                 {
-                    "id": "fbafe160-8063-423c-adec-cebb0cce4e60",
+                    "id": "9d582792-8b0d-4653-aa00-586dc568ccfa",
                     "name": "Community Comment Controller create",
                     "request": {
                         "name": "Community Comment Controller create",
@@ -3267,7 +4655,7 @@
                     },
                     "response": [
                         {
-                            "id": "fa3819b5-aa89-4125-a9e3-0ccd2db82397",
+                            "id": "9ad2c687-78e4-4808-9844-2e26c2e11fd5",
                             "name": "201",
                             "originalRequest": {
                                 "url": {
@@ -3311,7 +4699,7 @@
                     }
                 },
                 {
-                    "id": "eb426585-f430-4813-b839-4359968e494d",
+                    "id": "21a21407-63c0-45e2-9853-7599bd2bb649",
                     "name": "Community Comment Controller find All",
                     "request": {
                         "name": "Community Comment Controller find All",
@@ -3332,7 +4720,7 @@
                     },
                     "response": [
                         {
-                            "id": "51d42fea-e423-4f0d-8857-9af3e7ba8703",
+                            "id": "85f6a715-0c46-4b07-99c6-a1709e2da9fa",
                             "name": "200",
                             "originalRequest": {
                                 "url": {
@@ -3365,7 +4753,7 @@
                     "description": "",
                     "item": [
                         {
-                            "id": "abd20ae8-6e37-4e51-8ca1-3a50433529bb",
+                            "id": "5df79841-8232-438b-a9f0-29eaf518c09a",
                             "name": "Community Comment Controller find One",
                             "request": {
                                 "name": "Community Comment Controller find One",
@@ -3398,7 +4786,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "d39b4482-7ff1-41a1-a58c-61023371a9d2",
+                                    "id": "c0e58ab1-a9bb-40e7-84db-f3d7a0346287",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -3439,7 +4827,7 @@
                             }
                         },
                         {
-                            "id": "37c528b4-c0fe-4d0e-b109-27b459b694c0",
+                            "id": "a0120f82-99ad-466b-ab1a-f054ff4c8948",
                             "name": "Community Comment Controller update",
                             "request": {
                                 "name": "Community Comment Controller update",
@@ -3487,7 +4875,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "37d46000-5d7f-4bba-a75b-966cdce6faf7",
+                                    "id": "c55e9900-8c85-4b96-8a8c-e03f5717f627",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -3543,7 +4931,7 @@
                             }
                         },
                         {
-                            "id": "b599dd9b-3104-44b3-8ec3-d437f061f647",
+                            "id": "eac56ecd-9d0a-4073-ab22-d226dfe82844",
                             "name": "Community Comment Controller remove",
                             "request": {
                                 "name": "Community Comment Controller remove",
@@ -3576,7 +4964,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "adf81967-3b31-4000-90f3-1c8c7b9fe898",
+                                    "id": "de1f80ee-e4d4-4e4b-aa1d-71905ac8ba53",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -3629,7 +5017,7 @@
                     "description": "",
                     "item": [
                         {
-                            "id": "e1ccdef0-683d-4712-b464-6ec1a064bf83",
+                            "id": "473dd5be-99fb-4eba-bd7a-732eea44a827",
                             "name": "Community Reaction Controller toggle",
                             "request": {
                                 "name": "Community Reaction Controller toggle",
@@ -3666,7 +5054,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "50a98887-a493-4917-b4c6-928f8025685c",
+                                    "id": "dcce3f56-331d-4365-99dc-c87efa53abe9",
                                     "name": "201",
                                     "originalRequest": {
                                         "url": {
@@ -3713,7 +5101,7 @@
                     ]
                 },
                 {
-                    "id": "745be437-463b-4766-bf65-6be9c0320756",
+                    "id": "3aaadb26-8ccf-44bb-a867-8da6f538ad12",
                     "name": "Community Reaction Controller find All",
                     "request": {
                         "name": "Community Reaction Controller find All",
@@ -3734,7 +5122,7 @@
                     },
                     "response": [
                         {
-                            "id": "d6219e33-4966-4c84-bb22-7017363fb364",
+                            "id": "62f41078-00ec-42ae-83be-32a9c31a5535",
                             "name": "200",
                             "originalRequest": {
                                 "url": {
@@ -3767,7 +5155,7 @@
                     "description": "",
                     "item": [
                         {
-                            "id": "e96252a5-8b4e-42ca-9f9d-67b7e87af40f",
+                            "id": "e8ef9bea-406c-4aba-b500-c73a04bc65f5",
                             "name": "Community Reaction Controller find One",
                             "request": {
                                 "name": "Community Reaction Controller find One",
@@ -3800,7 +5188,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "fd465ae9-25c1-4795-a82b-7ccb602cd1c6",
+                                    "id": "80383acd-510d-406f-8d48-af3461b0ee0c",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -3841,7 +5229,7 @@
                             }
                         },
                         {
-                            "id": "428cf5ae-2655-409c-88ba-f987d07d5a49",
+                            "id": "4048c096-1c98-446f-84bf-8a5fd1a02463",
                             "name": "Community Reaction Controller remove",
                             "request": {
                                 "name": "Community Reaction Controller remove",
@@ -3874,7 +5262,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "01e690a3-a4eb-4dbd-ac6a-c554adf633bb",
+                                    "id": "56db27af-20b1-4895-b60b-1c64e7fd1f48",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -3927,7 +5315,7 @@
                     "description": "",
                     "item": [
                         {
-                            "id": "66024a75-4de9-4722-bf11-ffac4781a0ff",
+                            "id": "47050848-fd63-4449-867b-a952b80b4765",
                             "name": "Community Repost Controller toggle",
                             "request": {
                                 "name": "Community Repost Controller toggle",
@@ -3964,7 +5352,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "b6384417-33f2-42ee-a2e4-3e6d776c41ff",
+                                    "id": "81522603-053d-466f-a7b8-836f681feca2",
                                     "name": "201",
                                     "originalRequest": {
                                         "url": {
@@ -4011,7 +5399,7 @@
                     ]
                 },
                 {
-                    "id": "c4c17c6c-adc7-4f5b-a118-2e776e2329c5",
+                    "id": "c94236b0-eae4-4574-ad7a-1d601ed81c2a",
                     "name": "Community Repost Controller find All",
                     "request": {
                         "name": "Community Repost Controller find All",
@@ -4032,7 +5420,7 @@
                     },
                     "response": [
                         {
-                            "id": "1fda2d0a-68d5-4780-ab43-f7ccba19d896",
+                            "id": "2e1e05c0-19da-4691-8e5b-bc16c0efd007",
                             "name": "200",
                             "originalRequest": {
                                 "url": {
@@ -4065,7 +5453,7 @@
                     "description": "",
                     "item": [
                         {
-                            "id": "eb5cde36-fa84-4749-a579-d9fe9795f9d9",
+                            "id": "7009285d-c1fc-4856-b85d-c75d09b76e5e",
                             "name": "Community Repost Controller find One",
                             "request": {
                                 "name": "Community Repost Controller find One",
@@ -4098,7 +5486,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "4e5d7a5a-aa59-4e7b-b485-d7f2ec858836",
+                                    "id": "ee8116ff-222a-49e4-a8f5-9f383da67338",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -4139,7 +5527,7 @@
                             }
                         },
                         {
-                            "id": "4ddec9a3-f9c1-49df-8793-0a833632fe58",
+                            "id": "53e52027-beca-44b8-aebf-c066f78ccc28",
                             "name": "Community Repost Controller remove",
                             "request": {
                                 "name": "Community Repost Controller remove",
@@ -4172,7 +5560,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "5c3f85a9-0494-44da-8908-d393045d1a95",
+                                    "id": "f96dbb20-dec3-493d-8c75-fa9a62a93eb6",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -4225,7 +5613,7 @@
                     "description": "",
                     "item": [
                         {
-                            "id": "863ca02b-ad05-4fd5-b30c-8ec7c35d3f8a",
+                            "id": "a29cb4d6-c214-4fc8-8b94-7056985edb20",
                             "name": "Community Starred Post Controller toggle",
                             "request": {
                                 "name": "Community Starred Post Controller toggle",
@@ -4262,7 +5650,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "bc18c98c-5f2d-40b5-b72d-6951cad614fd",
+                                    "id": "5bcab72d-4bcd-4211-91db-a7daa1c5f47a",
                                     "name": "201",
                                     "originalRequest": {
                                         "url": {
@@ -4309,7 +5697,7 @@
                     ]
                 },
                 {
-                    "id": "cf0a4a78-261b-4038-9c76-347d1121ea8f",
+                    "id": "6dff9471-31dc-4891-991d-28b45dc626bc",
                     "name": "Community Starred Post Controller find All",
                     "request": {
                         "name": "Community Starred Post Controller find All",
@@ -4330,7 +5718,7 @@
                     },
                     "response": [
                         {
-                            "id": "9bca418b-720a-4caa-8764-f66333c4ac81",
+                            "id": "17593f41-e31b-4951-8773-9cdd8e49506f",
                             "name": "200",
                             "originalRequest": {
                                 "url": {
@@ -4363,7 +5751,7 @@
                     "description": "",
                     "item": [
                         {
-                            "id": "b8e17d13-7ccf-46b4-8721-b4672f6b7eaa",
+                            "id": "bd2ddaaa-b84b-4628-80d2-276d4425ed94",
                             "name": "Community Starred Post Controller find One",
                             "request": {
                                 "name": "Community Starred Post Controller find One",
@@ -4396,7 +5784,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "56807da8-c4c0-4fe5-9a53-2f6de0ba9cec",
+                                    "id": "dd010140-8e83-435a-a5a5-042b29aa5180",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -4437,7 +5825,7 @@
                             }
                         },
                         {
-                            "id": "4adeb412-d083-4ee8-b1ac-ea2f238a86db",
+                            "id": "b0a26e7c-450f-4c80-a4d2-a25dcf2e6083",
                             "name": "Community Starred Post Controller remove",
                             "request": {
                                 "name": "Community Starred Post Controller remove",
@@ -4470,7 +5858,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "5d3c11af-3109-4628-91e6-c066f0ee5f98",
+                                    "id": "c8e73065-9863-420a-a7e2-a8b16e752b6d",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -4523,7 +5911,7 @@
         }
     ],
     "info": {
-        "_postman_id": "1d5caa5f-10d0-4f7a-a737-9e64b5f0f4cd",
+        "_postman_id": "ce13687a-2e4d-418a-86d9-9f5b0d34f145",
         "name": "KSMM Api Documentation",
         "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
         "description": {

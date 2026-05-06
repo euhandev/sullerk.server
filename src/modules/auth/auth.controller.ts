@@ -1,4 +1,16 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { Public } from './auth.decorator';
@@ -167,5 +179,32 @@ export class AuthController {
       message: 'User Logout successfully',
       data: true,
     });
+  }
+
+  @Public()
+  @Get('google')
+  @UseGuards(AuthGuard('google'))
+  @ApiOperation({ summary: 'Initiate Google Login' })
+  async googleAuth() {
+    // This initiates the Google OAuth flow
+  }
+
+  @Public()
+  @Get('google/callback')
+  @UseGuards(AuthGuard('google'))
+  @ApiOperation({ summary: 'Google Login Callback' })
+  async googleAuthRedirect(@Req() req: any, @Res() res: Response) {
+    const result = await this.authService.validateOAuthUser(req.user);
+
+    // 🍪 Set tokens as HTTP-only cookies
+    this.setAuthCookies(res, {
+      accessToken: result.access_token,
+      refreshToken: result.refresh_token,
+    });
+
+    const frontendUrl = this.configService.get('FRONTEND_URL') || 'http://localhost:3000';
+    return res.redirect(
+      `${frontendUrl}/auth/success?accessToken=${result.access_token}&refreshToken=${result.refresh_token}`,
+    );
   }
 }

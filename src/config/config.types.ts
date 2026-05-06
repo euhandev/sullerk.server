@@ -68,6 +68,8 @@ export interface EnvConfig {
   MAIL_USER: string;
   MAIL_PASS: string;
   MAIL_FROM: string;
+  GOOGLE_CLIENT_ID: string;
+  GOOGLE_CLIENT_SECRET: string;
 }
 
 // config.types.ts (continued)

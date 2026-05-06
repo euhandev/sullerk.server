@@ -10,7 +10,10 @@ import { AuthService } from './auth.service';
 import { ConfigService } from '@/config/config.service';
 import { EmailTemplate } from '@/email-templates/forgot-password';
 import { GMailService } from '@/email/gmail';
+import { PassportModule } from '@nestjs/passport';
+import { GoogleStrategy } from '@/passport/google.strategy';
 export const OIDC_CONFIG = 'OIDC_CONFIG';
+
 @Module({
   imports: [
     HttpModule.register({
@@ -18,6 +21,7 @@ export const OIDC_CONFIG = 'OIDC_CONFIG';
       maxRedirects: 5,
     }),
     UserModule,
+    PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
       global: true,
       signOptions: { expiresIn: '7d' },
@@ -31,7 +35,9 @@ export const OIDC_CONFIG = 'OIDC_CONFIG';
     BrevoService,
     GMailService,
     EmailTemplate,
+    GoogleStrategy,
     // by  using this nest js automatically bind every endpoint with AuthGuard
+
     // { provide: APP_GUARD, useClass: RolesGuard },
   ],
   controllers: [AuthController],

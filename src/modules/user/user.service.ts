@@ -9,7 +9,6 @@ import { ConfigService } from '@/config/config.service';
 import QueryBuilder from '@/utils/query_builder';
 import { userFilterFields, userInclude, userSearchFields } from './user.constant';
 import { IGenericResponse } from '@/interface/common';
-import CryptoJS from 'crypto-js';
 
 @Injectable()
 export class UserService {
@@ -166,14 +165,14 @@ export class UserService {
 
     const map = result?.map((usr) =>
       usr?.role === Role.ADMIN
-        ? (({ customer, ...rest }) => rest)(usr)
-        : (({ admin, ...rest }) => rest)(usr),
+        ? (({ customer: _, ...rest }) => rest)(usr)
+        : (({ admin: _, ...rest }) => rest)(usr),
     );
 
     return { meta, data: map };
   }
 
-  private async generateUniqueUsername(email: string, tx: any): Promise<string> {
+  public async generateUniqueUsername(email: string, tx: any): Promise<string> {
     let base = email.split('@')[0].toLowerCase();
 
     base = base.replace(/[^a-z0-9]/g, '');

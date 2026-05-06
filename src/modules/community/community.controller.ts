@@ -44,7 +44,7 @@ export class CommunityController {
 
     if (Array.isArray(uploadableFiles) && uploadableFiles?.length > 0) {
       const uploaded = await this.fileService.uploadMultipleToCloudinary(uploadableFiles);
-      hero = uploaded[0];
+      hero = uploaded[0].url;
     }
 
     const result = await this.communityService.create(req, {...paylaod}, hero);
@@ -94,7 +94,7 @@ export class CommunityController {
 
     if (Array.isArray(uploadableFiles) && uploadableFiles?.length > 0) {
       const uploaded = await this.fileService.uploadMultipleToCloudinary(uploadableFiles);
-      hero = uploaded[0];
+      hero = uploaded[0].url;
     }
 
     const result = await this.communityService.update(req, id, paylaod, hero);
