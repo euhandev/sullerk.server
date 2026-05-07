@@ -32,7 +32,6 @@ import { CommunityReactionModule } from '@/modules/community-reaction/community-
 import { CommunityRepostModule } from '@/modules/community-repost/community-repost.module';
 import { CommunityStarredPostModule } from '@/modules/community-starred-post/community-starred-post.module';
 import { PostModule } from '@/modules/post/post.module';
-import { CommunityModule } from '@/modules/community/community.module';
 
 @Module({
   imports: [
@@ -68,15 +67,12 @@ import { CommunityModule } from '@/modules/community/community.module';
     ListingModule,
     PostModule,
     CommunityModule,
-<<<<<<< HEAD
     CommunityMemberModule,
     CommunityPostModule,
     CommunityCommentModule,
     CommunityReactionModule,
     CommunityRepostModule,
     CommunityStarredPostModule,
-=======
->>>>>>> 4c011a9 (add post community creation module)
   ],
 
   controllers: [AppController],

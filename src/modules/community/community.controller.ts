@@ -1,6 +1,5 @@
 import {
   Controller,
-<<<<<<< HEAD
   Get,
   Post,
   Body,
@@ -10,63 +9,16 @@ import {
   HttpStatus,
   Req,
   UseInterceptors,
-  UploadedFiles,
+  UploadedFile,
 } from '@nestjs/common';
 import { CommunityService } from './community.service';
 import { CreateCommunityDto } from './dto/create-community.dto';
 import { UpdateCommunityDto } from './dto/update-community.dto';
 import { Roles } from '../roles/roles.decorator';
-import { Role } from '@prisma/client';
+import { Role, FileContext } from '@prisma/client';
 import { ResponseService } from '@/utils/response';
 import { Request } from 'express';
-import { FileInterceptorInmemory } from '@/helper/file_interceptor_inmemorty';
-import { ParseFormDataInterceptor } from '@/helper/form_data_interceptor';
-import { FileService } from '@/helper/file.service';
-
-@Controller('communities')
-export class CommunityController {
-  constructor(private readonly communityService: CommunityService, private readonly fileService: FileService) {}
-
-  @Post()
-  @Roles(Role.ADMIN, Role.SUPER_ADMIN, Role.CUSTOMER)
-  @UseInterceptors(
-      FileInterceptorInmemory([{ name: 'file', maxCount: 1 }]),
-      ParseFormDataInterceptor,
-    )
-  async create(
-    @Req() req: Request,
-    @Body() paylaod: CreateCommunityDto,
-    @UploadedFiles() files: Record<string, Express.Multer.File[]>,
-  ) {
-
-    let hero: string | undefined;
-
-    const uploadableFiles = files?.file;
-
-    if (Array.isArray(uploadableFiles) && uploadableFiles?.length > 0) {
-      const uploaded = await this.fileService.uploadMultipleToCloudinary(uploadableFiles);
-      hero = uploaded[0].url;
-    }
-
-    const result = await this.communityService.create(req, {...paylaod}, hero);
-    return ResponseService.formatResponse({
-      statusCode: HttpStatus.CREATED,
-      message: `Community created successfully`,
-=======
-  Post,
-  Body,
-  UseInterceptors,
-  UploadedFile,
-  Req,
-  HttpStatus,
-  Delete,
-  Param,
-} from '@nestjs/common';
-import { CommunityService } from './community.service';
-import { CreateCommunityDto } from './dto/create-community.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { Roles } from '../roles/roles.decorator';
-import { Role, FileContext } from '@prisma/client';
 import {
   ApiConsumes,
   ApiOperation,
@@ -75,7 +27,6 @@ import {
   ApiBody,
   ApiBearerAuth,
 } from '@nestjs/swagger';
-import { ResponseService } from '@/utils/response';
 import { CommunityFileUploadResponse, CreateCommunityResponse } from './dto/community-response.dto';
 
 @ApiTags('Communities')
@@ -169,18 +120,16 @@ export class CommunityController {
     return ResponseService.formatResponse({
       statusCode: HttpStatus.CREATED,
       message: 'Community created successfully',
->>>>>>> 4c011a9 (add post community creation module)
       data: result,
     });
   }
 
-<<<<<<< HEAD
   @Get()
   async findAll(@Req() req: Request) {
     const result = await this.communityService.findAll(req);
     return ResponseService.formatResponse({
       statusCode: HttpStatus.OK,
-      message: `Communitys retrieved successfully`,
+      message: `Communities retrieved successfully`,
       meta: result.meta,
       data: result.data,
     });
@@ -198,26 +147,8 @@ export class CommunityController {
 
   @Patch(':id')
   @Roles(Role.ADMIN, Role.SUPER_ADMIN, Role.CUSTOMER)
-  @UseInterceptors(
-    FileInterceptorInmemory([{ name: 'file', maxCount: 1 }]),
-    ParseFormDataInterceptor,
-  )
-  async update(
-    @Req() req: Request,
-    @Param('id') id: string,
-    @Body() paylaod: UpdateCommunityDto,
-    @UploadedFiles() files: Record<string, Express.Multer.File[]>,
-  ) {
-    let hero: string | undefined;
-
-    const uploadableFiles = files?.file;
-
-    if (Array.isArray(uploadableFiles) && uploadableFiles?.length > 0) {
-      const uploaded = await this.fileService.uploadMultipleToCloudinary(uploadableFiles);
-      hero = uploaded[0].url;
-    }
-
-    const result = await this.communityService.update(req, id, paylaod, hero);
+  async update(@Req() req: Request, @Param('id') id: string, @Body() payload: UpdateCommunityDto) {
+    const result = await this.communityService.update(req, id, payload);
     return ResponseService.formatResponse({
       statusCode: HttpStatus.OK,
       message: `Community updated successfully`,
@@ -232,7 +163,10 @@ export class CommunityController {
     return ResponseService.formatResponse({
       statusCode: HttpStatus.OK,
       message: `Community deleted successfully`,
-=======
+      data: result,
+    });
+  }
+
   @Delete('upload/:id')
   @Roles(Role.CUSTOMER)
   @ApiOperation({
@@ -258,7 +192,6 @@ export class CommunityController {
     return ResponseService.formatResponse({
       statusCode: HttpStatus.OK,
       message: 'File deleted successfully',
->>>>>>> 4c011a9 (add post community creation module)
       data: result,
     });
   }
