@@ -46,7 +46,7 @@ export class CommunityService {
     if (!file) return null;
 
     const folder = 'communities/hero';
-    const { url, key } = await this.fileService.autoUpload(file, folder);
+    const { url, key } = await this.fileService.uploadToCloudinary(file, folder);
 
     return await this.prisma.file.create({
       data: {
@@ -74,13 +74,7 @@ export class CommunityService {
       throw new ApiError(HttpStatus.NOT_FOUND, 'File not found or not authorized');
     }
 
-    if (file.url.includes('cloudinary')) {
-      await this.fileService.deleteFromCloudinary(file.url, file.key).catch(() => {});
-    } else if (file.url.includes('digitaloceanspaces')) {
-      await this.fileService.deleteFromDigitalOcean(file.url).catch(() => {});
-    } else {
-      await this.fileService.deleteFromLocal(file.url).catch(() => {});
-    }
+    await this.fileService.autoDelete(file.url, file.key);
 
     await this.prisma.file.delete({ where: { id } });
     return { success: true };
@@ -237,12 +231,10 @@ export class CommunityService {
     const user: any = req?.user;
     if (user?.role !== 'ADMIN' && user?.role !== 'SUPER_ADMIN') {
       const customerId = await this.getCustomerId(req);
-      const membership = await this.prisma.communityMember.findUnique({
+      const membership = await this.prisma.communityMember.findFirst({
         where: {
-          communityId_customerId: {
-            communityId: id,
-            customerId: customerId!,
-          },
+          communityId: id,
+          customerId: customerId!,
         },
       });
 
@@ -255,6 +247,10 @@ export class CommunityService {
     let finalHeroImg: string | undefined;
 
     if (heroImg) {
+      // Cleanup old image if it exists
+      if (isExist.heroImg) {
+        await this.fileService.autoDelete(isExist.heroImg);
+      }
       finalHeroImg = heroImg.url;
     }
 
@@ -276,12 +272,10 @@ export class CommunityService {
     const user: any = req?.user;
     if (user?.role !== 'ADMIN' && user?.role !== 'SUPER_ADMIN') {
       const customerId = await this.getCustomerId(req);
-      const membership = await this.prisma.communityMember.findUnique({
+      const membership = await this.prisma.communityMember.findFirst({
         where: {
-          communityId_customerId: {
-            communityId: id,
-            customerId: customerId!,
-          },
+          communityId: id,
+          customerId: customerId!,
         },
       });
 
@@ -291,7 +285,7 @@ export class CommunityService {
     }
 
     if (isExist.heroImg) {
-      await this.fileService.deleteFromCloudinary(isExist.heroImg).catch(() => {});
+      await this.fileService.autoDelete(isExist.heroImg);
     }
 
     return await this.prisma.community.delete({

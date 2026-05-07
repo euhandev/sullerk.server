@@ -8,6 +8,7 @@ import {
   HttpStatus,
   Delete,
   Param,
+  Get,
 } from '@nestjs/common';
 import { ListingService } from './listing.service';
 import { CreateListingDto } from './dto/create-listing.dto';
@@ -30,6 +31,24 @@ import { ResponseService } from '@/utils/response';
 @Controller('listings')
 export class ListingController {
   constructor(private readonly listingService: ListingService) {}
+
+  @Get()
+  @ApiOperation({
+    summary: 'Get all listings with search, filter, and pagination',
+    description: `
+      Retrieves a paginated list of all active listings.
+      Supports searching (searchTerm), filtering (sport, teamOrCountry, category, etc.), and sorting.
+    `,
+  })
+  async findAll(@Req() req: any) {
+    const result = await this.listingService.findAll(req);
+    return ResponseService.formatResponse({
+      statusCode: HttpStatus.OK,
+      message: 'Listings retrieved successfully',
+      meta: result.meta,
+      data: result.data,
+    });
+  }
 
   @Post('upload')
   @Roles(Role.CUSTOMER)

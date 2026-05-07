@@ -5,7 +5,11 @@ import { PrismaService } from '@/helper/prisma.service';
 import { CreateListingDto, FileItem } from './dto/create-listing.dto';
 import { FileService as HelperFileService } from '@/helper/file.service';
 import { ApiError } from '@/utils/api_error';
-import { FileAs, FileContext, FileModule } from '@prisma/client';
+import { FileAs, FileContext, FileModule, Listing } from '@prisma/client';
+import QueryBuilder from '@/utils/query_builder';
+import { listingFilterFields, listingInclude, listingSearchFields } from './listing.constant';
+import { IGenericResponse } from '@/interface/common';
+import { Request } from 'express';
 
 @Injectable()
 export class ListingService {
@@ -139,13 +143,7 @@ export class ListingService {
       if (unusedFiles.length > 0) {
         for (const file of unusedFiles) {
           // Delete from storage
-          if (file.url.includes('cloudinary')) {
-            await this.fileService.deleteFromCloudinary(file.url, file.key).catch(() => {});
-          } else if (file.url.includes('digitaloceanspaces')) {
-            await this.fileService.deleteFromDigitalOcean(file.url).catch(() => {});
-          } else {
-            await this.fileService.deleteFromLocal(file.url).catch(() => {});
-          }
+          await this.fileService.autoDelete(file.url, file.key);
         }
 
         // Delete from DB
@@ -281,5 +279,27 @@ export class ListingService {
 
       return { success: true };
     });
+  }
+
+  /**
+   * Get all listings with optimized search, filter, and pagination
+   */
+  async findAll(req: Request): Promise<IGenericResponse<Listing[]>> {
+    const query = req.query;
+    const queryBuilder = new QueryBuilder(query, this.prisma.listing);
+
+    const [data, meta] = await Promise.all([
+      queryBuilder
+        .filter(listingFilterFields)
+        .search(listingSearchFields)
+        .sort()
+        .paginate()
+        .fields()
+        .include(listingInclude)
+        .execute(),
+      queryBuilder.countTotal(),
+    ]);
+
+    return { meta, data };
   }
 }
