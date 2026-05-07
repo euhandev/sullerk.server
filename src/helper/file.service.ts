@@ -377,4 +377,23 @@ export class FileService {
       return this.uploadToLocal(file);
     }
   }
+
+  async autoDelete(url: string, key?: string): Promise<void> {
+    if (!url) return;
+
+    try {
+      if (url.includes('cloudinary.com')) {
+        await this.deleteFromCloudinary(url, key).catch(() => {});
+      } else if (url.includes('digitaloceanspaces.com')) {
+        await this.deleteFromDigitalOcean(url).catch(() => {});
+      } else if (url.includes('/api/v1/files/')) {
+        await this.deleteFromLocal(url).catch(() => {});
+      } else {
+        // Fallback for any other local paths or unknown formats
+        await this.deleteFromLocal(url).catch(() => {});
+      }
+    } catch (error) {
+      console.error(`AutoDelete failed for URL: ${url}`, error);
+    }
+  }
 }

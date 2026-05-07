@@ -264,12 +264,13 @@ curl -X GET http://localhost:8989/api/v1/post \\
 `,
   })
   async findAll(@Req() req: any) {
-    const userId = req.user?.id; // Optional auth
-    const result = await this.postService.findAll(userId);
+    const userId = req.user?.id;
+    const result = await this.postService.findAll(req, userId);
     return ResponseService.formatResponse({
       statusCode: HttpStatus.OK,
-      message: 'Posts retrieved successfully',
-      data: result,
+      message: 'posts retrieved successfully',
+      meta: result.meta,
+      data: result.data,
     });
   }
 

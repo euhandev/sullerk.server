@@ -6,7 +6,11 @@ import { CreatePostDto, FileItem } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { FileService as HelperFileService } from '@/helper/file.service';
 import { ApiError } from '@/utils/api_error';
-import { FileAs, FileContext, FileModule, ReactionType } from '@prisma/client';
+import { FileAs, FileContext, FileModule, Post, ReactionType } from '@prisma/client';
+import { IGenericResponse } from '@/interface/common';
+import { Request } from 'express';
+import QueryBuilder from '@/utils/query_builder';
+import { postFilterFields, postInclude, postSearchFields } from './post.constant';
 
 @Injectable()
 export class PostService {
@@ -133,7 +137,7 @@ export class PostService {
     if (!file) {
       throw new ApiError(HttpStatus.NOT_FOUND, 'File not found or not authorized');
     }
-    await this.fileService.deleteFromCloudinary(file.url, file.key);
+    await this.fileService.autoDelete(file.url, file.key);
     await this.prisma.file.delete({ where: { id } });
     return { success: true };
   }
@@ -310,31 +314,36 @@ export class PostService {
   /**
    * Get all posts with engagement metrics
    */
-  async findAll(userId?: string) {
-    return await this.prisma.post.findMany({
-      include: {
-        customer: {
-          select: {
-            fullName: true,
-            user: { select: { avatar: true } },
-          },
+  /**
+   * Get all posts with optimized search, filter, and pagination
+   */
+  async findAll(req: Request, userId?: string): Promise<IGenericResponse<Post[]>> {
+    const query = req.query;
+    const queryBuilder = new QueryBuilder(query, this.prisma.post);
+
+    // If userId provided, we add logic to check reactions in the include
+    const dynamicInclude = {
+      ...postInclude,
+      ...(userId && {
+        reactions: {
+          where: { customer: { userId } },
+          select: { type: true },
         },
-        _count: {
-          select: {
-            reactions: true,
-            comments: true,
-            reports: true,
-          },
-        },
-        // If we have a userId, we can check if the current user reacted
-        ...(userId && {
-          reactions: {
-            where: { customer: { userId } },
-            select: { type: true },
-          },
-        }),
-      },
-      orderBy: { createdAt: 'desc' },
-    });
+      }),
+    };
+
+    const [data, meta] = await Promise.all([
+      queryBuilder
+        .filter(postFilterFields)
+        .search(postSearchFields)
+        .sort()
+        .paginate()
+        .fields()
+        .include(dynamicInclude)
+        .execute(),
+      queryBuilder.countTotal(),
+    ]);
+
+    return { meta, data };
   }
 }
