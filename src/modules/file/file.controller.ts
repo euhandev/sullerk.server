@@ -37,7 +37,7 @@ export class FileController {
     ParseFormDataInterceptor,
   )
   async upload(@UploadedFiles() files: Record<string, Express.Multer.File[]>) {
-    let uploadedFiles: string[] | null = null;
+    let uploadedFiles: any[] | null = null;
 
     const uploadableFiles = files?.files;
 

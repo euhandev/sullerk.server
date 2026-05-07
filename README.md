@@ -22,9 +22,100 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
-
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+
+## Database Architecture
+
+Below is the entity-relationship diagram representing the core data structure of the Sullerk platform.
+
+```mermaid
+erDiagram
+    User {
+        String id PK
+        String username
+        String email UK
+        Role role
+        Status status
+    }
+    Admin {
+        String id PK
+        String userId FK
+        String fullName
+    }
+    Customer {
+        String id PK
+        String userId FK
+        String fullName
+        Float balance
+    }
+    Post {
+        String id PK
+        String customerId FK
+        String description
+    }
+    Comment {
+        String id PK
+        String postId FK
+        String customerId FK
+        String body
+    }
+    Listing {
+        String id PK
+        String ownerId FK
+        String title
+        Float initialPrice
+        ListingStatus status
+    }
+    Order {
+        String id PK
+        String orderNumber UK
+        String listingId FK
+        String buyerId FK
+        String sellerId FK
+        Float totalAmount
+        OrderStatus status
+    }
+    Dispute {
+        String id PK
+        String listingId FK
+        String orderId FK
+        String raisedById FK
+        String resolvedById FK
+        DisputeStatus status
+    }
+    Community {
+        String id PK
+        String name
+        CommunityType type
+    }
+    CommunityMember {
+        String id PK
+        String customerId FK
+        String communityId FK
+        CommunityUserType userType
+    }
+    CommunityPost {
+        String id PK
+        String customerId FK
+        String communityId FK
+    }
+
+    User ||--|| Admin : "manages"
+    User ||--|| Customer : "profile"
+    Admin ||--o{ Dispute : "resolves"
+    Customer ||--o{ Post : "authors"
+    Customer ||--o{ Listing : "owns"
+    Customer ||--o{ Order : "buys/sells"
+    Customer ||--o{ Dispute : "raises"
+    Customer ||--o{ CommunityMember : "belongs to"
+    Post ||--o{ Comment : "has"
+    Listing ||--o{ Order : "is sold via"
+    Listing ||--o{ Dispute : "is disputed"
+    Order ||--o{ Dispute : "has"
+    Community ||--o{ CommunityMember : "contains"
+    Community ||--o{ CommunityPost : "hosts"
+```
+
 
 ## Installation
 

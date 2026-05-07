@@ -34,21 +34,12 @@ export class FileService {
   }
 
   /**
-   * Convert image to .webp using Sharp
+   * Uploads a single file to Cloudinary and returns its URL and Public ID.
    */
-  private async convertToWebP(originalPath: string): Promise<string> {
-    const newFilename = `${randomUUID()}.webp`;
-    const newPath = path.join(os.tmpdir(), newFilename);
-
-    await sharp(originalPath).webp({ quality: 80 }).toFile(newPath);
-
-    return newPath;
-  }
-
-  /**
-   * Uploads a single file to Cloudinary and returns its URL.
-   */
-  async uploadToCloudinary(file: Express.Multer.File, folder: string = 'general'): Promise<string> {
+  async uploadToCloudinary(
+    file: Express.Multer.File,
+    folder: string = 'general',
+  ): Promise<{ url: string; key: string }> {
     if (file.buffer) {
       return this.uploadBufferToCloudinary(file, folder);
     }
@@ -63,7 +54,8 @@ export class FileService {
       if (file.path) {
         await fs.unlink(file.path).catch(() => {}); // Clean up temp file
       }
-      return (result as { secure_url: string }).secure_url;
+      const res = result as { secure_url: string; public_id: string };
+      return { url: res.secure_url, key: res.public_id };
     } catch (error) {
       if (file.path) {
         await fs.unlink(file.path).catch(() => {});
@@ -78,13 +70,13 @@ export class FileService {
   async uploadBufferToCloudinary(
     file: Express.Multer.File,
     folder: string = 'general',
-  ): Promise<string> {
+  ): Promise<{ url: string; key: string }> {
     return new Promise((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
         { folder, resource_type: 'auto' },
         (error, result) => {
           if (error) reject(error);
-          else resolve(result.secure_url);
+          else resolve({ url: result.secure_url, key: result.public_id });
         },
       );
       const stream = Readable.from(file.buffer);
@@ -98,7 +90,7 @@ export class FileService {
   async uploadMultipleToCloudinary(
     files: Express.Multer.File[],
     folder: string = 'general',
-  ): Promise<string[]> {
+  ): Promise<{ url: string; key: string }[]> {
     try {
       const uploadPromises = files?.map((file) => this.uploadToCloudinary(file, folder));
       return await Promise.all(uploadPromises);
@@ -107,8 +99,22 @@ export class FileService {
     }
   }
 
-  async deleteFromCloudinary(url: string): Promise<void> {
+  async deleteFromCloudinary(url: string, key?: string): Promise<void> {
     try {
+      if (key) {
+        let resourceType = 'image';
+        if (url.includes('/video/upload/')) resourceType = 'video';
+        if (url.includes('/raw/upload/')) resourceType = 'raw';
+
+        await new Promise((resolve, reject) => {
+          cloudinary.uploader.destroy(key, { resource_type: resourceType }, (error, result) => {
+            if (error) reject(error);
+            else resolve(result);
+          });
+        });
+        return;
+      }
+
       if (!url) return;
       const urlParts = url.split('/upload/');
       if (urlParts.length > 1) {
@@ -153,7 +159,7 @@ export class FileService {
     }
   }
 
-  async uploadToDigitalOcean(file: Express.Multer.File): Promise<string> {
+  async uploadToDigitalOcean(file: Express.Multer.File): Promise<{ url: string; key: string }> {
     try {
       const fileStream = fs.createReadStream(file.path);
       const key = slugify(`${randomUUID()}-${file.originalname}`, {
@@ -176,7 +182,7 @@ export class FileService {
       // `${config.aws.do_space_endpoint}/${config.aws.do_space_bucket}/${key}`;
       const location = `${this.configService.get('DO_SPACE_ENDPOINT')}/${bucket}/${key}`;
       await fs.unlink(file.path);
-      return location;
+      return { url: location, key };
     } catch (error) {
       await fs.unlink(file.path).catch(() => {});
       throw error;
@@ -189,7 +195,7 @@ export class FileService {
   async uploadMultipleToDigitalOcean(
     files: Express.Multer.File[],
     type?: 'disk' | 'memory',
-  ): Promise<string[]> {
+  ): Promise<{ url: string; key: string }[]> {
     try {
       if (!type || type === 'disk') {
         const uploadPromises = files?.map((file) => this.uploadToDigitalOcean(file));
@@ -240,7 +246,9 @@ export class FileService {
     }
   }
 
-  async uploadBufferToDigitalOcean(file: Express.Multer.File): Promise<string> {
+  async uploadBufferToDigitalOcean(
+    file: Express.Multer.File,
+  ): Promise<{ url: string; key: string }> {
     try {
       const key = slugify(`${new Date().getTime()}-${file.originalname}`, {
         replacement: '-',
@@ -262,32 +270,66 @@ export class FileService {
         }),
       );
 
-      return `${this.configService.get('DO_SPACE_ENDPOINT')}/${bucket}/${key}`;
+      return { url: `${this.configService.get('DO_SPACE_ENDPOINT')}/${bucket}/${key}`, key };
     } catch (error) {
       throw new Error(`Failed to upload buffer to DigitalOcean: ${error.message}`);
     }
   }
 
-  async uploadToLocal(file: Express.Multer.File): Promise<string> {
-    const webpPath = await this.convertToWebP(file.path);
-    const fileName = `${randomUUID()}.webp`;
+  private async convertToWebP(input: string | Buffer): Promise<string> {
+    const newFilename = `${randomUUID()}.webp`;
+    const newPath = path.join(os.tmpdir(), newFilename);
+
+    await sharp(input).webp({ quality: 80 }).toFile(newPath);
+
+    return newPath;
+  }
+
+  async uploadToLocal(file: Express.Multer.File): Promise<{ url: string; key: string }> {
+    let finalPath = file.path;
+    let webpPath: string | null = null;
+    const isImage = file.mimetype.startsWith('image/');
+
+    if (isImage) {
+      webpPath = await this.convertToWebP(file.path || file.buffer);
+      finalPath = webpPath;
+    }
+
+    const fileName = isImage
+      ? `${randomUUID()}.webp`
+      : `${randomUUID()}${path.extname(file.originalname)}`;
     const localDir = path.join(process.cwd(), 'files');
     const localPath = path.join(localDir, fileName);
 
     try {
       await fs.ensureDir(localDir);
-      await fs.move(webpPath, localPath);
+      if (file.path || isImage) {
+        await fs.move(finalPath, localPath);
+      } else {
+        await fs.writeFile(localPath, file.buffer);
+      }
 
-      await fs.unlink(file.path);
-      return `${this.configService.get('SERVER_URL')}/api/v1/files/${fileName}`;
+      if (isImage && file.path) {
+        await fs.unlink(file.path).catch(() => {});
+      }
+      return {
+        url: `${this.configService.get('SERVER_URL')}/api/v1/files/${fileName}`,
+        key: fileName,
+      };
     } catch (error) {
-      await fs.unlink(file.path).catch(() => {});
-      await fs.unlink(webpPath).catch(() => {});
+      if (file.path) {
+        await fs.unlink(file.path).catch(() => {});
+      }
+      if (webpPath) {
+        await fs.unlink(webpPath).catch(() => {});
+      }
       throw error;
     }
   }
 
-  async uploadMultipleToLocal(files: Express.Multer.File[]): Promise<string[]> {
+  async uploadMultipleToLocal(
+    files: Express.Multer.File[],
+  ): Promise<{ url: string; key: string }[]> {
     try {
       const uploadPromises = files.map((file) => this.uploadToLocal(file));
       return await Promise.all(uploadPromises);
@@ -317,6 +359,22 @@ export class FileService {
       await Promise.all(deletePromises);
     } catch (error) {
       throw new Error(`Failed to delete multiple local files: ${error.message}`);
+    }
+  }
+
+  async autoUpload(
+    file: Express.Multer.File,
+    folder: string = 'general',
+  ): Promise<{ url: string; key: string }> {
+    const cloudinaryKey = this.configService.get('CLOUDINARY_API_KEY');
+    const doSpaceKey = this.configService.get('DO_SPACE_ACCESS_KEY');
+
+    if (cloudinaryKey && cloudinaryKey !== 'your_api_key') {
+      return this.uploadToCloudinary(file, folder);
+    } else if (doSpaceKey && doSpaceKey !== 'your_access_key') {
+      return this.uploadToDigitalOcean(file);
+    } else {
+      return this.uploadToLocal(file);
     }
   }
 }

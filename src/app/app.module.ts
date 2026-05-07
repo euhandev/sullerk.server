@@ -8,6 +8,7 @@ import { AuthGuard } from '@/modules/auth/auth.guard';
 import { AuthModule } from '@/modules/auth/auth.module';
 import { CustomerModule } from '@/modules/customer/customer.module';
 import { FileModule } from '@/modules/file/file.module';
+import { ListingModule } from '@/modules/listing/listing.module';
 import { RolesGuard } from '@/modules/roles/roles.guard';
 import { UserModule } from '@/modules/user/user.module';
 import { UserService } from '@/modules/user/user.service';
@@ -30,6 +31,11 @@ import { CommunityCommentModule } from '@/modules/community-comment/community-co
 import { CommunityReactionModule } from '@/modules/community-reaction/community-reaction.module';
 import { CommunityRepostModule } from '@/modules/community-repost/community-repost.module';
 import { CommunityStarredPostModule } from '@/modules/community-starred-post/community-starred-post.module';
+import { PostModule } from '@/modules/post/post.module';
+import { OrderModule } from '@/modules/order/order.module';
+import { PaymentModule } from '@/modules/payment/payment.module';
+import { ExchangeModule } from '@/modules/exchange/exchange.module';
+import { DisputeModule } from '@/modules/dispute/dispute.module';
 
 @Module({
   imports: [
@@ -62,6 +68,8 @@ import { CommunityStarredPostModule } from '@/modules/community-starred-post/com
     FileModule,
     ConfigModule,
     AnalyticsModule,
+    ListingModule,
+    PostModule,
     CommunityModule,
     CommunityMemberModule,
     CommunityPostModule,
@@ -69,7 +77,12 @@ import { CommunityStarredPostModule } from '@/modules/community-starred-post/com
     CommunityReactionModule,
     CommunityRepostModule,
     CommunityStarredPostModule,
+    OrderModule,
+    PaymentModule,
+    ExchangeModule,
+    DisputeModule,
   ],
+
   controllers: [AppController],
   providers: [
     UserService,

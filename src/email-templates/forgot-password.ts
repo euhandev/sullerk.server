@@ -131,4 +131,41 @@ export class EmailTemplate {
     };
     return params;
   }
+
+  async passwordResetSuccessEmail(email: string, name: string) {
+    const params: BrevoEmailParams = {
+      sender: { email: 'contact.proconnect2@gmail.com', name: 'oaktree' },
+      to: [{ email, name }],
+      subject: 'oaktree - Password Changed Successfully',
+      htmlContent: `<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Password Changed</title>
+    </head>
+    <body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7fa; margin: 0; padding: 20px; line-height: 1.6; color: #333333;">
+        <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
+            <div style="background-color: #4CAF50; padding: 30px 20px; text-align: center;">
+                <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 600;">Password Updated</h1>
+            </div>
+            <div style="padding: 40px 30px;">
+                <p style="font-size: 16px; margin-bottom: 20px;">Dear ${name},</p>
+                
+                <p style="font-size: 16px; margin-bottom: 20px;">This is a confirmation that your password for your oaktree account has been successfully changed.</p>
+                
+                <p style="font-size: 16px; margin-bottom: 20px;">If you did not make this change, please contact our support team immediately to secure your account.</p>
+                
+                <p style="font-size: 16px; margin-bottom: 0;">Best regards,<br>Oaktree Support Team</p>
+            </div>
+            <div style="background-color: #f8f9fa; padding: 20px; text-align: center; font-size: 14px; color: #6c757d;">
+                <p style="margin: 0 0 10px;">This is an automated security notification.</p>
+                <p style="margin: 0;">© 2025 oaktree. All rights reserved.</p>
+            </div>
+        </div>
+    </body>
+    </html>`,
+    };
+    return params;
+  }
 }

@@ -1,4 +1,16 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { Public } from './auth.decorator';
@@ -41,7 +53,10 @@ export class AuthController {
 
   private setAuthCookies(res: Response, tokens: { accessToken: string; refreshToken: string }) {
     const isProduction = this.configService.get('NODE_ENV')?.toLowerCase() === 'production';
-    const cookieDomain = this.configService.get('COOKIE_DOMAIN') || 'localhost';
+    let cookieDomain = this.configService.get('COOKIE_DOMAIN') || 'localhost';
+
+    // 🛡️ Sanitize domain: remove protocol (http://) and port (:3000)
+    cookieDomain = cookieDomain.replace(/^https?:\/\//, '').split(':')[0];
 
     const accessTokenMaxAge = this.parseMaxAge(this.configService.get('JWT_EXPIRES_IN') || '7d');
     const refreshTokenMaxAge = this.parseMaxAge(
@@ -167,5 +182,32 @@ export class AuthController {
       message: 'User Logout successfully',
       data: true,
     });
+  }
+
+  @Public()
+  @Get('google')
+  @UseGuards(AuthGuard('google'))
+  @ApiOperation({ summary: 'Initiate Google Login' })
+  async googleAuth() {
+    // This initiates the Google OAuth flow
+  }
+
+  @Public()
+  @Get('google/callback')
+  @UseGuards(AuthGuard('google'))
+  @ApiOperation({ summary: 'Google Login Callback' })
+  async googleAuthRedirect(@Req() req: any, @Res() res: Response) {
+    const result = await this.authService.validateOAuthUser(req.user);
+
+    // 🍪 Set tokens as HTTP-only cookies
+    this.setAuthCookies(res, {
+      accessToken: result.access_token,
+      refreshToken: result.refresh_token,
+    });
+
+    const frontendUrl = this.configService.get('FRONTEND_URL') || 'http://localhost:3000';
+    return res.redirect(
+      `${frontendUrl}/auth/success?accessToken=${result.access_token}&refreshToken=${result.refresh_token}`,
+    );
   }
 }

@@ -53,7 +53,9 @@ async function bootstrap() {
     allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Origin'],
   });
 
-  app.setGlobalPrefix('api/v1');
+  app.setGlobalPrefix('api/v1', {
+    exclude: ['health'],
+  });
 
   // validation pipe
   app.useGlobalPipes(
@@ -68,10 +70,21 @@ async function bootstrap() {
   app.use(cookieParser());
 
   const config = new DocumentBuilder()
-    .setTitle('KSMM Api Documentation')
-    .setDescription('API documentation')
-    .setVersion('0.0.1')
+    .setTitle('Sullerk Api Documentation')
+    .setDescription('API documentation for Sullerk platform')
+    .setVersion('1.0.0')
     .setContact('Euhan Sarkar', 'https://github.com/euhandev', 'euhan.dev@gmail.com')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'JWT',
+        description: 'Enter JWT token',
+        in: 'header',
+      },
+      'JWT-auth', // This name must match @ApiBearerAuth('JWT-auth')
+    )
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

@@ -18,7 +18,9 @@ model User {
   username                String
   email                   String         @unique
   contactNo               String         @default("")
-  password                String
+  password                String?
+  provider                AuthProvider   @default(LOCAL)
+  googleId                String?        @unique
   lang                    Lang           @default(ENG)
   role                    Role           @default(CUSTOMER)
   avatar                  String?        @default("")
@@ -53,6 +55,8 @@ model Admin {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  resolvedDisputes Dispute[] @relation("ResolvedBy")
+
   @@map("admins")
 }
 
@@ -72,17 +76,19 @@ model Customer {
   updatedAt  DateTime    @updatedAt
   user       User        @relation(fields: [userId], references: [id])
 
-  items          Item[]          @relation("ItemOwner")
+  listings       Listing[]   @relation("ListingOwner")
+
   ordersAsBuyer  Order[]         @relation("OrderBuyer")
   ordersAsSeller Order[]         @relation("OrderSeller")
-  disputes       Dispute[]
   watchlists     Watchlist[]
   paymentMethods PaymentMethod[]
-  ItemHistory    ItemHistory[]
+  listingHistory ListingHistory[]
   Report         Report[]
-  dealsAsBuyer   Deal[]          @relation("DealBuyer")
-  dealsAsSeller  Deal[]          @relation("DealSeller")
-  starredItems   StarredItem[]
+  dealsAsBuyer   Deal[]           @relation("DealBuyer")
+  dealsAsSeller  Deal[]           @relation("DealSeller")
+  starredListings StarredListing[]
+  shares          ListingShare[]
+
   posts          Post[]
   reports        Repost[]
   comments       Comment[]
@@ -96,6 +102,9 @@ model Customer {
   blockedBy           BlockedUser[] @relation("BlockedBy")
   blockedUsers        BlockedUser[] @relation("BlockedUser")
 
+  balance      Float     @default(0.0) // Virtual wallet
+  transactions Transaction[]
+
   communityMembers   CommunityMember[]
   communityPosts     CommunityPost[]
   communityComments  CommunityComment[]
@@ -107,6 +116,11 @@ model Customer {
   subscriptions Subscription[]
   payments      Payment[]
   activityLogs  ActivityLog[]
+
+  exchangeSent     ExchangeOffer[] @relation("ExchangeSender")
+  exchangeReceived ExchangeOffer[] @relation("ExchangeReceiver")
+
+  raisedDisputes   Dispute[]       @relation("RaisedBy")
 
   @@index([createdAt])
   @@map("customers")
@@ -171,13 +185,16 @@ model Post {
   customer   Customer   @relation(fields: [customerId], references: [id])
   aiAnalysis String?    @default("")
   type       PostType[]
-  text       String?    @default("")
+  description String?   @default("")
+  
+  images     FileItem[]
 
-  // ─── Article Url ───
-  articleUrl String? @default("")
+  // ─── External Link ───
+  externalLink String? @default("")
 
-  // ─── Image uploads ───
-  files File[]
+  // ─── Linked Listing ───
+  listingId    String?    @db.ObjectId
+  listing      Listing?   @relation(fields: [listingId], references: [id])
 
   // ─── Poll ───
   pollQuestion       String?
@@ -194,6 +211,8 @@ model Post {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  
+  files File[]
 }
 
 model PollOption {
@@ -202,7 +221,7 @@ model PollOption {
   votes     Int        @default(0)
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
-  post      Post       @relation("PollOptions", fields: [postId], references: [id])
+  post      Post       @relation("PollOptions", fields: [postId], references: [id], onDelete: Cascade)
   postId    String     @db.ObjectId
   PollVote  PollVote[]
 
@@ -228,7 +247,7 @@ model PollVote {
 model Reaction {
   id          String       @id @default(auto()) @map("_id") @db.ObjectId
   postId      String       @db.ObjectId
-  post        Post         @relation(fields: [postId], references: [id])
+  post        Post         @relation(fields: [postId], references: [id], onDelete: Cascade)
   reactedById String       @db.ObjectId
   customer    Customer     @relation(fields: [reactedById], references: [id])
   type        ReactionType @default(LIKE)
@@ -240,10 +259,27 @@ model Reaction {
   @@map("reactions")
 }
 
+
+model DealListing {
+  id        String          @id @default(auto()) @map("_id") @db.ObjectId
+  dealId    String          @db.ObjectId
+  deal      Deal            @relation(fields: [dealId], references: [id])
+  listingId String          @db.ObjectId
+  listing   Listing         @relation(fields: [listingId], references: [id])
+  type      DealListingType @default(MINE)
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+
+  @@unique([dealId, listingId])
+  @@map("deal_listings")
+}
+
+
+
 model Repost {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
   postId       String   @db.ObjectId
-  post         Post     @relation(fields: [postId], references: [id])
+  post         Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   reportedById String   @db.ObjectId
   customer     Customer @relation(fields: [reportedById], references: [id])
 
@@ -257,7 +293,7 @@ model Repost {
 model StarredPost {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
   postId       String   @db.ObjectId
-  post         Post     @relation(fields: [postId], references: [id])
+  post         Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   reportedById String   @db.ObjectId
   customer     Customer @relation(fields: [reportedById], references: [id])
 
@@ -272,7 +308,7 @@ model Comment {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
   postId String @db.ObjectId
-  post   Post   @relation(fields: [postId], references: [id])
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   customerId String   @db.ObjectId
   customer   Customer @relation(fields: [customerId], references: [id])
@@ -437,6 +473,14 @@ enum PostType {
   LINK
 }
 
+enum AuthProvider {
+  LOCAL
+  GOOGLE
+  APPLE
+  FACEBOOK
+  GITHUB
+}
+
 enum ReactionType {
   LIKE
   LOVE
@@ -446,31 +490,43 @@ enum ReactionType {
   ANGRY
 }
 
-model Item {
-  id              String        @id @default(auto()) @map("_id") @db.ObjectId
-  title           String?
-  sport           String
-  teamOrCountry   String
-  playerName      String?
-  category        ItemCategory
-  seasonOrYear    String
-  kitType         String? // Home, Away, Third, Special Edition, Match Worn, N/A
-  description     String
-  photos          File[]
-  signatureType   SignatureType @default(NONE)
-  photoProofLevel ProofLevel    @default(NONE)
-  authentication  String?
-  videoEvidence   VideoEvidence @default(NONE)
-  format          SaleFormat    @default(BUY_NOW)
+model Listing {
+  id                    String          @id @default(auto()) @map("_id") @db.ObjectId
+  title                 String?
+  sport                 String
+  teamOrCountry         String
+  playerOrManagerName   String?
+  category              ListingCategory
+  seasonOrYear          String
+  kitType               String? // Home, Away, Third, Special Edition, Match Worn, N/A
+  description           String
+  signatureType         SignatureType   @default(NONE)
+  photoProofType        PhotoProofType  @default(NONE)
+  videoProofType        VideoProofType  @default(NONE)
+  coaStatus             COAStatus       @default(NO_COA)
+  companyAuthentication String?         @default("Not Authenticated")
+  format                SaleFormat      @default(BUY_NOW)
 
-  baseValue       Float      @default(0.0)
-  initialPrice    Float      @default(0.0)
-  allowOffers     Boolean    @default(false)
-  autoPriceAdjust Boolean    @default(false)
-  status          ItemStatus @default(PENDING)
+  photos      FileItem[]
+  proofPhotos FileItem[]
+  proofVideos FileItem[]
+  coaFiles    FileItem[]
+  files       File[]
+
+  isTradingEnable    Boolean @default(false)
+  isHoldPrice        Boolean @default(false)
+  isPauseListing     Boolean @default(false)
+  estimatedBaseValue Float   @default(0.0)
+  initialPrice       Float   @default(0.0)
+
+  allowOffers     Boolean       @default(false)
+  autoPriceAdjust Boolean       @default(false)
+  status          ListingStatus @default(PENDING)
+  sharesCount     Int           @default(0)
+
 
   ownerId String   @db.ObjectId
-  owner   Customer @relation("ItemOwner", fields: [ownerId], references: [id])
+  owner   Customer @relation("ListingOwner", fields: [ownerId], references: [id])
 
   acquiredDate DateTime?
 
@@ -478,39 +534,51 @@ model Item {
   watchlists Watchlist[]
   reports    Report[]
 
-  createdAt     DateTime         @default(now())
-  updatedAt     DateTime         @updatedAt
-  ItemHistories ItemHistory[]
-  dealItems     DealItem[]
-  starredItems  StarredItem[]
-  collections   CollectionItem[]
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+  ListingHistories ListingHistory[]
+  dealListings     DealListing[]
+  starredListings  StarredListing[]
+  collections      CollectionListing[]
+  posts            Post[]
+  shares           ListingShare[]
 
-  @@map("items")
+  disputes      Dispute[]
+
+  @@map("listings")
 }
+
+type FileItem {
+  fileId String
+  url    String
+}
+
 
 model Collection {
   id          String           @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   description String
-  items       CollectionItem[]
+  listings    CollectionListing[]
+
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
 
   @@map("collections")
 }
 
-model CollectionItem {
+model CollectionListing {
   id           String     @id @default(auto()) @map("_id") @db.ObjectId
   collectionId String     @db.ObjectId
   collection   Collection @relation(fields: [collectionId], references: [id])
-  itemId       String     @db.ObjectId
-  item         Item       @relation(fields: [itemId], references: [id])
+  listingId    String     @db.ObjectId
+  listing      Listing    @relation(fields: [listingId], references: [id])
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
 
-  @@unique([collectionId, itemId])
-  @@map("collection_items")
+  @@unique([collectionId, listingId])
+  @@map("collection_listings")
 }
+
 
 model Deal {
   id        String     @id @default(auto()) @map("_id") @db.ObjectId
@@ -520,7 +588,8 @@ model Deal {
   seller    Customer   @relation("DealSeller", fields: [sellerId], references: [id])
   note      String?
   status    DealStatus @default(APPROTCHED)
-  items     DealItem[]
+  listings  DealListing[]
+
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
 
@@ -533,41 +602,19 @@ enum DealStatus {
   REJECTED
 }
 
-model DealItem {
-  id        String       @id @default(auto()) @map("_id") @db.ObjectId
-  dealId    String       @db.ObjectId
-  deal      Deal         @relation(fields: [dealId], references: [id])
-  itemId    String       @db.ObjectId
-  item      Item         @relation(fields: [itemId], references: [id])
-  type      DealItemType @default(MINE)
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
-
-  @@map("deal_items")
-}
-
-enum DealItemType {
+enum DealListingType {
   MINE
   OTHERS
 }
 
-model StarredItem {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  itemId     String   @db.ObjectId
-  item       Item     @relation(fields: [itemId], references: [id])
-  customerId String   @db.ObjectId
-  customer   Customer @relation(fields: [customerId], references: [id])
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 
-  @@map("starred_items")
-}
+
 
 model Report {
   id           String       @id @default(auto()) @map("_id") @db.ObjectId
-  itemId       String       @db.ObjectId
-  item         Item         @relation(fields: [itemId], references: [id])
+  listingId    String       @db.ObjectId
+  listing      Listing      @relation(fields: [listingId], references: [id])
   reportedById String       @db.ObjectId
   customer     Customer     @relation(fields: [reportedById], references: [id])
   reportNote   String
@@ -579,38 +626,58 @@ model Report {
   @@map("reports")
 }
 
+
+model StarredListing {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  customerId String   @db.ObjectId
+  customer   Customer @relation(fields: [customerId], references: [id])
+  listingId  String   @db.ObjectId
+  listing    Listing  @relation(fields: [listingId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([customerId, listingId])
+  @@map("starred_listings")
+}
+
 enum ReportStatus {
   PENDING
   ACTIVE
   COMPLETED
 }
 
-model ItemHistory {
+model ListingHistory {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  itemId     String   @db.ObjectId
-  item       Item     @relation(fields: [itemId], references: [id])
+  listingId  String   @db.ObjectId
+  listing    Listing  @relation(fields: [listingId], references: [id])
   customerId String   @db.ObjectId
   customer   Customer @relation(fields: [customerId], references: [id])
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  @@unique([itemId, customerId])
-  @@map("item_histories")
+  @@unique([listingId, customerId])
+  @@map("listing_histories")
 }
 
+
 model Order {
-  id          String      @id @default(auto()) @map("_id") @db.ObjectId
-  orderNumber String      @unique
-  itemId      String      @db.ObjectId
-  item        Item        @relation(fields: [itemId], references: [id])
-  buyerId     String      @db.ObjectId
-  buyer       Customer    @relation("OrderBuyer", fields: [buyerId], references: [id])
-  sellerId    String      @db.ObjectId
-  seller      Customer    @relation("OrderSeller", fields: [sellerId], references: [id])
-  amount      Float
-  status      OrderStatus @default(PENDING)
-  trackingNo  String?
-  type        OrderType   @default(PURCHASE)
+  id              String      @id @default(auto()) @map("_id") @db.ObjectId
+  orderNumber     String      @unique
+  listingId       String      @db.ObjectId
+  listing         Listing     @relation(fields: [listingId], references: [id])
+  buyerId         String      @db.ObjectId
+  buyer           Customer    @relation("OrderBuyer", fields: [buyerId], references: [id])
+  sellerId        String      @db.ObjectId
+  seller          Customer    @relation("OrderSeller", fields: [sellerId], references: [id])
+  
+  totalAmount     Float       // Total paid by buyer
+  platformFee     Float       @default(0.0) // Deducted amount
+  sellerEarnings  Float       @default(0.0) // Net amount for seller
+  
+  status          OrderStatus @default(PENDING_PAYMENT)
+  stripeSessionId String?     // Track Stripe checkout
+  trackingNo      String?
+  type            OrderType   @default(PURCHASE)
 
   disputes Dispute[]
 
@@ -620,15 +687,79 @@ model Order {
   @@map("orders")
 }
 
+model ExchangeOffer {
+  id              String         @id @default(auto()) @map("_id") @db.ObjectId
+  
+  senderId        String         @db.ObjectId
+  sender          Customer       @relation("ExchangeSender", fields: [senderId], references: [id])
+  
+  receiverId      String         @db.ObjectId
+  receiver        Customer       @relation("ExchangeReceiver", fields: [receiverId], references: [id])
+  
+  // Support for Bundles (multiple listings on either side)
+  senderListingIds   String[]      @db.ObjectId
+  receiverListingIds String[]      @db.ObjectId
+  
+  senderTotalValue   Float         @default(0.0)
+  receiverTotalValue Float         @default(0.0)
+  balanceToPay       Float         @default(0.0) // Difference to balance the trade
+  
+  note            String?
+  status          ExchangeStatus @default(PENDING)
+  paymentStatus   String         @default("NONE") // NONE, PENDING, PAID
+  stripeSessionId String?
+  
+  // Negotiation History (Offer -> Re-offer chain)
+  parentOfferId   String?        @db.ObjectId
+  parentOffer     ExchangeOffer? @relation("CounterOffers", fields: [parentOfferId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  counterOffers   ExchangeOffer[] @relation("CounterOffers")
+
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  @@map("exchange_offers")
+}
+
+model Transaction {
+  id              String          @id @default(auto()) @map("_id") @db.ObjectId
+  customerId      String          @db.ObjectId
+  customer        Customer        @relation(fields: [customerId], references: [id])
+  
+  amount          Float           // Positive for credits, negative for debits
+  type            TransactionType
+  
+  orderId         String?         @db.ObjectId
+  exchangeOfferId String?         @db.ObjectId
+  
+  description     String?         // e.g. "Payment for Listing X"
+  createdAt       DateTime        @default(now())
+
+  @@map("transactions")
+}
+
 model Dispute {
-  id         String        @id @default(auto()) @map("_id") @db.ObjectId
-  orderId    String        @db.ObjectId
-  order      Order         @relation(fields: [orderId], references: [id])
-  raisedById String        @db.ObjectId
-  raisedBy   Customer      @relation(fields: [raisedById], references: [id])
-  type       DisputeType
-  status     DisputeStatus @default(OPEN)
-  reason     String
+  id             String        @id @default(auto()) @map("_id") @db.ObjectId
+  
+  listingId      String?       @db.ObjectId
+  listing        Listing?      @relation(fields: [listingId], references: [id])
+  
+  orderId        String?       @db.ObjectId
+  order          Order?        @relation(fields: [orderId], references: [id])
+  
+  raisedById     String        @db.ObjectId
+  raisedBy       Customer      @relation("RaisedBy", fields: [raisedById], references: [id])
+  
+  resolvedById   String?       @db.ObjectId
+  resolvedBy     Admin?        @relation("ResolvedBy", fields: [resolvedById], references: [id])
+  
+  type           DisputeType
+  status         DisputeStatus @default(OPEN)
+  
+  reason         String        
+  details        String?       
+  resolutionNote String?       
+  
+  evidence       FileItem[]    
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -640,14 +771,28 @@ model Watchlist {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
   customerId String   @db.ObjectId
   customer   Customer @relation(fields: [customerId], references: [id])
-  itemId     String   @db.ObjectId
-  item       Item     @relation(fields: [itemId], references: [id])
+  listingId  String   @db.ObjectId
+  listing    Listing  @relation(fields: [listingId], references: [id])
 
   createdAt DateTime @default(now())
 
-  @@unique([customerId, itemId])
+  @@unique([customerId, listingId])
   @@map("watchlists")
 }
+
+model ListingShare {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  customerId String   @db.ObjectId
+  customer   Customer @relation(fields: [customerId], references: [id])
+  listingId  String   @db.ObjectId
+  listing    Listing  @relation(fields: [listingId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@unique([customerId, listingId])
+  @@map("listing_shares")
+}
+
 
 model PaymentMethod {
   id         String            @id @default(auto()) @map("_id") @db.ObjectId
@@ -764,7 +909,8 @@ model PricingConfig {
   @@map("pricing_configs")
 }
 
-enum ItemCategory {
+enum ListingCategory {
+
   SHIRT
   BOOTS
   CARD
@@ -781,19 +927,27 @@ enum SignatureType {
   DEDICATED
 }
 
-enum ProofLevel {
+enum PhotoProofType {
   NONE
   PARTIAL
   FULL
   WITH_ATHLETE
 }
 
-enum VideoEvidence {
+enum VideoProofType {
   NONE
-  ITEM
+  LISTING
   SIGNING
   WITH_ATHLETE
 }
+
+enum COAStatus {
+  NO_COA
+  COA_INCLUDED
+  SELF_CERTIFIED
+}
+
+
 
 enum SaleFormat {
   BUY_NOW
@@ -801,24 +955,44 @@ enum SaleFormat {
   BUY_AND_TRADE
 }
 
-enum ItemStatus {
+enum ListingStatus {
   ACTIVE
   PAUSED
   PENDING
+  LOCKED      // Reserved during checkout
   SOLD
+  EXCHANGED
 }
 
 enum OrderStatus {
-  PENDING
+  PENDING_PAYMENT
+  PAID
   PROCESSING
   SHIPPED
   DELIVERED
   CANCELLED
+  COMPLETED
 }
 
 enum OrderType {
   PURCHASE
   TRADE
+}
+
+enum ExchangeStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  CANCELLED
+  COUNTERED
+}
+
+enum TransactionType {
+  SALE_REVENUE
+  PURCHASE_DEBIT
+  TRADE_BALANCE
+  PLATFORM_FEE
+  WITHDRAWAL
 }
 
 enum DisputeType {
@@ -838,20 +1012,6 @@ enum PaymentMethodType {
   CARD
 }
 
-enum TransactionType {
-  PAYMENT
-  WITHDRAWAL
-  FEE
-  REFUND
-}
-
-enum TransactionStatus {
-  PENDING
-  COMPLETED
-  FAILED
-  CANCELLED
-}
-
 model Newsletter {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
   customerId String?  @db.ObjectId
@@ -866,26 +1026,46 @@ model File {
   id              String         @id @default(auto()) @map("_id") @db.ObjectId
   name            String?
   url             String
+  key             String?
   type            FileType       @default(DOC)
-  as              FileAs         @default(NONE)
+  purpose         FileAs         @default(PHOTOS)
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
-  Item            Item?          @relation(fields: [itemId], references: [id])
-  itemId          String?        @db.ObjectId
+  listing         Listing?       @relation(fields: [listingId], references: [id])
+  listingId       String?        @db.ObjectId
+  uploadedById    String?        @db.ObjectId
+  isPending       Boolean        @default(false)
+  context         FileContext    @default(CREATE)
+
   postId          String?        @db.ObjectId
-  post            Post?          @relation(fields: [postId], references: [id])
+
+  post            Post?          @relation(fields: [postId], references: [id], onDelete: Cascade)
   communityPostId String?        @db.ObjectId
   communityPost   CommunityPost? @relation(fields: [communityPostId], references: [id])
+
+  module          FileModule     @default(LISTING)
 
   @@map("files")
 }
 
+enum FileModule {
+  LISTING
+  POST
+  COMMUNITY
+}
+
 enum FileAs {
-  NONE
-  PHOTO_PROOF
-  VIDEO_PROOF
-  CERT_COA
+  PHOTOS
+  PROOF_PHOTO
+  PROOF_VIDEO
+  COA_FILE
   COM_AUTH
+  COMMUNITY_HERO
+}
+
+enum FileContext {
+  CREATE
+  EDIT
 }
 
 model Notification {

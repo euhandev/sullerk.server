@@ -7,5 +7,6 @@ import { FileService } from '@/helper/file.service';
 @Module({
   controllers: [CustomerController],
   providers: [CustomerService, FileService],
+  exports: [CustomerService],
 })
 export class CustomerModule {}

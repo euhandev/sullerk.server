@@ -1,8 +1,17 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
+import { PrismaService } from '@/helper/prisma.service';
 import { CreateCommunityDto } from './dto/create-community.dto';
 import { UpdateCommunityDto } from './dto/update-community.dto';
-import { PrismaService } from '@/helper/prisma.service';
+import { FileService } from '@/helper/file.service';
+import { ApiError } from '@/utils/api_error';
 import { Request } from 'express';
+import {
+  FileAs,
+  FileContext,
+  FileModule,
+  CommunityUserType,
+  CommunityMemberStatus,
+} from '@prisma/client';
 import {
   communityFilterFields,
   communityInclude,
@@ -10,14 +19,11 @@ import {
   communitySearchFields,
 } from './community.constant';
 import QueryBuilder from '@/utils/query_builder';
-import { ApiError } from '@/utils/api_error';
-import { CommunityMemberStatus, CommunityUserType } from '@prisma/client';
-import { FileService } from '@/helper/file.service';
 
 @Injectable()
 export class CommunityService {
   constructor(
-    private prisma: PrismaService,
+    private readonly prisma: PrismaService,
     private readonly fileService: FileService,
   ) {}
 
@@ -33,30 +39,116 @@ export class CommunityService {
     return customer.id;
   }
 
-  async create(req: Request, paylaod: CreateCommunityDto, hero?: string) {
-    const customerId = await this.getCustomerId(req);
+  /**
+   * Upload hero image for community
+   */
+  async uploadMedia(file: any, userId: string, context: FileContext = FileContext.CREATE) {
+    if (!file) return null;
 
-    if (!customerId) throw new ApiError(HttpStatus.BAD_REQUEST, 'Only admin can create community');
+    const folder = 'communities/hero';
+    const { url, key } = await this.fileService.autoUpload(file, folder);
 
-    const result = await this.prisma.$transaction(async tx => {
+    return await this.prisma.file.create({
+      data: {
+        url,
+        key,
+        name: file.originalname,
+        purpose: FileAs.COMMUNITY_HERO,
+        uploadedById: userId,
+        isPending: true,
+        context: context,
+        module: FileModule.COMMUNITY,
+      },
+    });
+  }
 
-      const communityCreation = await tx.community.create({
-        data: { ...paylaod, heroImg: hero, },
+  /**
+   * Delete pending community file
+   */
+  async deletePendingFile(id: string, userId: string) {
+    const file = await this.prisma.file.findFirst({
+      where: { id, uploadedById: userId, isPending: true, module: FileModule.COMMUNITY },
+    });
+
+    if (!file) {
+      throw new ApiError(HttpStatus.NOT_FOUND, 'File not found or not authorized');
+    }
+
+    if (file.url.includes('cloudinary')) {
+      await this.fileService.deleteFromCloudinary(file.url, file.key).catch(() => {});
+    } else if (file.url.includes('digitaloceanspaces')) {
+      await this.fileService.deleteFromDigitalOcean(file.url).catch(() => {});
+    } else {
+      await this.fileService.deleteFromLocal(file.url).catch(() => {});
+    }
+
+    await this.prisma.file.delete({ where: { id } });
+    return { success: true };
+  }
+
+  /**
+   * Create community and add creator as Admin
+   */
+  async create(createCommunityDto: CreateCommunityDto, userId: string) {
+    const { heroImg, ...communityData } = createCommunityDto;
+
+    // 1. Validate customer
+    const customer = await this.prisma.customer.findUnique({
+      where: { userId },
+    });
+    if (!customer) {
+      throw new ApiError(HttpStatus.NOT_FOUND, 'Customer profile not found');
+    }
+
+    // 2. Resolve hero image if provided
+    let finalHeroImg = '';
+    let finalHeroImgFileId = '';
+
+    if (heroImg) {
+      const file = await this.prisma.file.findFirst({
+        where: {
+          uploadedById: userId,
+          module: FileModule.COMMUNITY,
+          OR: [{ id: heroImg.fileId || undefined }, { url: heroImg.url || undefined }].filter(
+            (cond) => Object.values(cond)[0] !== undefined,
+          ),
+        },
       });
 
-      await tx.communityMember.create({
+      if (file) {
+        finalHeroImg = file.url;
+        finalHeroImgFileId = file.id;
+      } else if (heroImg.url) {
+        finalHeroImg = heroImg.url;
+      }
+    }
+
+    // 3. Create Community in transaction
+    return await this.prisma.$transaction(async (tx) => {
+      const community = await tx.community.create({
         data: {
-          communityId: communityCreation.id,
-          customerId: customerId!,
-          userType: CommunityUserType.ADMIN,
-          status: CommunityMemberStatus.ACTIVE,
-        }
-      })
+          ...communityData,
+          heroImg: finalHeroImg,
+          members: {
+            create: {
+              customerId: customer.id,
+              userType: CommunityUserType.ADMIN,
+              status: CommunityMemberStatus.ACTIVE,
+            },
+          },
+        },
+      });
 
-      return communityCreation;
-    }) 
+      // 4. Update file record to clear pending status
+      if (finalHeroImgFileId) {
+        await tx.file.updateMany({
+          where: { id: finalHeroImgFileId, uploadedById: userId, isPending: true },
+          data: { isPending: false },
+        });
+      }
 
-    return result;
+      return community;
+    });
   }
 
   async findAll(req: Request) {
@@ -69,7 +161,7 @@ export class CommunityService {
       : {};
 
     const queryBuilder = new QueryBuilder(query, this.prisma.community);
-    
+
     const user: any = req?.user;
     if (user?.role !== 'ADMIN' && user?.role !== 'SUPER_ADMIN') {
       const customerId = await this.getCustomerId(req);
@@ -109,7 +201,6 @@ export class CommunityService {
     }
 
     const user: any = req?.user;
-    // System admins bypass membership check
     if (user?.role !== 'ADMIN' && user?.role !== 'SUPER_ADMIN') {
       const customerId = await this.getCustomerId(req);
       const membership = await this.prisma.communityMember.findUnique({
@@ -122,21 +213,23 @@ export class CommunityService {
       });
 
       if (!membership || membership.status === CommunityMemberStatus.BLOCKED) {
-        throw new ApiError(HttpStatus.FORBIDDEN, 'You do not have permission to view this community');
+        throw new ApiError(
+          HttpStatus.FORBIDDEN,
+          'You do not have permission to view this community',
+        );
       }
     }
 
     return isCommunityExists;
   }
 
-  async update(req: Request, id: string, paylaod: UpdateCommunityDto, hero?: string) {
+  async update(req: Request, id: string, paylaod: UpdateCommunityDto) {
     const isExist = await this.prisma.community.findUnique({ where: { id } });
     if (!isExist) {
       throw new ApiError(HttpStatus.NOT_FOUND, 'community not found with this id:' + id);
     }
 
     const user: any = req?.user;
-    // System admins bypass community admin check
     if (user?.role !== 'ADMIN' && user?.role !== 'SUPER_ADMIN') {
       const customerId = await this.getCustomerId(req);
       const membership = await this.prisma.communityMember.findUnique({
@@ -153,18 +246,20 @@ export class CommunityService {
       }
     }
 
-    const community = await this.prisma.$transaction(async tx => {
-      if (hero && isExist?.heroImg) {
-        await this.fileService.deleteFromCloudinary(isExist.heroImg);
-      }
-      const result = await tx.community.update({
-        where: { id },
-        data: { ...paylaod, ...(hero && { heroImg: hero }) },
-      });
-      return result;
-    });
+    const { heroImg, ...updateData } = paylaod;
+    let finalHeroImg: string | undefined;
 
-    return community;
+    if (heroImg) {
+      finalHeroImg = heroImg.url;
+    }
+
+    return await this.prisma.community.update({
+      where: { id },
+      data: {
+        ...updateData,
+        ...(finalHeroImg && { heroImg: finalHeroImg }),
+      },
+    });
   }
 
   async remove(req: Request, id: string) {
@@ -174,7 +269,6 @@ export class CommunityService {
     }
 
     const user: any = req?.user;
-    // System admins bypass community admin check
     if (user?.role !== 'ADMIN' && user?.role !== 'SUPER_ADMIN') {
       const customerId = await this.getCustomerId(req);
       const membership = await this.prisma.communityMember.findUnique({
@@ -192,7 +286,7 @@ export class CommunityService {
     }
 
     if (isExist.heroImg) {
-      await this.fileService.deleteFromCloudinary(isExist.heroImg);
+      await this.fileService.deleteFromCloudinary(isExist.heroImg).catch(() => {});
     }
 
     return await this.prisma.community.delete({

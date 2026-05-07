@@ -32,7 +32,9 @@ export interface EnvConfig {
 
   STRIPE_SK: string;
   STRIPE_PK: string;
+  STRIPE_SECRET_KEY: string;
   STRIPE_WEBHOOK_SECRET: string;
+  PLATFORM_FEE_PERCENT: string;
 
   BREVO_API_KEY: string;
 
@@ -68,6 +70,8 @@ export interface EnvConfig {
   MAIL_USER: string;
   MAIL_PASS: string;
   MAIL_FROM: string;
+  GOOGLE_CLIENT_ID: string;
+  GOOGLE_CLIENT_SECRET: string;
 }
 
 // config.types.ts (continued)

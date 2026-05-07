@@ -70,7 +70,7 @@ export class AdminController {
         uploadableFiles,
         'avatars',
       );
-      avatar = uploaded[0];
+      avatar = uploaded[0].url;
     }
 
     const result = await this.adminService.update(id, updateAdminDto, avatar);

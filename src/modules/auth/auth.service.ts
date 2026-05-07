@@ -1,4 +1,3 @@
-import { BrevoService } from '@/email/brevo';
 import { PrismaService } from '@/helper/prisma.service';
 import { HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -7,8 +6,9 @@ import { BcryptService } from '@/utils/bcrypt.service';
 import { Request } from 'express';
 import { ConfigService } from '@/config/config.service';
 import { EmailTemplate } from '@/email-templates/forgot-password';
-import { Role, Status } from '@prisma/client';
+import { AuthProvider, Role, Status } from '@prisma/client';
 import { GMailService } from '@/email/gmail';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class AuthService {
@@ -20,6 +20,7 @@ export class AuthService {
     private readonly gmailService: GMailService,
     private readonly prisma: PrismaService,
     private readonly emailTemplate: EmailTemplate,
+    private readonly userService: UserService,
   ) {}
 
   async login(data: {
@@ -172,6 +173,10 @@ export class AuthService {
       throw new ApiError(HttpStatus.NOT_FOUND, `User Not Found`);
     }
 
+    if (user.status === Status.INACTIVE) {
+      throw new ApiError(HttpStatus.FORBIDDEN, 'Your account is inactive. Please contact support.');
+    }
+
     // Generate 6-digit OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     const expires = new Date();
@@ -235,6 +240,97 @@ export class AuthService {
       } as any,
     });
 
+    const successParams = await this.emailTemplate.passwordResetSuccessEmail(
+      user.email,
+      user.username || 'User',
+    );
+
+    await this.gmailService.sendEmail({
+      to: user.email,
+      subject: successParams.subject,
+      html: successParams.htmlContent,
+    });
+
     return { message: 'Password resetted successfully' };
+  }
+
+  async validateOAuthUser(profile: {
+    googleId: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    picture: string;
+  }): Promise<{ access_token: string; refresh_token: string }> {
+    const { googleId, email, firstName, lastName, picture } = profile;
+
+    let user = await this.prisma.user.findUnique({
+      where: { email },
+      include: { customer: true, admin: true },
+    });
+
+    if (!user) {
+      // Register new user
+      user = (await this.prisma.$transaction(async (tx) => {
+        const username = await this.userService.generateUniqueUsername(email, tx);
+        const newUser = await tx.user.create({
+          data: {
+            email,
+            username,
+            googleId,
+            provider: AuthProvider.GOOGLE,
+            avatar: picture,
+            role: Role.CUSTOMER,
+            status: Status.ACTIVE,
+          },
+        });
+
+        await tx.customer.create({
+          data: {
+            userId: newUser.id,
+            fullName: `${firstName} ${lastName}`,
+          },
+        });
+
+        return tx.user.findUnique({
+          where: { id: newUser.id },
+          include: { customer: true, admin: true },
+        });
+      })) as any;
+    } else if (!user.googleId) {
+      // Link existing user to Google
+      user = (await this.prisma.user.update({
+        where: { id: user.id },
+        data: {
+          googleId,
+          provider: AuthProvider.GOOGLE,
+          // Update avatar if not set
+          avatar: user.avatar || picture,
+        },
+        include: { customer: true, admin: true },
+      })) as any;
+    }
+
+    // Generate tokens
+    const payload = {
+      id: user!.id,
+      email: user!.email,
+      role: user!.role,
+      name: user!.username,
+      avatar: user!.avatar,
+    };
+
+    const accessToken = await this.jwtService.signAsync(payload, {
+      secret: this.configService.get('JWT_SECRET'),
+      expiresIn: '7d',
+    });
+    const refreshToken = await this.jwtService.signAsync(payload, {
+      secret: this.configService.get('JWT_SECRET'),
+      expiresIn: '30d',
+    });
+
+    return {
+      access_token: accessToken,
+      refresh_token: refreshToken,
+    };
   }
 }

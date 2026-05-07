@@ -1,28 +1,51 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { CommunityType } from '@prisma/client';
-import { IsArray, IsEnum, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsOptional, IsString, IsArray, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
+
+export class FileItem {
+  @ApiPropertyOptional({
+    example: '69fae180e0c772d77befd5b8',
+    description: 'Database ID of the file',
+  })
+  @IsString()
+  @IsOptional()
+  fileId?: string;
+
+  @ApiPropertyOptional({
+    example: 'http://localhost:8989/api/v1/files/example.webp',
+    description: 'Absolute URL of the file',
+  })
+  @IsString()
+  @IsOptional()
+  url?: string;
+}
 
 export class CreateCommunityDto {
-  @ApiProperty()
+  @ApiProperty({ example: 'Vintage Jersey Collectors' })
   @IsString()
-  @MinLength(3)
-  @MaxLength(100)
+  @IsNotEmpty()
   name: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional({ example: 'A place for collectors of rare football kits.' })
   @IsString()
-  @MinLength(10)
-  @MaxLength(500)
   @IsOptional()
   description?: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional({ example: ['football', 'vintage'], type: [String] })
+  @IsArray()
+  @IsString({ each: true })
+  @IsOptional()
+  tags?: string[];
+
+  @ApiProperty({ enum: CommunityType, example: 'PUBLIC' })
   @IsEnum(CommunityType)
+  @IsNotEmpty()
   type: CommunityType;
 
-  @ApiProperty({ type: [String] })
-  @IsArray()
+  @ApiPropertyOptional({ type: FileItem })
   @IsOptional()
-  @IsString({ each: true })
-  tags?: string[];
+  @ValidateNested()
+  @Type(() => FileItem)
+  heroImg?: FileItem;
 }
