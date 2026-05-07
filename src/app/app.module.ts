@@ -32,6 +32,10 @@ import { CommunityReactionModule } from '@/modules/community-reaction/community-
 import { CommunityRepostModule } from '@/modules/community-repost/community-repost.module';
 import { CommunityStarredPostModule } from '@/modules/community-starred-post/community-starred-post.module';
 import { PostModule } from '@/modules/post/post.module';
+import { OrderModule } from '@/modules/order/order.module';
+import { PaymentModule } from '@/modules/payment/payment.module';
+import { ExchangeModule } from '@/modules/exchange/exchange.module';
+import { DisputeModule } from '@/modules/dispute/dispute.module';
 
 @Module({
   imports: [
@@ -73,6 +77,10 @@ import { PostModule } from '@/modules/post/post.module';
     CommunityReactionModule,
     CommunityRepostModule,
     CommunityStarredPostModule,
+    OrderModule,
+    PaymentModule,
+    ExchangeModule,
+    DisputeModule,
   ],
 
   controllers: [AppController],

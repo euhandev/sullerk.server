@@ -37,6 +37,7 @@ Table admins {
   user users [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
+  resolvedDisputes disputes [not null]
 }
 
 Table customers {
@@ -57,7 +58,6 @@ Table customers {
   listings listings [not null]
   ordersAsBuyer orders [not null]
   ordersAsSeller orders [not null]
-  disputes disputes [not null]
   watchlists watchlists [not null]
   paymentMethods payment_methods [not null]
   listingHistory listing_histories [not null]
@@ -77,6 +77,8 @@ Table customers {
   followedByFollowing Following [not null]
   blockedBy BlockedUser [not null]
   blockedUsers BlockedUser [not null]
+  balance Float [not null, default: 0]
+  transactions transactions [not null]
   communityMembers community_members [not null]
   communityPosts community_posts [not null]
   communityComments community_comments [not null]
@@ -87,6 +89,9 @@ Table customers {
   subscriptions subscriptions [not null]
   payments payments [not null]
   activityLogs activity_logs [not null]
+  exchangeSent exchange_offers [not null]
+  exchangeReceived exchange_offers [not null]
+  raisedDisputes disputes [not null]
 }
 
 Table Follower {
@@ -401,6 +406,7 @@ Table listings {
   collections collection_listings [not null]
   posts Post [not null]
   shares listing_shares [not null]
+  disputes disputes [not null]
 }
 
 Table collections {
@@ -488,8 +494,11 @@ Table orders {
   buyer customers [not null]
   sellerId String [not null]
   seller customers [not null]
-  amount Float [not null]
-  status OrderStatus [not null, default: 'PENDING']
+  totalAmount Float [not null]
+  platformFee Float [not null, default: 0]
+  sellerEarnings Float [not null, default: 0]
+  status OrderStatus [not null, default: 'PENDING_PAYMENT']
+  stripeSessionId String
   trackingNo String
   type OrderType [not null, default: 'PURCHASE']
   disputes disputes [not null]
@@ -497,15 +506,56 @@ Table orders {
   updatedAt DateTime [not null]
 }
 
+Table exchange_offers {
+  id String [pk]
+  senderId String [not null]
+  sender customers [not null]
+  receiverId String [not null]
+  receiver customers [not null]
+  senderListingIds String[] [not null]
+  receiverListingIds String[] [not null]
+  senderTotalValue Float [not null, default: 0]
+  receiverTotalValue Float [not null, default: 0]
+  balanceToPay Float [not null, default: 0]
+  note String
+  status ExchangeStatus [not null, default: 'PENDING']
+  paymentStatus String [not null, default: 'NONE']
+  stripeSessionId String
+  parentOfferId String
+  parentOffer exchange_offers
+  counterOffers exchange_offers [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table transactions {
+  id String [pk]
+  customerId String [not null]
+  customer customers [not null]
+  amount Float [not null]
+  type TransactionType [not null]
+  orderId String
+  exchangeOfferId String
+  description String
+  createdAt DateTime [default: `now()`, not null]
+}
+
 Table disputes {
   id String [pk]
-  orderId String [not null]
-  order orders [not null]
+  listingId String
+  listing listings
+  orderId String
+  order orders
   raisedById String [not null]
   raisedBy customers [not null]
+  resolvedById String
+  resolvedBy admins
   type DisputeType [not null]
   status DisputeStatus [not null, default: 'OPEN']
   reason String [not null]
+  details String
+  resolutionNote String
+  evidence FileItem[] [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
 }
@@ -901,20 +951,40 @@ Enum ListingStatus {
   ACTIVE
   PAUSED
   PENDING
+  LOCKED
   SOLD
+  EXCHANGED
 }
 
 Enum OrderStatus {
-  PENDING
+  PENDING_PAYMENT
+  PAID
   PROCESSING
   SHIPPED
   DELIVERED
   CANCELLED
+  COMPLETED
 }
 
 Enum OrderType {
   PURCHASE
   TRADE
+}
+
+Enum ExchangeStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  CANCELLED
+  COUNTERED
+}
+
+Enum TransactionType {
+  SALE_REVENUE
+  PURCHASE_DEBIT
+  TRADE_BALANCE
+  PLATFORM_FEE
+  WITHDRAWAL
 }
 
 Enum DisputeType {
@@ -932,20 +1002,6 @@ Enum PaymentMethodType {
   BANK_ACCOUNT
   PAYPAL
   CARD
-}
-
-Enum TransactionType {
-  PAYMENT
-  WITHDRAWAL
-  FEE
-  REFUND
-}
-
-Enum TransactionStatus {
-  PENDING
-  COMPLETED
-  FAILED
-  CANCELLED
 }
 
 Enum FileModule {
@@ -1066,7 +1122,7 @@ Ref: Post.customerId > customers.id
 
 Ref: Post.listingId > listings.id
 
-Ref: pollOptions.postId > Post.id
+Ref: pollOptions.postId > Post.id [delete: Cascade]
 
 Ref: poll_votes.pollId > Post.id
 
@@ -1074,7 +1130,7 @@ Ref: poll_votes.customerId > customers.id
 
 Ref: poll_votes.optionId > pollOptions.id
 
-Ref: reactions.postId > Post.id
+Ref: reactions.postId > Post.id [delete: Cascade]
 
 Ref: reactions.reactedById > customers.id
 
@@ -1082,15 +1138,15 @@ Ref: deal_listings.dealId > deals.id
 
 Ref: deal_listings.listingId > listings.id
 
-Ref: reposts.postId > Post.id
+Ref: reposts.postId > Post.id [delete: Cascade]
 
 Ref: reposts.reportedById > customers.id
 
-Ref: starred_posts.postId > Post.id
+Ref: starred_posts.postId > Post.id [delete: Cascade]
 
 Ref: starred_posts.reportedById > customers.id
 
-Ref: comments.postId > Post.id
+Ref: comments.postId > Post.id [delete: Cascade]
 
 Ref: comments.customerId > customers.id
 
@@ -1158,9 +1214,21 @@ Ref: orders.buyerId > customers.id
 
 Ref: orders.sellerId > customers.id
 
+Ref: exchange_offers.senderId > customers.id
+
+Ref: exchange_offers.receiverId > customers.id
+
+Ref: exchange_offers.parentOfferId - exchange_offers.id [delete: No Action]
+
+Ref: transactions.customerId > customers.id
+
+Ref: disputes.listingId > listings.id
+
 Ref: disputes.orderId > orders.id
 
 Ref: disputes.raisedById > customers.id
+
+Ref: disputes.resolvedById > admins.id
 
 Ref: watchlists.customerId > customers.id
 
@@ -1184,7 +1252,7 @@ Ref: payments.subscriptionPlanId > subscription_plans.id
 
 Ref: files.listingId > listings.id
 
-Ref: files.postId > Post.id
+Ref: files.postId > Post.id [delete: Cascade]
 
 Ref: files.communityPostId > community_posts.id
 

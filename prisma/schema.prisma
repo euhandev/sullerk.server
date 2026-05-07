@@ -55,6 +55,8 @@ model Admin {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  resolvedDisputes Dispute[] @relation("ResolvedBy")
+
   @@map("admins")
 }
 
@@ -78,7 +80,6 @@ model Customer {
 
   ordersAsBuyer  Order[]         @relation("OrderBuyer")
   ordersAsSeller Order[]         @relation("OrderSeller")
-  disputes       Dispute[]
   watchlists     Watchlist[]
   paymentMethods PaymentMethod[]
   listingHistory ListingHistory[]
@@ -101,6 +102,9 @@ model Customer {
   blockedBy           BlockedUser[] @relation("BlockedBy")
   blockedUsers        BlockedUser[] @relation("BlockedUser")
 
+  balance      Float     @default(0.0) // Virtual wallet
+  transactions Transaction[]
+
   communityMembers   CommunityMember[]
   communityPosts     CommunityPost[]
   communityComments  CommunityComment[]
@@ -112,6 +116,11 @@ model Customer {
   subscriptions Subscription[]
   payments      Payment[]
   activityLogs  ActivityLog[]
+
+  exchangeSent     ExchangeOffer[] @relation("ExchangeSender")
+  exchangeReceived ExchangeOffer[] @relation("ExchangeReceiver")
+
+  raisedDisputes   Dispute[]       @relation("RaisedBy")
 
   @@index([createdAt])
   @@map("customers")
@@ -212,7 +221,7 @@ model PollOption {
   votes     Int        @default(0)
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
-  post      Post       @relation("PollOptions", fields: [postId], references: [id])
+  post      Post       @relation("PollOptions", fields: [postId], references: [id], onDelete: Cascade)
   postId    String     @db.ObjectId
   PollVote  PollVote[]
 
@@ -238,7 +247,7 @@ model PollVote {
 model Reaction {
   id          String       @id @default(auto()) @map("_id") @db.ObjectId
   postId      String       @db.ObjectId
-  post        Post         @relation(fields: [postId], references: [id])
+  post        Post         @relation(fields: [postId], references: [id], onDelete: Cascade)
   reactedById String       @db.ObjectId
   customer    Customer     @relation(fields: [reactedById], references: [id])
   type        ReactionType @default(LIKE)
@@ -270,7 +279,7 @@ model DealListing {
 model Repost {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
   postId       String   @db.ObjectId
-  post         Post     @relation(fields: [postId], references: [id])
+  post         Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   reportedById String   @db.ObjectId
   customer     Customer @relation(fields: [reportedById], references: [id])
 
@@ -284,7 +293,7 @@ model Repost {
 model StarredPost {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
   postId       String   @db.ObjectId
-  post         Post     @relation(fields: [postId], references: [id])
+  post         Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   reportedById String   @db.ObjectId
   customer     Customer @relation(fields: [reportedById], references: [id])
 
@@ -299,7 +308,7 @@ model Comment {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
   postId String @db.ObjectId
-  post   Post   @relation(fields: [postId], references: [id])
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   customerId String   @db.ObjectId
   customer   Customer @relation(fields: [customerId], references: [id])
@@ -534,6 +543,8 @@ model Listing {
   posts            Post[]
   shares           ListingShare[]
 
+  disputes      Dispute[]
+
   @@map("listings")
 }
 
@@ -650,19 +661,23 @@ model ListingHistory {
 
 
 model Order {
-  id          String      @id @default(auto()) @map("_id") @db.ObjectId
-  orderNumber String      @unique
-  listingId   String      @db.ObjectId
-  listing     Listing     @relation(fields: [listingId], references: [id])
-  buyerId     String      @db.ObjectId
-
-  buyer       Customer    @relation("OrderBuyer", fields: [buyerId], references: [id])
-  sellerId    String      @db.ObjectId
-  seller      Customer    @relation("OrderSeller", fields: [sellerId], references: [id])
-  amount      Float
-  status      OrderStatus @default(PENDING)
-  trackingNo  String?
-  type        OrderType   @default(PURCHASE)
+  id              String      @id @default(auto()) @map("_id") @db.ObjectId
+  orderNumber     String      @unique
+  listingId       String      @db.ObjectId
+  listing         Listing     @relation(fields: [listingId], references: [id])
+  buyerId         String      @db.ObjectId
+  buyer           Customer    @relation("OrderBuyer", fields: [buyerId], references: [id])
+  sellerId        String      @db.ObjectId
+  seller          Customer    @relation("OrderSeller", fields: [sellerId], references: [id])
+  
+  totalAmount     Float       // Total paid by buyer
+  platformFee     Float       @default(0.0) // Deducted amount
+  sellerEarnings  Float       @default(0.0) // Net amount for seller
+  
+  status          OrderStatus @default(PENDING_PAYMENT)
+  stripeSessionId String?     // Track Stripe checkout
+  trackingNo      String?
+  type            OrderType   @default(PURCHASE)
 
   disputes Dispute[]
 
@@ -672,15 +687,79 @@ model Order {
   @@map("orders")
 }
 
+model ExchangeOffer {
+  id              String         @id @default(auto()) @map("_id") @db.ObjectId
+  
+  senderId        String         @db.ObjectId
+  sender          Customer       @relation("ExchangeSender", fields: [senderId], references: [id])
+  
+  receiverId      String         @db.ObjectId
+  receiver        Customer       @relation("ExchangeReceiver", fields: [receiverId], references: [id])
+  
+  // Support for Bundles (multiple listings on either side)
+  senderListingIds   String[]      @db.ObjectId
+  receiverListingIds String[]      @db.ObjectId
+  
+  senderTotalValue   Float         @default(0.0)
+  receiverTotalValue Float         @default(0.0)
+  balanceToPay       Float         @default(0.0) // Difference to balance the trade
+  
+  note            String?
+  status          ExchangeStatus @default(PENDING)
+  paymentStatus   String         @default("NONE") // NONE, PENDING, PAID
+  stripeSessionId String?
+  
+  // Negotiation History (Offer -> Re-offer chain)
+  parentOfferId   String?        @db.ObjectId
+  parentOffer     ExchangeOffer? @relation("CounterOffers", fields: [parentOfferId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  counterOffers   ExchangeOffer[] @relation("CounterOffers")
+
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  @@map("exchange_offers")
+}
+
+model Transaction {
+  id              String          @id @default(auto()) @map("_id") @db.ObjectId
+  customerId      String          @db.ObjectId
+  customer        Customer        @relation(fields: [customerId], references: [id])
+  
+  amount          Float           // Positive for credits, negative for debits
+  type            TransactionType
+  
+  orderId         String?         @db.ObjectId
+  exchangeOfferId String?         @db.ObjectId
+  
+  description     String?         // e.g. "Payment for Listing X"
+  createdAt       DateTime        @default(now())
+
+  @@map("transactions")
+}
+
 model Dispute {
-  id         String        @id @default(auto()) @map("_id") @db.ObjectId
-  orderId    String        @db.ObjectId
-  order      Order         @relation(fields: [orderId], references: [id])
-  raisedById String        @db.ObjectId
-  raisedBy   Customer      @relation(fields: [raisedById], references: [id])
-  type       DisputeType
-  status     DisputeStatus @default(OPEN)
-  reason     String
+  id             String        @id @default(auto()) @map("_id") @db.ObjectId
+  
+  listingId      String?       @db.ObjectId
+  listing        Listing?      @relation(fields: [listingId], references: [id])
+  
+  orderId        String?       @db.ObjectId
+  order          Order?        @relation(fields: [orderId], references: [id])
+  
+  raisedById     String        @db.ObjectId
+  raisedBy       Customer      @relation("RaisedBy", fields: [raisedById], references: [id])
+  
+  resolvedById   String?       @db.ObjectId
+  resolvedBy     Admin?        @relation("ResolvedBy", fields: [resolvedById], references: [id])
+  
+  type           DisputeType
+  status         DisputeStatus @default(OPEN)
+  
+  reason         String        
+  details        String?       
+  resolutionNote String?       
+  
+  evidence       FileItem[]    
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -877,24 +956,43 @@ enum SaleFormat {
 }
 
 enum ListingStatus {
-
   ACTIVE
   PAUSED
   PENDING
+  LOCKED      // Reserved during checkout
   SOLD
+  EXCHANGED
 }
 
 enum OrderStatus {
-  PENDING
+  PENDING_PAYMENT
+  PAID
   PROCESSING
   SHIPPED
   DELIVERED
   CANCELLED
+  COMPLETED
 }
 
 enum OrderType {
   PURCHASE
   TRADE
+}
+
+enum ExchangeStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  CANCELLED
+  COUNTERED
+}
+
+enum TransactionType {
+  SALE_REVENUE
+  PURCHASE_DEBIT
+  TRADE_BALANCE
+  PLATFORM_FEE
+  WITHDRAWAL
 }
 
 enum DisputeType {
@@ -912,20 +1010,6 @@ enum PaymentMethodType {
   BANK_ACCOUNT
   PAYPAL
   CARD
-}
-
-enum TransactionType {
-  PAYMENT
-  WITHDRAWAL
-  FEE
-  REFUND
-}
-
-enum TransactionStatus {
-  PENDING
-  COMPLETED
-  FAILED
-  CANCELLED
 }
 
 model Newsletter {
@@ -955,7 +1039,7 @@ model File {
 
   postId          String?        @db.ObjectId
 
-  post            Post?          @relation(fields: [postId], references: [id])
+  post            Post?          @relation(fields: [postId], references: [id], onDelete: Cascade)
   communityPostId String?        @db.ObjectId
   communityPost   CommunityPost? @relation(fields: [communityPostId], references: [id])
 

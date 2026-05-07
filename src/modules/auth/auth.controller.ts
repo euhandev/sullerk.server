@@ -53,7 +53,10 @@ export class AuthController {
 
   private setAuthCookies(res: Response, tokens: { accessToken: string; refreshToken: string }) {
     const isProduction = this.configService.get('NODE_ENV')?.toLowerCase() === 'production';
-    const cookieDomain = this.configService.get('COOKIE_DOMAIN') || 'localhost';
+    let cookieDomain = this.configService.get('COOKIE_DOMAIN') || 'localhost';
+
+    // 🛡️ Sanitize domain: remove protocol (http://) and port (:3000)
+    cookieDomain = cookieDomain.replace(/^https?:\/\//, '').split(':')[0];
 
     const accessTokenMaxAge = this.parseMaxAge(this.configService.get('JWT_EXPIRES_IN') || '7d');
     const refreshTokenMaxAge = this.parseMaxAge(

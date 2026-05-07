@@ -1,14 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  HttpStatus,
-  Req,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, Req } from '@nestjs/common';
 import { CommunityCommentService } from './community-comment.service';
 import { CreateCommunityCommentDto } from './dto/create-community-comment.dto';
 import { UpdateCommunityCommentDto } from './dto/update-community-comment.dto';
@@ -17,14 +7,32 @@ import { Role } from '@prisma/client';
 import { ResponseService } from '@/utils/response';
 import { Request } from 'express';
 
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+
+@ApiTags('Community Comments')
+@ApiBearerAuth('JWT-auth')
 @Controller('community-comments')
 export class CommunityCommentController {
-  constructor(
-    private readonly communityCommentService: CommunityCommentService,
-  ) {}
+  constructor(private readonly communityCommentService: CommunityCommentService) {}
 
   @Post()
   @Roles(Role.ADMIN, Role.SUPER_ADMIN, Role.CUSTOMER)
+  @ApiOperation({
+    summary: 'Create a comment in a community post',
+    description: `
+**CURL Request Sample:**
+\`\`\`bash
+curl -X POST http://localhost:8989/api/v1/community-comments \\
+  -H "Authorization: Bearer YOUR_TOKEN" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "postId": "65fc123...",
+    "communityId": "65fc456...",
+    "body": "Great insights in this community!"
+  }'
+\`\`\`
+`,
+  })
   async create(@Req() req: Request, @Body() paylaod: CreateCommunityCommentDto) {
     const result = await this.communityCommentService.create(req, paylaod);
     return ResponseService.formatResponse({
@@ -35,6 +43,15 @@ export class CommunityCommentController {
   }
 
   @Get()
+  @ApiOperation({
+    summary: 'Find all community comments (with filters)',
+    description: `
+**CURL Request Sample:**
+\`\`\`bash
+curl -X GET "http://localhost:8989/api/v1/community-comments?postId=65fc123..."
+\`\`\`
+`,
+  })
   async findAll(@Req() req: Request) {
     const result = await this.communityCommentService.findAll(req);
     return ResponseService.formatResponse({
@@ -46,6 +63,7 @@ export class CommunityCommentController {
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Get a single community comment by ID' })
   async findOne(@Param('id') id: string) {
     const result = await this.communityCommentService.findOne(id);
     return ResponseService.formatResponse({
@@ -57,6 +75,7 @@ export class CommunityCommentController {
 
   @Patch(':id')
   @Roles(Role.ADMIN, Role.SUPER_ADMIN, Role.CUSTOMER)
+  @ApiOperation({ summary: 'Update your community comment' })
   async update(
     @Req() req: Request,
     @Param('id') id: string,
@@ -72,6 +91,7 @@ export class CommunityCommentController {
 
   @Delete(':id')
   @Roles(Role.ADMIN, Role.SUPER_ADMIN, Role.CUSTOMER)
+  @ApiOperation({ summary: 'Delete a community comment' })
   async remove(@Req() req: Request, @Param('id') id: string) {
     const result = await this.communityCommentService.remove(req, id);
     return ResponseService.formatResponse({

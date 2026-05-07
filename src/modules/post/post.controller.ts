@@ -8,12 +8,15 @@ import {
   HttpStatus,
   Delete,
   Param,
+  Get,
+  Patch,
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
+import { UpdatePostDto } from './dto/update-post.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Roles } from '../roles/roles.decorator';
-import { Role, FileContext, FileAs } from '@prisma/client';
+import { Role, FileContext, FileAs, ReactionType } from '@prisma/client';
 import {
   ApiConsumes,
   ApiOperation,
@@ -24,12 +27,17 @@ import {
 } from '@nestjs/swagger';
 import { ResponseService } from '@/utils/response';
 import { PostFileUploadResponse, CreatePostResponse } from './dto/post-response.dto';
+import { CommentService } from '../comment/comment.service';
+import { CreateCommentDto } from '../comment/dto/create-comment.dto';
 
 @ApiTags('Posts')
 @ApiBearerAuth('JWT-auth')
-@Controller('posts')
+@Controller('post')
 export class PostController {
-  constructor(private readonly postService: PostService) {}
+  constructor(
+    private readonly postService: PostService,
+    private readonly commentService: CommentService,
+  ) {}
 
   @Post('upload')
   @Roles(Role.CUSTOMER)
@@ -41,7 +49,7 @@ export class PostController {
 
       **CURL EXAMPLE:**
       \`\`\`bash
-      curl -X POST "http://localhost:8989/api/v1/posts/upload" \\
+      curl -X POST "http://localhost:8989/api/v1/post/upload" \\
         -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \\
         -H "Content-Type: multipart/form-data" \\
         -F "file=@/path/to/image.jpg" \\
@@ -102,7 +110,7 @@ export class PostController {
 
       **CURL EXAMPLE:**
       \`\`\`bash
-      curl -X POST "http://localhost:8989/api/v1/posts" \\
+      curl -X POST "http://localhost:8989/api/v1/post" \\
         -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \\
         -H "Content-Type: application/json" \\
         -d '{
@@ -172,7 +180,7 @@ export class PostController {
 
       **CURL EXAMPLE:**
       \`\`\`bash
-      curl -X DELETE "http://localhost:8989/api/v1/posts/upload/69fb040e3915f10779259593" \\
+      curl -X DELETE "http://localhost:8989/api/v1/post/upload/69fb040e3915f10779259593" \\
         -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
       \`\`\`
     `,
@@ -194,6 +202,191 @@ export class PostController {
     return ResponseService.formatResponse({
       statusCode: HttpStatus.OK,
       message: 'File deleted successfully',
+      data: result,
+    });
+  }
+
+  @Post(':id/react')
+  @Roles(Role.CUSTOMER)
+  @ApiOperation({
+    summary: 'React to a post (Love/Like)',
+    description: `
+**CURL Request Sample:**
+\`\`\`bash
+curl -X POST http://localhost:8989/api/v1/post/65fc123.../react \\
+  -H "Authorization: Bearer YOUR_TOKEN" \\
+  -H "Content-Type: application/json" \\
+  -d '{ "type": "LOVE" }'
+\`\`\`
+`,
+  })
+  async react(@Param('id') id: string, @Body('type') type: ReactionType, @Req() req: any) {
+    const userId = req.user.id;
+    const result = await this.postService.reactToPost(id, type, userId);
+    return ResponseService.formatResponse({
+      statusCode: HttpStatus.OK,
+      message: 'Reaction updated successfully',
+      data: result,
+    });
+  }
+
+  @Post(':id/share')
+  @Roles(Role.CUSTOMER)
+  @ApiOperation({
+    summary: 'Share a post (Repost)',
+    description: `
+**CURL Request Sample:**
+\`\`\`bash
+curl -X POST http://localhost:8989/api/v1/post/65fc123.../share \\
+  -H "Authorization: Bearer YOUR_TOKEN"
+\`\`\`
+`,
+  })
+  async share(@Param('id') id: string, @Req() req: any) {
+    const userId = req.user.id;
+    const result = await this.postService.sharePost(id, userId);
+    return ResponseService.formatResponse({
+      statusCode: HttpStatus.CREATED,
+      message: 'Post shared successfully',
+      data: result,
+    });
+  }
+
+  @Get()
+  @ApiOperation({
+    summary: 'Get all posts (Feed)',
+    description: `
+**CURL Request Sample:**
+\`\`\`bash
+curl -X GET http://localhost:8989/api/v1/post \\
+  -H "Authorization: Bearer YOUR_TOKEN"
+\`\`\`
+`,
+  })
+  async findAll(@Req() req: any) {
+    const userId = req.user?.id; // Optional auth
+    const result = await this.postService.findAll(userId);
+    return ResponseService.formatResponse({
+      statusCode: HttpStatus.OK,
+      message: 'Posts retrieved successfully',
+      data: result,
+    });
+  }
+
+  // ─────────────────────────────────────────
+  // 💬 Comment Routes
+  // ─────────────────────────────────────────
+
+  @Post('comments')
+  @Roles(Role.CUSTOMER)
+  @ApiOperation({
+    summary: 'Comment on a post',
+    description: `
+**CURL Request Sample:**
+\`\`\`bash
+curl -X POST http://localhost:8989/api/v1/post/comments \\
+  -H "Authorization: Bearer YOUR_TOKEN" \\
+  -H "Content-Type: application/json" \\
+  -d '{ "postId": "65fc123...", "body": "Great post!" }'
+\`\`\`
+`,
+  })
+  async createComment(@Body() createCommentDto: CreateCommentDto, @Req() req: any) {
+    const userId = req.user.id;
+    const result = await this.commentService.create(createCommentDto, userId);
+    return ResponseService.formatResponse({
+      statusCode: HttpStatus.CREATED,
+      message: 'Comment added successfully',
+      data: result,
+    });
+  }
+
+  @Get(':postId/comments')
+  @ApiOperation({
+    summary: 'Get all comments for a post',
+    description: `
+**CURL Request Sample:**
+\`\`\`bash
+curl -X GET http://localhost:8989/api/v1/post/65fc123.../comments
+\`\`\`
+`,
+  })
+  async getComments(@Param('postId') postId: string) {
+    const result = await this.commentService.findByPost(postId);
+    return ResponseService.formatResponse({
+      statusCode: HttpStatus.OK,
+      message: 'Comments retrieved successfully',
+      data: result,
+    });
+  }
+
+  @Delete('comments/:id')
+  @Roles(Role.CUSTOMER)
+  @ApiOperation({
+    summary: 'Delete your comment',
+    description: `
+**CURL Request Sample:**
+\`\`\`bash
+curl -X DELETE http://localhost:8989/api/v1/post/comments/65fc123... \\
+  -H "Authorization: Bearer YOUR_TOKEN"
+\`\`\`
+`,
+  })
+  async deleteComment(@Param('id') id: string, @Req() req: any) {
+    const userId = req.user.id;
+    const result = await this.commentService.remove(id, userId);
+    return ResponseService.formatResponse({
+      statusCode: HttpStatus.OK,
+      message: 'Comment deleted successfully',
+      data: result,
+    });
+  }
+
+  @Patch(':id')
+  @Roles(Role.CUSTOMER)
+  @ApiOperation({
+    summary: 'Update a post',
+    description: `
+**CURL Request Sample:**
+\`\`\`bash
+curl -X PATCH http://localhost:8989/api/v1/post/65fc123... \\
+  -H "Authorization: Bearer YOUR_TOKEN" \\
+  -H "Content-Type: application/json" \\
+  -d '{ "description": "My updated description" }'
+\`\`\`
+`,
+  })
+  async update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto, @Req() req: any) {
+    const userId = req.user.id;
+    const result = await this.postService.update(id, updatePostDto, userId);
+    return ResponseService.formatResponse({
+      statusCode: HttpStatus.OK,
+      message: 'Post updated successfully',
+      data: result,
+    });
+  }
+
+  @Delete(':id')
+  @Roles(Role.CUSTOMER)
+  @ApiOperation({
+    summary: 'Delete a post',
+    description: `
+      Deletes a post and all associated comments, reactions, and shares (Cascade).
+      Media files are deleted from Cloudinary in the background.
+
+**CURL Request Sample:**
+\`\`\`bash
+curl -X DELETE http://localhost:8989/api/v1/post/65fc123... \\
+  -H "Authorization: Bearer YOUR_TOKEN"
+\`\`\`
+`,
+  })
+  async remove(@Param('id') id: string, @Req() req: any) {
+    const userId = req.user.id;
+    const result = await this.postService.remove(id, userId);
+    return ResponseService.formatResponse({
+      statusCode: HttpStatus.OK,
+      message: 'Post deleted successfully',
       data: result,
     });
   }

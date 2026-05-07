@@ -53,7 +53,9 @@ async function bootstrap() {
     allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Origin'],
   });
 
-  app.setGlobalPrefix('api/v1');
+  app.setGlobalPrefix('api/v1', {
+    exclude: ['health'],
+  });
 
   // validation pipe
   app.useGlobalPipes(

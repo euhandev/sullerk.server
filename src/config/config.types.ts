@@ -32,7 +32,9 @@ export interface EnvConfig {
 
   STRIPE_SK: string;
   STRIPE_PK: string;
+  STRIPE_SECRET_KEY: string;
   STRIPE_WEBHOOK_SECRET: string;
+  PLATFORM_FEE_PERCENT: string;
 
   BREVO_API_KEY: string;
 
