@@ -185,9 +185,12 @@ export class CommunityService {
       .include(communityInclude)
       .populate(populateFields)
       .execute();
+    const mappedResult = result.map((community: any) => ({
+      ...community,
+    }));
 
     const meta = await queryBuilder.countTotal();
-    return { meta, data: result };
+    return { meta, data: mappedResult };
   }
 
   async findOne(req: Request, id: string) {
@@ -220,7 +223,9 @@ export class CommunityService {
       }
     }
 
-    return isCommunityExists;
+    return {
+      ...isCommunityExists,
+    };
   }
 
   async update(req: Request, id: string, paylaod: UpdateCommunityDto) {

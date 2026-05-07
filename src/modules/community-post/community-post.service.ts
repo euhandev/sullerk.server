@@ -33,7 +33,12 @@ export class CommunityPostService {
     return customer.id;
   }
 
-  private async checkPostPermission(req: Request, postId: string, communityId: string, action: 'update' | 'delete') {
+  private async checkPostPermission(
+    req: Request,
+    postId: string,
+    communityId: string,
+    action: 'update' | 'delete',
+  ) {
     const user: any = req?.user;
     if (user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN') return;
 
@@ -58,14 +63,18 @@ export class CommunityPostService {
       throw new ApiError(HttpStatus.FORBIDDEN, 'You do not have permission to perform this action');
     }
 
-    if (action === 'update' && membership.userType !== CommunityUserType.ADMIN && post.customerId !== customerId) {
-       throw new ApiError(HttpStatus.FORBIDDEN, 'Only the author can update the post');
+    if (
+      action === 'update' &&
+      membership.userType !== CommunityUserType.ADMIN &&
+      post.customerId !== customerId
+    ) {
+      throw new ApiError(HttpStatus.FORBIDDEN, 'Only the author can update the post');
     }
   }
 
   async create(req: Request, paylaod: CreateCommunityPostDto) {
     const customerId = await this.getCustomerId(req);
-    
+
     // Check if user is a member and not blocked
     const membership = await this.prisma.communityMember.findUnique({
       where: {
@@ -110,19 +119,31 @@ export class CommunityPostService {
       .populate(populateFields)
       .execute();
 
+    const mappedResult = result.map((post: any) => ({
+      ...post,
+      totalReactions: post._count?.reactions || 0,
+      totalReposts: post._count?.reports || 0,
+      totalComments: post._count?.comments || 0,
+    }));
+
     const meta = await queryBuilder.countTotal();
-    return { meta, data: result };
+    return { meta, data: mappedResult };
   }
 
   async findOne(id: string) {
     const isExist = await this.prisma.communityPost.findUnique({
       where: { id },
-      include: communityPostInclude
+      include: communityPostInclude,
     });
     if (!isExist) {
       throw new ApiError(HttpStatus.NOT_FOUND, 'Post not found');
     }
-    return isExist;
+    return {
+      ...isExist,
+      totalReactions: (isExist as any)._count?.reactions || 0,
+      totalReposts: (isExist as any)._count?.reports || 0,
+      totalComments: (isExist as any)._count?.comments || 0,
+    };
   }
 
   async update(req: Request, id: string, paylaod: UpdateCommunityPostDto) {
