@@ -1,4 +1,3 @@
-
 import { ApiProperty } from '@nestjs/swagger';
 import { IsMongoId, IsOptional, IsString } from 'class-validator';
 

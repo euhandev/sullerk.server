@@ -1,14 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  HttpStatus,
-  Req,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, Req } from '@nestjs/common';
 import { CommunityMemberService } from './community-member.service';
 import { CreateCommunityMemberDto } from './dto/create-community-member.dto';
 import { UpdateCommunityMemberDto } from './dto/update-community-member.dto';
@@ -19,9 +9,7 @@ import { Request } from 'express';
 
 @Controller('community-members')
 export class CommunityMemberController {
-  constructor(
-    private readonly communityMemberService: CommunityMemberService,
-  ) {}
+  constructor(private readonly communityMemberService: CommunityMemberService) {}
 
   @Post()
   @Roles(Role.ADMIN, Role.SUPER_ADMIN, Role.CUSTOMER)

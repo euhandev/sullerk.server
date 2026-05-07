@@ -11,7 +11,7 @@ import {
 } from './community-post.constant';
 import QueryBuilder from '@/utils/query_builder';
 import { ApiError } from '@/utils/api_error';
-import { CommunityMemberStatus, CommunityUserType } from '@prisma/client';
+import { CommunityMemberStatus } from '@prisma/client';
 import { FileService } from '@/helper/file.service';
 
 @Injectable()
@@ -43,13 +43,8 @@ export class CommunityPostService {
     if (user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN') return;
 
     const customerId = await this.getCustomerId(req);
-    const post = await this.prisma.communityPost.findUnique({ where: { id: postId } });
-    if (!post) throw new ApiError(HttpStatus.NOT_FOUND, 'Post not found');
 
-    // Author can update/delete
-    if (post.customerId === customerId) return;
-
-    // Community admin can delete (but maybe not update author's text? Usually admins can delete only)
+    // 1. Check if user is a member and not blocked
     const membership = await this.prisma.communityMember.findUnique({
       where: {
         communityId_customerId: {
@@ -59,17 +54,21 @@ export class CommunityPostService {
       },
     });
 
-    if (!membership || membership.userType !== CommunityUserType.ADMIN) {
-      throw new ApiError(HttpStatus.FORBIDDEN, 'You do not have permission to perform this action');
+    if (!membership || membership.status === CommunityMemberStatus.BLOCKED) {
+      throw new ApiError(
+        HttpStatus.FORBIDDEN,
+        'You must be a member of this community to perform this action',
+      );
     }
 
-    if (
-      action === 'update' &&
-      membership.userType !== CommunityUserType.ADMIN &&
-      post.customerId !== customerId
-    ) {
-      throw new ApiError(HttpStatus.FORBIDDEN, 'Only the author can update the post');
-    }
+    const post = await this.prisma.communityPost.findUnique({ where: { id: postId } });
+    if (!post) throw new ApiError(HttpStatus.NOT_FOUND, 'Post not found');
+
+    // Author can update/delete
+    if (post.customerId === customerId) return;
+
+    // If not author and not global admin, forbid
+    throw new ApiError(HttpStatus.FORBIDDEN, `Only the author can ${action} this post`);
   }
 
   async create(req: Request, paylaod: CreateCommunityPostDto) {
@@ -116,6 +115,61 @@ export class CommunityPostService {
       .fields()
       .include(communityPostInclude)
       .rawFilter({})
+      .populate(populateFields)
+      .execute();
+
+    const mappedResult = result.map((post: any) => ({
+      ...post,
+      totalReactions: post._count?.reactions || 0,
+      totalReposts: post._count?.reports || 0,
+      totalComments: post._count?.comments || 0,
+    }));
+
+    const meta = await queryBuilder.countTotal();
+    return { meta, data: mappedResult };
+  }
+
+  async findAllCommunityPosts(req: Request, communityId: string) {
+    const query = req.query;
+    const populateFields = (query.populate as string)
+      ? (query.populate as string).split(',').reduce((acc: Record<string, boolean>, field) => {
+          acc[field] = true;
+          return acc;
+        }, {})
+      : {};
+
+    const customerId = await this.getCustomerId(req);
+    console.log(`customer id is `, customerId);
+
+    // validate is the the member has access to the community
+    const membership = await this.prisma.communityMember.findUnique({
+      where: {
+        communityId_customerId: {
+          communityId,
+          customerId: customerId!,
+        },
+      },
+    });
+
+    console.log(`see member `, membership);
+
+    if (!membership || membership.status === CommunityMemberStatus.BLOCKED) {
+      throw new ApiError(
+        HttpStatus.FORBIDDEN,
+        'You do not have permission to view posts in this community',
+      );
+    }
+
+    const queryBuilder = new QueryBuilder(query, this.prisma.communityPost);
+    const result = await queryBuilder
+      .filter(communityPostFilterFields)
+      .search(communityPostSearchFields)
+      .nestedFilter(communityPostNestedFilters)
+      .sort()
+      .paginate()
+      .fields()
+      .include(communityPostInclude)
+      .rawFilter({ communityId })
       .populate(populateFields)
       .execute();
 

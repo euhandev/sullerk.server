@@ -9,10 +9,7 @@ describe('CommunityRepostService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        CommunityRepostService,
-        { provide: PrismaService, useValue: mockPrismaService },
-      ],
+      providers: [CommunityRepostService, { provide: PrismaService, useValue: mockPrismaService }],
     }).compile();
 
     service = module.get<CommunityRepostService>(CommunityRepostService);

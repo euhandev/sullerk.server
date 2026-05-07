@@ -62,6 +62,26 @@ curl -X GET "http://localhost:8989/api/v1/community-comments?postId=65fc123..."
     });
   }
 
+  @Get('post/:postId')
+  @ApiOperation({
+    summary: 'Find all community comments (with filters)',
+    description: `
+**CURL Request Sample:**
+\`\`\`bash
+curl -X GET "http://localhost:8989/api/v1/community-comments/post/:postId"
+\`\`\`
+`,
+  })
+  async findAllByPostId(@Req() req: Request, @Param('postId') postId: string) {
+    const result = await this.communityCommentService.findAllByPostId(req, postId);
+    return ResponseService.formatResponse({
+      statusCode: HttpStatus.OK,
+      message: `Community Post Comments retrieved successfully`,
+      meta: result.meta,
+      data: result.data,
+    });
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Get a single community comment by ID' })
   async findOne(@Param('id') id: string) {

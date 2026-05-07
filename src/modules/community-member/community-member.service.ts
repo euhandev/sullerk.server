@@ -11,7 +11,7 @@ import {
 } from './community-member.constant';
 import QueryBuilder from '@/utils/query_builder';
 import { ApiError } from '@/utils/api_error';
-import { CommunityUserType } from '@prisma/client';
+import { CommunityMemberStatus, CommunityType, CommunityUserType } from '@prisma/client';
 
 @Injectable()
 export class CommunityMemberService {
@@ -29,7 +29,7 @@ export class CommunityMemberService {
     return customer.id;
   }
 
-  private async checkAdminPermission(req: Request, communityId: string) {
+  private async checkAdminOrModeratorPermission(req: Request, communityId: string) {
     const user: any = req?.user;
     if (user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN') return;
 
@@ -43,16 +43,71 @@ export class CommunityMemberService {
       },
     });
 
-    if (!membership || membership.userType !== CommunityUserType.ADMIN) {
-      throw new ApiError(HttpStatus.FORBIDDEN, 'Only community admins can perform this action');
+    if (
+      !membership ||
+      (membership.userType !== CommunityUserType.ADMIN &&
+        membership.userType !== CommunityUserType.MODERATOR)
+    ) {
+      throw new ApiError(
+        HttpStatus.FORBIDDEN,
+        'Only community admins or moderators can perform this action',
+      );
     }
   }
 
-  async create(req: Request, paylaod: CreateCommunityMemberDto) {
-    await this.checkAdminPermission(req, paylaod.communityId);
+  async create(req: Request, payload: CreateCommunityMemberDto) {
+    const requesterCustomerId = await this.getCustomerId(req);
+
+    const community = await this.prisma.community.findUnique({
+      where: { id: payload.communityId },
+    });
+    if (!community) {
+      throw new ApiError(HttpStatus.NOT_FOUND, 'Community not found');
+    }
+
+    // Check if the requester is an admin/moderator of this community
+    const requesterMembership = await this.prisma.communityMember.findUnique({
+      where: {
+        communityId_customerId: {
+          communityId: payload.communityId,
+          customerId: requesterCustomerId!,
+        },
+      },
+    });
+
+    const user: any = req?.user;
+    const isGlobalAdmin = user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN';
+
+    const isAdminOrModerator =
+      isGlobalAdmin ||
+      (requesterMembership &&
+        (requesterMembership.userType === CommunityUserType.ADMIN ||
+          requesterMembership.userType === CommunityUserType.MODERATOR));
+
+    let status: CommunityMemberStatus = CommunityMemberStatus.PENDING;
+
+    if (community.type === CommunityType.PUBLIC) {
+      status = CommunityMemberStatus.ACTIVE;
+    } else if (community.type === CommunityType.PRIVATE) {
+      if (isAdminOrModerator) {
+        status = CommunityMemberStatus.ACTIVE;
+      } else {
+        status = CommunityMemberStatus.PENDING;
+      }
+    }
+
+    // If the requester is joining themselves, they should be a MEMBER by default
+    // unless specified otherwise by an admin
+    const userType = isAdminOrModerator
+      ? payload.userType || CommunityUserType.MEMBER
+      : CommunityUserType.MEMBER;
 
     return await this.prisma.communityMember.create({
-      data: paylaod,
+      data: {
+        ...payload,
+        status,
+        userType,
+      },
     });
   }
 
@@ -97,19 +152,19 @@ export class CommunityMemberService {
     return isExist;
   }
 
-  async update(req: Request, id: string, paylaod: UpdateCommunityMemberDto) {
+  async update(req: Request, id: string, payload: UpdateCommunityMemberDto) {
     const isExist = await this.findOne(id);
-    await this.checkAdminPermission(req, isExist.communityId);
+    await this.checkAdminOrModeratorPermission(req, isExist.communityId);
 
     return await this.prisma.communityMember.update({
       where: { id },
-      data: paylaod,
+      data: payload,
     });
   }
 
   async remove(req: Request, id: string) {
     const isExist = await this.findOne(id);
-    await this.checkAdminPermission(req, isExist.communityId);
+    await this.checkAdminOrModeratorPermission(req, isExist.communityId);
 
     return await this.prisma.communityMember.delete({
       where: { id },

@@ -1,17 +1,6 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  HttpStatus,
-  Req,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, HttpStatus, Req } from '@nestjs/common';
 import { CommunityStarredPostService } from './community-starred-post.service';
 import { CreateCommunityStarredPostDto } from './dto/create-community-starred-post.dto';
-import { UpdateCommunityStarredPostDto } from './dto/update-community-starred-post.dto';
 import { Roles } from '../roles/roles.decorator';
 import { Role } from '@prisma/client';
 import { ResponseService } from '@/utils/response';
@@ -19,9 +8,7 @@ import { Request } from 'express';
 
 @Controller('community-starred-posts')
 export class CommunityStarredPostController {
-  constructor(
-    private readonly communityStarredPostService: CommunityStarredPostService,
-  ) {}
+  constructor(private readonly communityStarredPostService: CommunityStarredPostService) {}
 
   @Post('toggle')
   @Roles(Role.ADMIN, Role.SUPER_ADMIN, Role.CUSTOMER)
@@ -56,9 +43,9 @@ export class CommunityStarredPostController {
   }
 
   @Delete(':id')
-  @Roles(Role.ADMIN, Role.SUPER_ADMIN)
-  async remove(@Param('id') id: string) {
-    const result = await this.communityStarredPostService.remove(id);
+  @Roles(Role.ADMIN, Role.SUPER_ADMIN, Role.CUSTOMER)
+  async remove(@Req() req: Request, @Param('id') id: string) {
+    const result = await this.communityStarredPostService.remove(req, id);
     return ResponseService.formatResponse({
       statusCode: HttpStatus.OK,
       message: `CommunityStarredPost deleted successfully`,

@@ -1,4 +1,3 @@
-
 import { ApiProperty } from '@nestjs/swagger';
 import { CommunityMemberStatus, CommunityUserType } from '@prisma/client';
 import { IsEnum, IsMongoId, IsString } from 'class-validator';

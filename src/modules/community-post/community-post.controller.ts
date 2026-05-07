@@ -1,14 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  HttpStatus,
-  Req,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, Req } from '@nestjs/common';
 import { CommunityPostService } from './community-post.service';
 import { CreateCommunityPostDto } from './dto/create-community-post.dto';
 import { UpdateCommunityPostDto } from './dto/update-community-post.dto';
@@ -19,9 +9,7 @@ import { Request } from 'express';
 
 @Controller('community-posts')
 export class CommunityPostController {
-  constructor(
-    private readonly communityPostService: CommunityPostService,
-  ) {}
+  constructor(private readonly communityPostService: CommunityPostService) {}
 
   @Post()
   @Roles(Role.ADMIN, Role.SUPER_ADMIN, Role.CUSTOMER)
@@ -45,6 +33,17 @@ export class CommunityPostController {
     });
   }
 
+  @Get('community/:communityId')
+  async findAllCommunityPost(@Req() req: Request, @Param('communityId') communityId: string) {
+    const result = await this.communityPostService.findAllCommunityPosts(req, communityId);
+    return ResponseService.formatResponse({
+      statusCode: HttpStatus.OK,
+      message: `CommunityPosts retrieved successfully`,
+      meta: result.meta,
+      data: result.data,
+    });
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const result = await this.communityPostService.findOne(id);
@@ -57,7 +56,11 @@ export class CommunityPostController {
 
   @Patch(':id')
   @Roles(Role.ADMIN, Role.SUPER_ADMIN, Role.CUSTOMER)
-  async update(@Req() req: Request, @Param('id') id: string, @Body() paylaod: UpdateCommunityPostDto) {
+  async update(
+    @Req() req: Request,
+    @Param('id') id: string,
+    @Body() paylaod: UpdateCommunityPostDto,
+  ) {
     const result = await this.communityPostService.update(req, id, paylaod);
     return ResponseService.formatResponse({
       statusCode: HttpStatus.OK,

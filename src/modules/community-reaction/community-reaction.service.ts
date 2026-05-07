@@ -29,9 +29,47 @@ export class CommunityReactionService {
     return customer.id;
   }
 
+  private async checkReactionPermission(
+    req: Request,
+    reactionId: string,
+    communityId: string,
+    action: 'update' | 'delete',
+  ) {
+    const user: any = req?.user;
+    if (user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN') return;
+
+    const customerId = await this.getCustomerId(req);
+
+    // 1. Check if user is a member and not blocked
+    const membership = await this.prisma.communityMember.findUnique({
+      where: {
+        communityId_customerId: {
+          communityId,
+          customerId: customerId!,
+        },
+      },
+    });
+
+    if (!membership || membership.status === CommunityMemberStatus.BLOCKED) {
+      throw new ApiError(
+        HttpStatus.FORBIDDEN,
+        'You must be a member of this community to perform this action',
+      );
+    }
+
+    const reaction = await this.prisma.communityReaction.findUnique({ where: { id: reactionId } });
+    if (!reaction) throw new ApiError(HttpStatus.NOT_FOUND, 'Reaction not found');
+
+    // Author can delete (reactions usually aren't updated, but for consistency)
+    if (reaction.reactedById === customerId) return;
+
+    // If not author and not global admin, forbid
+    throw new ApiError(HttpStatus.FORBIDDEN, `Only the author can ${action} this reaction`);
+  }
+
   async toggleReaction(req: Request, paylaod: CreateCommunityReactionDto) {
     const customerId = await this.getCustomerId(req);
-    
+
     const membership = await this.prisma.communityMember.findUnique({
       where: {
         communityId_customerId: {
@@ -71,12 +109,10 @@ export class CommunityReactionService {
   async findAll(req: Request) {
     const query = req.query;
     const populateFields = (query.populate as string)
-      ? (query.populate as string)
-          .split(',')
-          .reduce((acc: Record<string, boolean>, field) => {
-            acc[field] = true;
-            return acc;
-          }, {})
+      ? (query.populate as string).split(',').reduce((acc: Record<string, boolean>, field) => {
+          acc[field] = true;
+          return acc;
+        }, {})
       : {};
 
     const queryBuilder = new QueryBuilder(query, this.prisma.communityReaction);
@@ -91,7 +127,6 @@ export class CommunityReactionService {
       .rawFilter({})
       .populate(populateFields)
       .execute();
- 
 
     const meta = await queryBuilder.countTotal();
     return { meta, data: result };
@@ -105,22 +140,20 @@ export class CommunityReactionService {
     return isExist;
   }
 
-  async update(id: string, paylaod: UpdateCommunityReactionDto) {
+  async update(req: Request, id: string, paylaod: UpdateCommunityReactionDto) {
     const isExist = await this.findOne(id);
-    if(!isExist){
-      throw new ApiError(HttpStatus.NOT_FOUND, "communityReaction not found with this id:"+ id)
-    }
+    await this.checkReactionPermission(req, id, isExist.communityId, 'update');
+
     return await this.prisma.communityReaction.update({
       where: { id },
       data: paylaod,
     });
   }
 
-  async remove(id: string) {
+  async remove(req: Request, id: string) {
     const isExist = await this.findOne(id);
-    if(!isExist){
-      throw new ApiError(HttpStatus.NOT_FOUND, "communityReaction not found with this id:"+ id)
-    }
+    await this.checkReactionPermission(req, id, isExist.communityId, 'delete');
+
     return await this.prisma.communityReaction.delete({
       where: { id },
     });

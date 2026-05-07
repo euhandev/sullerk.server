@@ -11,7 +11,7 @@ import {
 } from './community-comment.constant';
 import QueryBuilder from '@/utils/query_builder';
 import { ApiError } from '@/utils/api_error';
-import { CommunityMemberStatus, CommunityUserType } from '@prisma/client';
+import { CommunityMemberStatus } from '@prisma/client';
 import { FileService } from '@/helper/file.service';
 
 @Injectable()
@@ -33,16 +33,18 @@ export class CommunityCommentService {
     return customer.id;
   }
 
-  private async checkCommentPermission(req: Request, commentId: string, communityId: string, action: 'update' | 'delete') {
+  private async checkCommentPermission(
+    req: Request,
+    commentId: string,
+    communityId: string,
+    action: 'update' | 'delete',
+  ) {
     const user: any = req?.user;
     if (user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN') return;
 
     const customerId = await this.getCustomerId(req);
-    const comment = await this.prisma.communityComment.findUnique({ where: { id: commentId } });
-    if (!comment) throw new ApiError(HttpStatus.NOT_FOUND, 'Comment not found');
 
-    if (comment.customerId === customerId) return;
-
+    // 1. Check if user is a member and not blocked
     const membership = await this.prisma.communityMember.findUnique({
       where: {
         communityId_customerId: {
@@ -52,18 +54,26 @@ export class CommunityCommentService {
       },
     });
 
-    if (!membership || membership.userType !== CommunityUserType.ADMIN) {
-      throw new ApiError(HttpStatus.FORBIDDEN, 'You do not have permission to perform this action');
+    if (!membership || membership.status === CommunityMemberStatus.BLOCKED) {
+      throw new ApiError(
+        HttpStatus.FORBIDDEN,
+        'You must be a member of this community to perform this action',
+      );
     }
 
-    if (action === 'update' && membership.userType !== CommunityUserType.ADMIN && comment.customerId !== customerId) {
-      throw new ApiError(HttpStatus.FORBIDDEN, 'Only the author can update the comment');
-    }
+    const comment = await this.prisma.communityComment.findUnique({ where: { id: commentId } });
+    if (!comment) throw new ApiError(HttpStatus.NOT_FOUND, 'Comment not found');
+
+    // Author can update/delete
+    if (comment.customerId === customerId) return;
+
+    // If not author and not global admin, forbid
+    throw new ApiError(HttpStatus.FORBIDDEN, `Only the author can ${action} this comment`);
   }
 
   async create(req: Request, paylaod: CreateCommunityCommentDto) {
     const customerId = await this.getCustomerId(req);
-    
+
     const membership = await this.prisma.communityMember.findUnique({
       where: {
         communityId_customerId: {
@@ -111,10 +121,58 @@ export class CommunityCommentService {
     return { meta, data: result };
   }
 
+  async findAllByPostId(req: Request, postId: string) {
+    const query = req.query;
+    const populateFields = (query.populate as string)
+      ? (query.populate as string).split(',').reduce((acc: Record<string, boolean>, field) => {
+          acc[field] = true;
+          return acc;
+        }, {})
+      : {};
+    const customerId = await this.getCustomerId(req);
+
+    const isPostExists = await this.prisma.communityPost.findUnique({
+      where: { id: postId },
+    });
+
+    if (!isPostExists) {
+      throw new ApiError(HttpStatus.NOT_FOUND, 'Post not found');
+    }
+
+    const membership = await this.prisma.communityMember.findUnique({
+      where: {
+        communityId_customerId: {
+          communityId: isPostExists.communityId,
+          customerId: customerId!,
+        },
+      },
+    });
+
+    if (!membership || membership.status === CommunityMemberStatus.BLOCKED) {
+      throw new ApiError(HttpStatus.FORBIDDEN, 'Only members can comment in this community');
+    }
+
+    const queryBuilder = new QueryBuilder(query, this.prisma.communityComment);
+    const result = await queryBuilder
+      .filter(communityCommentFilterFields)
+      .search(communityCommentSearchFields)
+      .nestedFilter(communityCommentNestedFilters)
+      .sort()
+      .paginate()
+      .fields()
+      .include(communityCommentInclude)
+      .rawFilter({})
+      .populate(populateFields)
+      .execute();
+
+    const meta = await queryBuilder.countTotal();
+    return { meta, data: result };
+  }
+
   async findOne(id: string) {
     const isExist = await this.prisma.communityComment.findUnique({
       where: { id },
-      include: communityCommentInclude
+      include: communityCommentInclude,
     });
     if (!isExist) {
       throw new ApiError(HttpStatus.NOT_FOUND, 'Comment not found');
@@ -135,7 +193,6 @@ export class CommunityCommentService {
   async remove(req: Request, id: string) {
     const comment = await this.findOne(id);
     await this.checkCommentPermission(req, id, comment.communityId, 'delete');
-
 
     return await this.prisma.communityComment.delete({
       where: { id },

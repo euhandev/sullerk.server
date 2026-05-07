@@ -1,4 +1,3 @@
-
 import { ApiProperty } from '@nestjs/swagger';
 import { PostType } from '@prisma/client';
 import { IsArray, IsEnum, IsMongoId, IsOptional, IsString } from 'class-validator';

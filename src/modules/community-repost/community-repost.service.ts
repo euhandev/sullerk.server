@@ -29,9 +29,47 @@ export class CommunityRepostService {
     return customer.id;
   }
 
+  private async checkRepostPermission(
+    req: Request,
+    repostId: string,
+    communityId: string,
+    action: 'update' | 'delete',
+  ) {
+    const user: any = req?.user;
+    if (user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN') return;
+
+    const customerId = await this.getCustomerId(req);
+
+    // 1. Check if user is a member and not blocked
+    const membership = await this.prisma.communityMember.findUnique({
+      where: {
+        communityId_customerId: {
+          communityId,
+          customerId: customerId!,
+        },
+      },
+    });
+
+    if (!membership || membership.status === CommunityMemberStatus.BLOCKED) {
+      throw new ApiError(
+        HttpStatus.FORBIDDEN,
+        'You must be a member of this community to perform this action',
+      );
+    }
+
+    const repost = await this.prisma.communityRepost.findUnique({ where: { id: repostId } });
+    if (!repost) throw new ApiError(HttpStatus.NOT_FOUND, 'Repost not found');
+
+    // Author can delete
+    if (repost.reportedById === customerId) return;
+
+    // If not author and not global admin, forbid
+    throw new ApiError(HttpStatus.FORBIDDEN, `Only the author can ${action} this repost`);
+  }
+
   async toggleRepost(req: Request, paylaod: CreateCommunityRepostDto) {
     const customerId = await this.getCustomerId(req);
-    
+
     const membership = await this.prisma.communityMember.findUnique({
       where: {
         communityId_customerId: {
@@ -71,12 +109,10 @@ export class CommunityRepostService {
   async findAll(req: Request) {
     const query = req.query;
     const populateFields = (query.populate as string)
-      ? (query.populate as string)
-          .split(',')
-          .reduce((acc: Record<string, boolean>, field) => {
-            acc[field] = true;
-            return acc;
-          }, {})
+      ? (query.populate as string).split(',').reduce((acc: Record<string, boolean>, field) => {
+          acc[field] = true;
+          return acc;
+        }, {})
       : {};
 
     const queryBuilder = new QueryBuilder(query, this.prisma.communityRepost);
@@ -89,49 +125,43 @@ export class CommunityRepostService {
       .paginate()
       .fields()
       .include(communityRepostInclude)
-      .rawFilter({
-       
-      })
+      .rawFilter({})
       .populate(populateFields)
       // .getAllQueries()
       .execute();
- 
 
     const meta = await queryBuilder.countTotal();
     return { meta, data: result };
   }
 
   async findOne(id: string) {
-
     const isCommunityRepostExists = await this.prisma.communityRepost.findUnique({
-        where: { id },
+      where: { id },
     });
-  
-      if (!isCommunityRepostExists) {
-        throw new ApiError(HttpStatus.NOT_FOUND, "communityRepost not found");
-      }
+
+    if (!isCommunityRepostExists) {
+      throw new ApiError(HttpStatus.NOT_FOUND, 'communityRepost not found');
+    }
 
     return await this.prisma.communityRepost.findUnique({
       where: { id },
     });
   }
 
-  async update(id: string, paylaod: UpdateCommunityRepostDto) {
+  async update(req: Request, id: string, paylaod: UpdateCommunityRepostDto) {
     const isExist = await this.findOne(id);
-    if(!isExist){
-      throw new ApiError(HttpStatus.NOT_FOUND, "communityRepost not found with this id:"+ id)
-    }
+    await this.checkRepostPermission(req, id, isExist.communityId, 'update');
+
     return await this.prisma.communityRepost.update({
       where: { id },
       data: paylaod,
     });
   }
 
-  async remove(id: string) {
+  async remove(req: Request, id: string) {
     const isExist = await this.findOne(id);
-    if(!isExist){
-      throw new ApiError(HttpStatus.NOT_FOUND, "communityRepost not found with this id:"+ id)
-    }
+    await this.checkRepostPermission(req, id, isExist.communityId, 'delete');
+
     return await this.prisma.communityRepost.delete({
       where: { id },
     });
