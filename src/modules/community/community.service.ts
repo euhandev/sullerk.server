@@ -1,4 +1,5 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
+<<<<<<< HEAD
 import { CreateCommunityDto } from './dto/create-community.dto';
 import { UpdateCommunityDto } from './dto/update-community.dto';
 import { PrismaService } from '@/helper/prisma.service';
@@ -13,10 +14,24 @@ import QueryBuilder from '@/utils/query_builder';
 import { ApiError } from '@/utils/api_error';
 import { CommunityMemberStatus, CommunityUserType } from '@prisma/client';
 import { FileService } from '@/helper/file.service';
+=======
+import { PrismaService } from '@/helper/prisma.service';
+import { CreateCommunityDto } from './dto/create-community.dto';
+import { FileService as HelperFileService } from '@/helper/file.service';
+import { ApiError } from '@/utils/api_error';
+import {
+  FileAs,
+  FileContext,
+  FileModule,
+  CommunityUserType,
+  CommunityMemberStatus,
+} from '@prisma/client';
+>>>>>>> 4c011a9 (add post community creation module)
 
 @Injectable()
 export class CommunityService {
   constructor(
+<<<<<<< HEAD
     private prisma: PrismaService,
     private readonly fileService: FileService,
   ) {}
@@ -117,10 +132,115 @@ export class CommunityService {
           communityId_customerId: {
             communityId: id,
             customerId: customerId!,
+=======
+    private readonly prisma: PrismaService,
+    private readonly fileService: HelperFileService,
+  ) {}
+
+  /**
+   * Upload hero image for community
+   */
+  async uploadMedia(file: any, userId: string, context: FileContext = FileContext.CREATE) {
+    if (!file) return null;
+
+    const folder = 'communities/hero';
+    const { url, key } = await this.fileService.autoUpload(file, folder);
+
+    return await this.prisma.file.create({
+      data: {
+        url,
+        key,
+        name: file.originalname,
+        purpose: FileAs.COMMUNITY_HERO,
+        uploadedById: userId,
+        isPending: true,
+        context: context,
+        module: FileModule.COMMUNITY,
+      },
+    });
+  }
+
+  /**
+   * Delete pending community file
+   */
+  async deletePendingFile(id: string, userId: string) {
+    const file = await this.prisma.file.findFirst({
+      where: { id, uploadedById: userId, isPending: true, module: FileModule.COMMUNITY },
+    });
+
+    if (!file) {
+      throw new ApiError(HttpStatus.NOT_FOUND, 'File not found or not authorized');
+    }
+
+    if (file.url.includes('cloudinary')) {
+      await this.fileService.deleteFromCloudinary(file.url, file.key).catch(() => {});
+    } else if (file.url.includes('digitaloceanspaces')) {
+      await this.fileService.deleteFromDigitalOcean(file.url).catch(() => {});
+    } else {
+      await this.fileService.deleteFromLocal(file.url).catch(() => {});
+    }
+
+    await this.prisma.file.delete({ where: { id } });
+    return { success: true };
+  }
+
+  /**
+   * Create community and add creator as Admin
+   */
+  async create(createCommunityDto: CreateCommunityDto, userId: string) {
+    const { heroImg, ...communityData } = createCommunityDto;
+
+    // 1. Validate customer
+    const customer = await this.prisma.customer.findUnique({
+      where: { userId },
+    });
+    if (!customer) {
+      throw new ApiError(HttpStatus.NOT_FOUND, 'Customer profile not found');
+    }
+
+    // 2. Resolve hero image if provided
+    let finalHeroImg = '';
+    let finalHeroImgFileId = '';
+
+    if (heroImg) {
+      // Find the file by ID or URL to ensure it exists for this user
+      const file = await this.prisma.file.findFirst({
+        where: {
+          uploadedById: userId,
+          module: FileModule.COMMUNITY,
+          OR: [{ id: heroImg.fileId || undefined }, { url: heroImg.url || undefined }].filter(
+            (cond) => Object.values(cond)[0] !== undefined,
+          ),
+        },
+      });
+
+      if (file) {
+        finalHeroImg = file.url;
+        finalHeroImgFileId = file.id;
+      } else if (heroImg.url) {
+        // Fallback to provided URL if no DB record found
+        finalHeroImg = heroImg.url;
+      }
+    }
+
+    // 3. Create Community in transaction
+    return await this.prisma.$transaction(async (tx) => {
+      const community = await tx.community.create({
+        data: {
+          ...communityData,
+          heroImg: finalHeroImg,
+          members: {
+            create: {
+              customerId: customer.id,
+              userType: CommunityUserType.ADMIN,
+              status: CommunityMemberStatus.ACTIVE,
+            },
+>>>>>>> 4c011a9 (add post community creation module)
           },
         },
       });
 
+<<<<<<< HEAD
       if (!membership || membership.status === CommunityMemberStatus.BLOCKED) {
         throw new ApiError(HttpStatus.FORBIDDEN, 'You do not have permission to view this community');
       }
@@ -197,6 +317,17 @@ export class CommunityService {
 
     return await this.prisma.community.delete({
       where: { id },
+=======
+      // 4. Update file record to clear pending status
+      if (finalHeroImgFileId) {
+        await tx.file.updateMany({
+          where: { id: finalHeroImgFileId, uploadedById: userId, isPending: true },
+          data: { isPending: false },
+        });
+      }
+
+      return community;
+>>>>>>> 4c011a9 (add post community creation module)
     });
   }
 }

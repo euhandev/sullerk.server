@@ -86,6 +86,7 @@ model Customer {
   dealsAsBuyer   Deal[]           @relation("DealBuyer")
   dealsAsSeller  Deal[]           @relation("DealSeller")
   starredListings StarredListing[]
+  shares          ListingShare[]
 
   posts          Post[]
   reports        Repost[]
@@ -512,6 +513,7 @@ model Listing {
   allowOffers     Boolean       @default(false)
   autoPriceAdjust Boolean       @default(false)
   status          ListingStatus @default(PENDING)
+  sharesCount     Int           @default(0)
 
 
   ownerId String   @db.ObjectId
@@ -530,6 +532,7 @@ model Listing {
   starredListings  StarredListing[]
   collections      CollectionListing[]
   posts            Post[]
+  shares           ListingShare[]
 
   @@map("listings")
 }
@@ -696,6 +699,19 @@ model Watchlist {
 
   @@unique([customerId, listingId])
   @@map("watchlists")
+}
+
+model ListingShare {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  customerId String   @db.ObjectId
+  customer   Customer @relation(fields: [customerId], references: [id])
+  listingId  String   @db.ObjectId
+  listing    Listing  @relation(fields: [listingId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@unique([customerId, listingId])
+  @@map("listing_shares")
 }
 
 
@@ -943,7 +959,15 @@ model File {
   communityPostId String?        @db.ObjectId
   communityPost   CommunityPost? @relation(fields: [communityPostId], references: [id])
 
+  module          FileModule     @default(LISTING)
+
   @@map("files")
+}
+
+enum FileModule {
+  LISTING
+  POST
+  COMMUNITY
 }
 
 enum FileAs {
@@ -952,6 +976,7 @@ enum FileAs {
   PROOF_VIDEO
   COA_FILE
   COM_AUTH
+  COMMUNITY_HERO
 }
 
 enum FileContext {

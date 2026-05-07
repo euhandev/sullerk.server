@@ -5,7 +5,7 @@ import { PrismaService } from '@/helper/prisma.service';
 import { CreateListingDto, FileItem } from './dto/create-listing.dto';
 import { FileService as HelperFileService } from '@/helper/file.service';
 import { ApiError } from '@/utils/api_error';
-import { FileAs, FileContext } from '@prisma/client';
+import { FileAs, FileContext, FileModule } from '@prisma/client';
 
 @Injectable()
 export class ListingService {
@@ -43,6 +43,7 @@ export class ListingService {
         uploadedById: userId,
         isPending: true,
         context: context,
+        module: FileModule.LISTING,
       },
     });
   }
@@ -179,6 +180,7 @@ export class ListingService {
         id: fileId,
         uploadedById: userId,
         isPending: true,
+        module: FileModule.LISTING,
       },
     });
 
@@ -202,5 +204,82 @@ export class ListingService {
 
   async fileDeleted(data: { url: string; key?: string }) {
     await this.emitter.emit('file-deleted', data);
+  }
+
+  /**
+   * Toggle Love/Star status for a listing
+   */
+  async toggleStar(listingId: string, userId: string) {
+    const customer = await this.prisma.customer.findUnique({ where: { userId } });
+    if (!customer) throw new ApiError(HttpStatus.NOT_FOUND, 'Customer profile not found');
+
+    const existing = await this.prisma.starredListing.findUnique({
+      where: {
+        customerId_listingId: { customerId: customer.id, listingId },
+      },
+    });
+
+    if (existing) {
+      await this.prisma.starredListing.delete({ where: { id: existing.id } });
+      return { starred: false };
+    } else {
+      await this.prisma.starredListing.create({
+        data: { customerId: customer.id, listingId },
+      });
+      return { starred: true };
+    }
+  }
+
+  /**
+   * Toggle Watchlist status for a listing
+   */
+  async toggleWatchlist(listingId: string, userId: string) {
+    const customer = await this.prisma.customer.findUnique({ where: { userId } });
+    if (!customer) throw new ApiError(HttpStatus.NOT_FOUND, 'Customer profile not found');
+
+    const existing = await this.prisma.watchlist.findUnique({
+      where: {
+        customerId_listingId: { customerId: customer.id, listingId },
+      },
+    });
+
+    if (existing) {
+      await this.prisma.watchlist.delete({ where: { id: existing.id } });
+      return { watching: false };
+    } else {
+      await this.prisma.watchlist.create({
+        data: { customerId: customer.id, listingId },
+      });
+      return { watching: true };
+    }
+  }
+
+  /**
+   * Record a share action for a listing
+   */
+  async share(listingId: string, userId: string) {
+    const customer = await this.prisma.customer.findUnique({ where: { userId } });
+    if (!customer) throw new ApiError(HttpStatus.NOT_FOUND, 'Customer profile not found');
+
+    return await this.prisma.$transaction(async (tx) => {
+      // 1. Create share record (ignore if already exists for this user to avoid double counting)
+      const existing = await tx.listingShare.findUnique({
+        where: { customerId_listingId: { customerId: customer.id, listingId } },
+      });
+
+      if (!existing) {
+        await tx.listingShare.create({
+          data: { customerId: customer.id, listingId },
+        });
+
+        // 2. Increment shares count on listing
+        await tx.listing.update({
+          where: { id: listingId },
+          data: { sharesCount: { increment: 1 } },
+        });
+      }
+
+      return { success: true };
+    });
   }
 }

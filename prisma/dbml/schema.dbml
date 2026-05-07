@@ -65,6 +65,7 @@ Table customers {
   dealsAsBuyer deals [not null]
   dealsAsSeller deals [not null]
   starredListings starred_listings [not null]
+  shares listing_shares [not null]
   posts Post [not null]
   reports reposts [not null]
   comments comments [not null]
@@ -385,6 +386,7 @@ Table listings {
   allowOffers Boolean [not null, default: false]
   autoPriceAdjust Boolean [not null, default: false]
   status ListingStatus [not null, default: 'PENDING']
+  sharesCount Int [not null, default: 0]
   ownerId String [not null]
   owner customers [not null]
   acquiredDate DateTime
@@ -398,6 +400,7 @@ Table listings {
   starredListings starred_listings [not null]
   collections collection_listings [not null]
   posts Post [not null]
+  shares listing_shares [not null]
 }
 
 Table collections {
@@ -520,6 +523,19 @@ Table watchlists {
   }
 }
 
+Table listing_shares {
+  id String [pk]
+  customerId String [not null]
+  customer customers [not null]
+  listingId String [not null]
+  listing listings [not null]
+  createdAt DateTime [default: `now()`, not null]
+
+  indexes {
+    (customerId, listingId) [unique]
+  }
+}
+
 Table payment_methods {
   id String [pk]
   customerId String [not null]
@@ -615,6 +631,7 @@ Table files {
   post Post
   communityPostId String
   communityPost community_posts
+  module FileModule [not null, default: 'LISTING']
 }
 
 Table notifications {
@@ -931,12 +948,19 @@ Enum TransactionStatus {
   CANCELLED
 }
 
+Enum FileModule {
+  LISTING
+  POST
+  COMMUNITY
+}
+
 Enum FileAs {
   PHOTOS
   PROOF_PHOTO
   PROOF_VIDEO
   COA_FILE
   COM_AUTH
+  COMMUNITY_HERO
 }
 
 Enum FileContext {
@@ -1141,6 +1165,10 @@ Ref: disputes.raisedById > customers.id
 Ref: watchlists.customerId > customers.id
 
 Ref: watchlists.listingId > listings.id
+
+Ref: listing_shares.customerId > customers.id
+
+Ref: listing_shares.listingId > listings.id
 
 Ref: payment_methods.customerId > customers.id
 

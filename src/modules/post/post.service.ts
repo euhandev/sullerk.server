@@ -3,7 +3,7 @@ import { PrismaService } from '@/helper/prisma.service';
 import { CreatePostDto, FileItem } from './dto/create-post.dto';
 import { FileService as HelperFileService } from '@/helper/file.service';
 import { ApiError } from '@/utils/api_error';
-import { FileAs, FileContext } from '@prisma/client';
+import { FileAs, FileContext, FileModule } from '@prisma/client';
 
 @Injectable()
 export class PostService {
@@ -37,6 +37,7 @@ export class PostService {
         uploadedById: userId,
         isPending: true,
         context: context,
+        module: FileModule.POST,
       },
     });
   }
@@ -123,7 +124,7 @@ export class PostService {
 
   async deletePendingFile(id: string, userId: string) {
     const file = await this.prisma.file.findFirst({
-      where: { id, uploadedById: userId, isPending: true },
+      where: { id, uploadedById: userId, isPending: true, module: FileModule.POST },
     });
     if (!file) {
       throw new ApiError(HttpStatus.NOT_FOUND, 'File not found or not authorized');

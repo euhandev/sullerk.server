@@ -239,4 +239,95 @@ export class ListingController {
       data: result,
     });
   }
+
+  @Post('star/:id')
+  @Roles(Role.CUSTOMER)
+  @ApiOperation({
+    summary: 'Toggle Love/Star status for a listing',
+    description: `
+      Toggles the favorite status of a listing for the current user.
+      Returns { starred: true } if added, { starred: false } if removed.
+
+      **CURL EXAMPLE:**
+      \`\`\`bash
+      curl -X POST "http://localhost:8989/api/v1/listings/star/69fae180e0c772d77befd5b8" \\
+        -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+      \`\`\`
+    `,
+  })
+  @ApiResponse({
+    status: 200,
+    schema: { example: { success: true, data: { starred: true } } },
+  })
+  async toggleStar(@Param('id') id: string, @Req() req: any) {
+    const userId = req.user.id;
+    const result = await this.listingService.toggleStar(id, userId);
+    return ResponseService.formatResponse({
+      statusCode: HttpStatus.OK,
+      message: result.starred ? 'Listing starred successfully' : 'Listing unstarred successfully',
+      data: result,
+    });
+  }
+
+  @Post('watchlist/:id')
+  @Roles(Role.CUSTOMER)
+  @ApiOperation({
+    summary: 'Toggle Watchlist status for a listing',
+    description: `
+      Toggles whether a listing is in the user's watchlist.
+      Returns { watching: true } if added, { watching: false } if removed.
+
+      **CURL EXAMPLE:**
+      \`\`\`bash
+      curl -X POST "http://localhost:8989/api/v1/listings/watchlist/69fae180e0c772d77befd5b8" \\
+        -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+      \`\`\`
+    `,
+  })
+  @ApiResponse({
+    status: 200,
+    schema: { example: { success: true, data: { watching: true } } },
+  })
+  async toggleWatchlist(@Param('id') id: string, @Req() req: any) {
+    const userId = req.user.id;
+    const result = await this.listingService.toggleWatchlist(id, userId);
+    return ResponseService.formatResponse({
+      statusCode: HttpStatus.OK,
+      message: result.watching
+        ? 'Listing added to watchlist successfully'
+        : 'Listing removed from watchlist successfully',
+      data: result,
+    });
+  }
+
+  @Post('share/:id')
+  @Roles(Role.CUSTOMER)
+  @ApiOperation({
+    summary: 'Record a share action for a listing',
+    description: `
+      Increments the share count for a listing and records the user who shared it.
+      A user can only increment the count once.
+
+      **CURL EXAMPLE:**
+      \`\`\`bash
+      curl -X POST "http://localhost:8989/api/v1/listings/share/69fae180e0c772d77befd5b8" \\
+        -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+      \`\`\`
+    `,
+  })
+  @ApiResponse({
+    status: 200,
+    schema: {
+      example: { success: true, message: 'Listing shared successfully', data: { success: true } },
+    },
+  })
+  async share(@Param('id') id: string, @Req() req: any) {
+    const userId = req.user.id;
+    const result = await this.listingService.share(id, userId);
+    return ResponseService.formatResponse({
+      statusCode: HttpStatus.OK,
+      message: 'Listing shared successfully',
+      data: result,
+    });
+  }
 }
