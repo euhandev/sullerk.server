@@ -76,24 +76,24 @@ model Customer {
   updatedAt  DateTime    @updatedAt
   user       User        @relation(fields: [userId], references: [id])
 
-  listings       Listing[]   @relation("ListingOwner")
+  listings Listing[] @relation("ListingOwner")
 
-  ordersAsBuyer  Order[]         @relation("OrderBuyer")
-  ordersAsSeller Order[]         @relation("OrderSeller")
-  watchlists     Watchlist[]
-  paymentMethods PaymentMethod[]
-  listingHistory ListingHistory[]
-  Report         Report[]
-  dealsAsBuyer   Deal[]           @relation("DealBuyer")
-  dealsAsSeller  Deal[]           @relation("DealSeller")
+  ordersAsBuyer   Order[]          @relation("OrderBuyer")
+  ordersAsSeller  Order[]          @relation("OrderSeller")
+  watchlists      Watchlist[]
+  paymentMethods  PaymentMethod[]
+  listingHistory  ListingHistory[]
+  Report          Report[]
+  dealsAsBuyer    Deal[]           @relation("DealBuyer")
+  dealsAsSeller   Deal[]           @relation("DealSeller")
   starredListings StarredListing[]
   shares          ListingShare[]
 
-  posts          Post[]
-  reports        Repost[]
-  comments       Comment[]
-  reactions      Reaction[]
-  stars          StarredPost[]
+  posts     Post[]
+  reports   Repost[]
+  comments  Comment[]
+  reactions Reaction[]
+  stars     StarredPost[]
 
   followers           Follower[]    @relation("Follower")
   followedBy          Follower[]    @relation("Following")
@@ -102,7 +102,7 @@ model Customer {
   blockedBy           BlockedUser[] @relation("BlockedBy")
   blockedUsers        BlockedUser[] @relation("BlockedUser")
 
-  balance      Float     @default(0.0) // Virtual wallet
+  balance      Float         @default(0.0) // Virtual wallet
   transactions Transaction[]
 
   communityMembers   CommunityMember[]
@@ -120,7 +120,7 @@ model Customer {
   exchangeSent     ExchangeOffer[] @relation("ExchangeSender")
   exchangeReceived ExchangeOffer[] @relation("ExchangeReceiver")
 
-  raisedDisputes   Dispute[]       @relation("RaisedBy")
+  raisedDisputes Dispute[] @relation("RaisedBy")
 
   @@index([createdAt])
   @@map("customers")
@@ -180,21 +180,21 @@ model BlockedUser {
 // post 
 
 model Post {
-  id         String     @id @default(auto()) @map("_id") @db.ObjectId
-  customerId String     @db.ObjectId
-  customer   Customer   @relation(fields: [customerId], references: [id])
-  aiAnalysis String?    @default("")
-  type       PostType[]
-  description String?   @default("")
-  
-  images     FileItem[]
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  customerId  String     @db.ObjectId
+  customer    Customer   @relation(fields: [customerId], references: [id])
+  aiAnalysis  String?    @default("")
+  type        PostType[]
+  description String?    @default("")
+
+  images FileItem[]
 
   // ─── External Link ───
   externalLink String? @default("")
 
   // ─── Linked Listing ───
-  listingId    String?    @db.ObjectId
-  listing      Listing?   @relation(fields: [listingId], references: [id])
+  listingId String?  @db.ObjectId
+  listing   Listing? @relation(fields: [listingId], references: [id])
 
   // ─── Poll ───
   pollQuestion       String?
@@ -211,7 +211,7 @@ model Post {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
+
   files File[]
 }
 
@@ -259,7 +259,6 @@ model Reaction {
   @@map("reactions")
 }
 
-
 model DealListing {
   id        String          @id @default(auto()) @map("_id") @db.ObjectId
   dealId    String          @db.ObjectId
@@ -273,8 +272,6 @@ model DealListing {
   @@unique([dealId, listingId])
   @@map("deal_listings")
 }
-
-
 
 model Repost {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
@@ -423,13 +420,13 @@ model CommunityRepost {
 }
 
 model CommunityStarredPost {
-  id           String        @id @default(auto()) @map("_id") @db.ObjectId
-  postId       String        @db.ObjectId
-  post         CommunityPost @relation(fields: [postId], references: [id])
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  postId      String        @db.ObjectId
+  post        CommunityPost @relation(fields: [postId], references: [id])
   starredById String        @db.ObjectId
-  customer     Customer      @relation(fields: [starredById], references: [id])
-  communityId  String        @db.ObjectId
-  community    Community     @relation(fields: [communityId], references: [id])
+  customer    Customer      @relation(fields: [starredById], references: [id])
+  communityId String        @db.ObjectId
+  community   Community     @relation(fields: [communityId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -524,7 +521,6 @@ model Listing {
   status          ListingStatus @default(PENDING)
   sharesCount     Int           @default(0)
 
-
   ownerId String   @db.ObjectId
   owner   Customer @relation("ListingOwner", fields: [ownerId], references: [id])
 
@@ -543,7 +539,19 @@ model Listing {
   posts            Post[]
   shares           ListingShare[]
 
-  disputes      Dispute[]
+  disputes Dispute[]
+
+  calculatedBasePrice     Float? // Engine-calculated price snapshot
+  displayPrice            Float? // Final price after seller adjustment
+  priceEngineConfigId     String?               @db.ObjectId
+  priceEngineConfig       PriceEngineConfig?    @relation(fields: [priceEngineConfigId], references: [id])
+  priceBreakdown          Json? // Audit trail of multipliers applied
+  appliedHonours          String[] // Honour keys applied at creation
+  appliedApiMetrics       Json? // { "Goal": 2, "Assist": 1 } snapshot
+  lastApiRecalcAt         DateTime? // Last time API cron updated price
+  isPriceLocked           Boolean               @default(false)
+  sellerAdjustmentPercent Float? // % deviation applied by seller (within range)
+  priceCalculationLogs    PriceCalculationLog[]
 
   @@map("listings")
 }
@@ -553,15 +561,14 @@ type FileItem {
   url    String
 }
 
-
 model Collection {
-  id          String           @id @default(auto()) @map("_id") @db.ObjectId
+  id          String              @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   description String
   listings    CollectionListing[]
 
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("collections")
 }
@@ -579,19 +586,18 @@ model CollectionListing {
   @@map("collection_listings")
 }
 
-
 model Deal {
-  id        String     @id @default(auto()) @map("_id") @db.ObjectId
-  buyerId   String     @db.ObjectId
-  buyer     Customer   @relation("DealBuyer", fields: [buyerId], references: [id])
-  sellerId  String     @db.ObjectId
-  seller    Customer   @relation("DealSeller", fields: [sellerId], references: [id])
-  note      String?
-  status    DealStatus @default(APPROTCHED)
-  listings  DealListing[]
+  id       String        @id @default(auto()) @map("_id") @db.ObjectId
+  buyerId  String        @db.ObjectId
+  buyer    Customer      @relation("DealBuyer", fields: [buyerId], references: [id])
+  sellerId String        @db.ObjectId
+  seller   Customer      @relation("DealSeller", fields: [sellerId], references: [id])
+  note     String?
+  status   DealStatus    @default(APPROTCHED)
+  listings DealListing[]
 
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("deals")
 }
@@ -607,10 +613,6 @@ enum DealListingType {
   OTHERS
 }
 
-
-
-
-
 model Report {
   id           String       @id @default(auto()) @map("_id") @db.ObjectId
   listingId    String       @db.ObjectId
@@ -625,7 +627,6 @@ model Report {
 
   @@map("reports")
 }
-
 
 model StarredListing {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
@@ -659,23 +660,22 @@ model ListingHistory {
   @@map("listing_histories")
 }
 
-
 model Order {
-  id              String      @id @default(auto()) @map("_id") @db.ObjectId
-  orderNumber     String      @unique
-  listingId       String      @db.ObjectId
-  listing         Listing     @relation(fields: [listingId], references: [id])
-  buyerId         String      @db.ObjectId
-  buyer           Customer    @relation("OrderBuyer", fields: [buyerId], references: [id])
-  sellerId        String      @db.ObjectId
-  seller          Customer    @relation("OrderSeller", fields: [sellerId], references: [id])
-  
-  totalAmount     Float       // Total paid by buyer
-  platformFee     Float       @default(0.0) // Deducted amount
-  sellerEarnings  Float       @default(0.0) // Net amount for seller
-  
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  orderNumber String   @unique
+  listingId   String   @db.ObjectId
+  listing     Listing  @relation(fields: [listingId], references: [id])
+  buyerId     String   @db.ObjectId
+  buyer       Customer @relation("OrderBuyer", fields: [buyerId], references: [id])
+  sellerId    String   @db.ObjectId
+  seller      Customer @relation("OrderSeller", fields: [sellerId], references: [id])
+
+  totalAmount    Float // Total paid by buyer
+  platformFee    Float @default(0.0) // Deducted amount
+  sellerEarnings Float @default(0.0) // Net amount for seller
+
   status          OrderStatus @default(PENDING_PAYMENT)
-  stripeSessionId String?     // Track Stripe checkout
+  stripeSessionId String? // Track Stripe checkout
   trackingNo      String?
   type            OrderType   @default(PURCHASE)
 
@@ -688,78 +688,78 @@ model Order {
 }
 
 model ExchangeOffer {
-  id              String         @id @default(auto()) @map("_id") @db.ObjectId
-  
-  senderId        String         @db.ObjectId
-  sender          Customer       @relation("ExchangeSender", fields: [senderId], references: [id])
-  
-  receiverId      String         @db.ObjectId
-  receiver        Customer       @relation("ExchangeReceiver", fields: [receiverId], references: [id])
-  
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  senderId String   @db.ObjectId
+  sender   Customer @relation("ExchangeSender", fields: [senderId], references: [id])
+
+  receiverId String   @db.ObjectId
+  receiver   Customer @relation("ExchangeReceiver", fields: [receiverId], references: [id])
+
   // Support for Bundles (multiple listings on either side)
-  senderListingIds   String[]      @db.ObjectId
-  receiverListingIds String[]      @db.ObjectId
-  
-  senderTotalValue   Float         @default(0.0)
-  receiverTotalValue Float         @default(0.0)
-  balanceToPay       Float         @default(0.0) // Difference to balance the trade
-  
+  senderListingIds   String[] @db.ObjectId
+  receiverListingIds String[] @db.ObjectId
+
+  senderTotalValue   Float @default(0.0)
+  receiverTotalValue Float @default(0.0)
+  balanceToPay       Float @default(0.0) // Difference to balance the trade
+
   note            String?
   status          ExchangeStatus @default(PENDING)
   paymentStatus   String         @default("NONE") // NONE, PENDING, PAID
   stripeSessionId String?
-  
-  // Negotiation History (Offer -> Re-offer chain)
-  parentOfferId   String?        @db.ObjectId
-  parentOffer     ExchangeOffer? @relation("CounterOffers", fields: [parentOfferId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  counterOffers   ExchangeOffer[] @relation("CounterOffers")
 
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
+  // Negotiation History (Offer -> Re-offer chain)
+  parentOfferId String?         @db.ObjectId
+  parentOffer   ExchangeOffer?  @relation("CounterOffers", fields: [parentOfferId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  counterOffers ExchangeOffer[] @relation("CounterOffers")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("exchange_offers")
 }
 
 model Transaction {
-  id              String          @id @default(auto()) @map("_id") @db.ObjectId
-  customerId      String          @db.ObjectId
-  customer        Customer        @relation(fields: [customerId], references: [id])
-  
-  amount          Float           // Positive for credits, negative for debits
-  type            TransactionType
-  
-  orderId         String?         @db.ObjectId
-  exchangeOfferId String?         @db.ObjectId
-  
-  description     String?         // e.g. "Payment for Listing X"
-  createdAt       DateTime        @default(now())
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  customerId String   @db.ObjectId
+  customer   Customer @relation(fields: [customerId], references: [id])
+
+  amount Float // Positive for credits, negative for debits
+  type   TransactionType
+
+  orderId         String? @db.ObjectId
+  exchangeOfferId String? @db.ObjectId
+
+  description String? // e.g. "Payment for Listing X"
+  createdAt   DateTime @default(now())
 
   @@map("transactions")
 }
 
 model Dispute {
-  id             String        @id @default(auto()) @map("_id") @db.ObjectId
-  
-  listingId      String?       @db.ObjectId
-  listing        Listing?      @relation(fields: [listingId], references: [id])
-  
-  orderId        String?       @db.ObjectId
-  order          Order?        @relation(fields: [orderId], references: [id])
-  
-  raisedById     String        @db.ObjectId
-  raisedBy       Customer      @relation("RaisedBy", fields: [raisedById], references: [id])
-  
-  resolvedById   String?       @db.ObjectId
-  resolvedBy     Admin?        @relation("ResolvedBy", fields: [resolvedById], references: [id])
-  
-  type           DisputeType
-  status         DisputeStatus @default(OPEN)
-  
-  reason         String        
-  details        String?       
-  resolutionNote String?       
-  
-  evidence       FileItem[]    
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  listingId String?  @db.ObjectId
+  listing   Listing? @relation(fields: [listingId], references: [id])
+
+  orderId String? @db.ObjectId
+  order   Order?  @relation(fields: [orderId], references: [id])
+
+  raisedById String   @db.ObjectId
+  raisedBy   Customer @relation("RaisedBy", fields: [raisedById], references: [id])
+
+  resolvedById String? @db.ObjectId
+  resolvedBy   Admin?  @relation("ResolvedBy", fields: [resolvedById], references: [id])
+
+  type   DisputeType
+  status DisputeStatus @default(OPEN)
+
+  reason         String
+  details        String?
+  resolutionNote String?
+
+  evidence FileItem[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -792,7 +792,6 @@ model ListingShare {
   @@unique([customerId, listingId])
   @@map("listing_shares")
 }
-
 
 model PaymentMethod {
   id         String            @id @default(auto()) @map("_id") @db.ObjectId
@@ -910,13 +909,13 @@ model PricingConfig {
 }
 
 enum ListingCategory {
-
   SHIRT
   BOOTS
   CARD
   GLOVES
   MATCH_BALL
   SHORTS
+  SIGNED_PHOTO
   OTHER
 }
 
@@ -947,8 +946,6 @@ enum COAStatus {
   SELF_CERTIFIED
 }
 
-
-
 enum SaleFormat {
   BUY_NOW
   TRADE_ONLY
@@ -959,7 +956,7 @@ enum ListingStatus {
   ACTIVE
   PAUSED
   PENDING
-  LOCKED      // Reserved during checkout
+  LOCKED // Reserved during checkout
   SOLD
   EXCHANGED
 }
@@ -1023,27 +1020,27 @@ model Newsletter {
 }
 
 model File {
-  id              String         @id @default(auto()) @map("_id") @db.ObjectId
-  name            String?
-  url             String
-  key             String?
-  type            FileType       @default(DOC)
-  purpose         FileAs         @default(PHOTOS)
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
-  listing         Listing?       @relation(fields: [listingId], references: [id])
-  listingId       String?        @db.ObjectId
-  uploadedById    String?        @db.ObjectId
-  isPending       Boolean        @default(false)
-  context         FileContext    @default(CREATE)
+  id           String      @id @default(auto()) @map("_id") @db.ObjectId
+  name         String?
+  url          String
+  key          String?
+  type         FileType    @default(DOC)
+  purpose      FileAs      @default(PHOTOS)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  listing      Listing?    @relation(fields: [listingId], references: [id])
+  listingId    String?     @db.ObjectId
+  uploadedById String?     @db.ObjectId
+  isPending    Boolean     @default(false)
+  context      FileContext @default(CREATE)
 
-  postId          String?        @db.ObjectId
+  postId String? @db.ObjectId
 
   post            Post?          @relation(fields: [postId], references: [id], onDelete: Cascade)
   communityPostId String?        @db.ObjectId
   communityPost   CommunityPost? @relation(fields: [communityPostId], references: [id])
 
-  module          FileModule     @default(LISTING)
+  module FileModule @default(LISTING)
 
   @@map("files")
 }
@@ -1102,8 +1099,6 @@ enum Role {
 enum Status {
   ACTIVE
   INACTIVE
-
-  @@map("status")
 }
 
 enum Lang {
@@ -1271,3 +1266,329 @@ enum ActionType {
   UPDATE_PASSWORD
   RESET_PASSWORD
 }
+
+// ─────────────────────────────────────────────────────────────
+// PRICE ENGINE CONFIG (Root Model - One Per Sport)
+// ─────────────────────────────────────────────────────────────
+
+model PriceEngineConfig {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  sport       String  @unique // "Football", "Basketball", etc.
+  isActive    Boolean @default(true)
+  description String?
+
+  // ─── GLOBAL CONTROLS TAB ─────────────────────────────
+  platformFeePercent       Float @default(5.0) // e.g., 5.0 = 5%
+  sellerAdjustRangePercent Float @default(10.0) // ±% sellers can adjust
+  apiRecalcIntervalGames   Int   @default(2) // Recalc every N matches/events
+
+  // ─── RELATIONS ─────────────────────────────────────
+  baseValues           BaseValue[]
+  proofMultipliers     ProofMultiplierGroup[]
+  signatureMultipliers SignatureMultiplier[]
+  authMultipliers      AuthMultiplier[]
+  cardMultipliers      CardMultiplierGroup[]
+  honourMultipliers    HonourMultiplier[]
+  apiPerformanceRules  ApiPerformanceRule[]
+  calculationLogs      PriceCalculationLog[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Listing   Listing[]
+
+  @@index([sport, isActive])
+  @@map("price_engine_configs")
+}
+
+// ─────────────────────────────────────────────────────────────
+// BASE VALUES TAB
+// ─────────────────────────────────────────────────────────────
+
+model BaseValue {
+  id       String            @id @default(auto()) @map("_id") @db.ObjectId
+  configId String            @db.ObjectId
+  config   PriceEngineConfig @relation(fields: [configId], references: [id], onDelete: Cascade)
+
+  category  ListingCategory // Reuse your existing enum: SHIRT, BOOTS, CARD, GLOVES, MATCH_BALL, SHORTS, OTHER
+  basePrice Float // Base price in GBP
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([configId, category])
+  @@map("base_values")
+}
+
+// ─────────────────────────────────────────────────────────────
+// PROOF MULTIPLIERS TAB (Photo + Video)
+// ─────────────────────────────────────────────────────────────
+
+model ProofMultiplierGroup {
+  id       String            @id @default(auto()) @map("_id") @db.ObjectId
+  configId String            @db.ObjectId
+  config   PriceEngineConfig @relation(fields: [configId], references: [id], onDelete: Cascade)
+
+  proofType ProofType // PHOTO or VIDEO
+  rules     ProofMultiplierRule[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([configId, proofType])
+  @@map("proof_multiplier_groups")
+}
+
+model ProofMultiplierRule {
+  id      String               @id @default(auto()) @map("_id") @db.ObjectId
+  groupId String               @db.ObjectId
+  group   ProofMultiplierGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  viewKey    ProofViewKey
+  multiplier Float
+  isActive   Boolean      @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([groupId, viewKey])
+  @@map("proof_multiplier_rules")
+}
+
+enum ProofType {
+  PHOTO
+  VIDEO
+}
+
+enum ProofViewKey {
+  NO_PROOF
+  PARTIAL_VIEW
+  FULL_VIEW
+  PARTIAL_VIEW_ATHLETE
+  FULL_VIEW_ATHLETE
+}
+
+// ─────────────────────────────────────────────────────────────
+// SIGNATURE MULTIPLIERS TAB
+// ─────────────────────────────────────────────────────────────
+
+model SignatureMultiplier {
+  id       String            @id @default(auto()) @map("_id") @db.ObjectId
+  configId String            @db.ObjectId
+  config   PriceEngineConfig @relation(fields: [configId], references: [id], onDelete: Cascade)
+
+  signatureKey SignatureKey
+  multiplier   Float
+  isActive     Boolean      @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([configId, signatureKey])
+  @@map("signature_multipliers")
+}
+
+enum SignatureKey {
+  NONE
+  PARTIAL
+  FULL
+  PERSONALISED
+}
+
+// ─────────────────────────────────────────────────────────────
+// AUTHENTICATION MULTIPLIERS TAB
+// ─────────────────────────────────────────────────────────────
+
+model AuthMultiplier {
+  id       String            @id @default(auto()) @map("_id") @db.ObjectId
+  configId String            @db.ObjectId
+  config   PriceEngineConfig @relation(fields: [configId], references: [id], onDelete: Cascade)
+
+  companyKey AuthCompanyKey
+  multiplier Float
+  isActive   Boolean        @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([configId, companyKey])
+  @@map("auth_multipliers")
+}
+
+enum AuthCompanyKey {
+  NONE
+  BECKETT
+  PSA
+  JSA
+  ACG
+  AFTAL
+  SGC
+  CGC
+}
+
+// ─────────────────────────────────────────────────────────────
+// ★★★ CARDS TAB ★★★ (Numbering, Features, Grades)
+// ─────────────────────────────────────────────────────────────
+
+model CardMultiplierGroup {
+  id       String            @id @default(auto()) @map("_id") @db.ObjectId
+  configId String            @db.ObjectId
+  config   PriceEngineConfig @relation(fields: [configId], references: [id], onDelete: Cascade)
+
+  groupType CardMultiplierType
+  rules     CardMultiplierRule[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([configId, groupType])
+  @@map("card_multiplier_groups")
+}
+
+model CardMultiplierRule {
+  id      String              @id @default(auto()) @map("_id") @db.ObjectId
+  groupId String              @db.ObjectId
+  group   CardMultiplierGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  ruleKey    CardRuleKey
+  label      String?
+  multiplier Float
+  sortOrder  Int         @default(0)
+  isActive   Boolean     @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([groupId, ruleKey])
+  @@map("card_multiplier_rules")
+}
+
+enum CardMultiplierType {
+  NUMBERING
+  FEATURE
+  GRADE
+}
+
+enum CardRuleKey {
+  // NUMBERING
+  NUM_5
+  NUM_10
+  NUM_15
+  NUM_20
+  NUM_25
+  NUM_49
+  NUM_75
+  NUM_100
+  UNNUMBERED
+  // FEATURES
+  NO_EXTRAS
+  PATCH_ONLY
+  SIG_ONLY
+  SIG_PATCH
+  // GRADES
+  RAW
+  GRADE_1
+  GRADE_2
+  GRADE_3
+  GRADE_4
+  GRADE_5
+  GRADE_6
+  GRADE_7
+  GRADE_8
+  GRADE_8_5
+  GRADE_9
+  GRADE_9_5
+  GRADE_10
+}
+
+// ─────────────────────────────────────────────────────────────
+// HONOURS TAB (Sport-Specific)
+// ─────────────────────────────────────────────────────────────
+
+model HonourMultiplier {
+  id       String            @id @default(auto()) @map("_id") @db.ObjectId
+  configId String            @db.ObjectId
+  config   PriceEngineConfig @relation(fields: [configId], references: [id], onDelete: Cascade)
+
+  honourKey    String // Exact match to frontend honour label
+  multiplier   Float
+  sportContext String?
+  isActive     Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([configId, honourKey])
+  @@map("honour_multipliers")
+}
+
+// ─────────────────────────────────────────────────────────────
+// ★★★ API PERFORMANCE TAB ★★★
+// ─────────────────────────────────────────────────────────────
+
+model ApiPerformanceRule {
+  id       String            @id @default(auto()) @map("_id") @db.ObjectId
+  configId String            @db.ObjectId
+  config   PriceEngineConfig @relation(fields: [configId], references: [id], onDelete: Cascade)
+
+  metricKey         String // Matches API_METRICS_BY_SPORT keys
+  effectType        ApiEffectType
+  adjustmentPercent Float // Percentage: 8.0 = ±8%
+  triggerCondition  Json? // Optional: { "applyPerUnit": true, "operator": ">=" }
+  sortOrder         Int           @default(0)
+  isActive          Boolean       @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([configId, metricKey, effectType])
+  @@index([configId, isActive, metricKey])
+  @@map("api_performance_rules")
+}
+
+enum ApiEffectType {
+  POSITIVE
+  NEGATIVE
+}
+
+// ─────────────────────────────────────────────────────────────
+// PRICE CALCULATION LOG (Audit Trail)
+// ─────────────────────────────────────────────────────────────
+
+model PriceCalculationLog {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  listingId String?  @db.ObjectId
+  listing   Listing? @relation(fields: [listingId], references: [id], onDelete: SetNull)
+
+  configId String            @db.ObjectId
+  config   PriceEngineConfig @relation(fields: [configId], references: [id])
+
+  inputContext   Json // { category, proofPhoto, proofVideo, signature, auth, honours[], apiMetrics{} }
+  breakdown      Json // Step-by-step calculation trace
+  finalPrice     Float
+  currency       String             @default("GBP")
+  platformFee    Float
+  sellerRangeMin Float
+  sellerRangeMax Float
+  trigger        CalculationTrigger @default(MANUAL)
+  calculatedBy   String?            @db.ObjectId
+
+  createdAt DateTime @default(now())
+
+  @@index([listingId, createdAt])
+  @@index([configId, createdAt])
+  @@map("price_calculation_logs")
+}
+
+enum CalculationTrigger {
+  MANUAL
+  API_RECALC
+  CONFIG_UPDATE
+}
+
+//   appliedHonours          String[]      // Honour keys applied at creation
+//   appliedApiMetrics       Json?         // { "Goal": 2, "Assist": 1 } snapshot
+//   lastApiRecalcAt         DateTime?     // Last time API cron updated price
+//   isPriceLocked           Boolean       @default(false)
+//   sellerAdjustmentPercent Float?        // % deviation applied by seller (within range)
+// */

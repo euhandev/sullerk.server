@@ -407,6 +407,17 @@ Table listings {
   posts Post [not null]
   shares listing_shares [not null]
   disputes disputes [not null]
+  calculatedBasePrice Float
+  displayPrice Float
+  priceEngineConfigId String
+  priceEngineConfig price_engine_configs
+  priceBreakdown Json
+  appliedHonours String[] [not null]
+  appliedApiMetrics Json
+  lastApiRecalcAt DateTime
+  isPriceLocked Boolean [not null, default: false]
+  sellerAdjustmentPercent Float
+  priceCalculationLogs price_calculation_logs [not null]
 }
 
 Table collections {
@@ -784,6 +795,183 @@ Table activity_logs {
   updatedAt DateTime [not null]
 }
 
+Table price_engine_configs {
+  id String [pk]
+  sport String [unique, not null]
+  isActive Boolean [not null, default: true]
+  description String
+  platformFeePercent Float [not null, default: 5]
+  sellerAdjustRangePercent Float [not null, default: 10]
+  apiRecalcIntervalGames Int [not null, default: 2]
+  baseValues base_values [not null]
+  proofMultipliers proof_multiplier_groups [not null]
+  signatureMultipliers signature_multipliers [not null]
+  authMultipliers auth_multipliers [not null]
+  cardMultipliers card_multiplier_groups [not null]
+  honourMultipliers honour_multipliers [not null]
+  apiPerformanceRules api_performance_rules [not null]
+  calculationLogs price_calculation_logs [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  Listing listings [not null]
+}
+
+Table base_values {
+  id String [pk]
+  configId String [not null]
+  config price_engine_configs [not null]
+  category ListingCategory [not null]
+  basePrice Float [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+
+  indexes {
+    (configId, category) [unique]
+  }
+}
+
+Table proof_multiplier_groups {
+  id String [pk]
+  configId String [not null]
+  config price_engine_configs [not null]
+  proofType ProofType [not null]
+  rules proof_multiplier_rules [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+
+  indexes {
+    (configId, proofType) [unique]
+  }
+}
+
+Table proof_multiplier_rules {
+  id String [pk]
+  groupId String [not null]
+  group proof_multiplier_groups [not null]
+  viewKey ProofViewKey [not null]
+  multiplier Float [not null]
+  isActive Boolean [not null, default: true]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+
+  indexes {
+    (groupId, viewKey) [unique]
+  }
+}
+
+Table signature_multipliers {
+  id String [pk]
+  configId String [not null]
+  config price_engine_configs [not null]
+  signatureKey SignatureKey [not null]
+  multiplier Float [not null]
+  isActive Boolean [not null, default: true]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+
+  indexes {
+    (configId, signatureKey) [unique]
+  }
+}
+
+Table auth_multipliers {
+  id String [pk]
+  configId String [not null]
+  config price_engine_configs [not null]
+  companyKey AuthCompanyKey [not null]
+  multiplier Float [not null]
+  isActive Boolean [not null, default: true]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+
+  indexes {
+    (configId, companyKey) [unique]
+  }
+}
+
+Table card_multiplier_groups {
+  id String [pk]
+  configId String [not null]
+  config price_engine_configs [not null]
+  groupType CardMultiplierType [not null]
+  rules card_multiplier_rules [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+
+  indexes {
+    (configId, groupType) [unique]
+  }
+}
+
+Table card_multiplier_rules {
+  id String [pk]
+  groupId String [not null]
+  group card_multiplier_groups [not null]
+  ruleKey CardRuleKey [not null]
+  label String
+  multiplier Float [not null]
+  sortOrder Int [not null, default: 0]
+  isActive Boolean [not null, default: true]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+
+  indexes {
+    (groupId, ruleKey) [unique]
+  }
+}
+
+Table honour_multipliers {
+  id String [pk]
+  configId String [not null]
+  config price_engine_configs [not null]
+  honourKey String [not null]
+  multiplier Float [not null]
+  sportContext String
+  isActive Boolean [not null, default: true]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+
+  indexes {
+    (configId, honourKey) [unique]
+  }
+}
+
+Table api_performance_rules {
+  id String [pk]
+  configId String [not null]
+  config price_engine_configs [not null]
+  metricKey String [not null]
+  effectType ApiEffectType [not null]
+  adjustmentPercent Float [not null]
+  triggerCondition Json
+  sortOrder Int [not null, default: 0]
+  isActive Boolean [not null, default: true]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+
+  indexes {
+    (configId, metricKey, effectType) [unique]
+  }
+}
+
+Table price_calculation_logs {
+  id String [pk]
+  listingId String
+  listing listings
+  configId String [not null]
+  config price_engine_configs [not null]
+  inputContext Json [not null]
+  breakdown Json [not null]
+  finalPrice Float [not null]
+  currency String [not null, default: 'GBP']
+  platformFee Float [not null]
+  sellerRangeMin Float [not null]
+  sellerRangeMax Float [not null]
+  trigger CalculationTrigger [not null, default: 'MANUAL']
+  calculatedBy String
+  createdAt DateTime [default: `now()`, not null]
+}
+
 Table Follower {
   followersId String [ref: > Follower.id]
   followingId String [ref: > Following.id]
@@ -911,6 +1099,7 @@ Enum ListingCategory {
   GLOVES
   MATCH_BALL
   SHORTS
+  SIGNED_PHOTO
   OTHER
 }
 
@@ -1102,6 +1291,83 @@ Enum ActionType {
   RESET_PASSWORD
 }
 
+Enum ProofType {
+  PHOTO
+  VIDEO
+}
+
+Enum ProofViewKey {
+  NO_PROOF
+  PARTIAL_VIEW
+  FULL_VIEW
+  PARTIAL_VIEW_ATHLETE
+  FULL_VIEW_ATHLETE
+}
+
+Enum SignatureKey {
+  NONE
+  PARTIAL
+  FULL
+  PERSONALISED
+}
+
+Enum AuthCompanyKey {
+  NONE
+  BECKETT
+  PSA
+  JSA
+  ACG
+  AFTAL
+  SGC
+  CGC
+}
+
+Enum CardMultiplierType {
+  NUMBERING
+  FEATURE
+  GRADE
+}
+
+Enum CardRuleKey {
+  NUM_5
+  NUM_10
+  NUM_15
+  NUM_20
+  NUM_25
+  NUM_49
+  NUM_75
+  NUM_100
+  UNNUMBERED
+  NO_EXTRAS
+  PATCH_ONLY
+  SIG_ONLY
+  SIG_PATCH
+  RAW
+  GRADE_1
+  GRADE_2
+  GRADE_3
+  GRADE_4
+  GRADE_5
+  GRADE_6
+  GRADE_7
+  GRADE_8
+  GRADE_8_5
+  GRADE_9
+  GRADE_9_5
+  GRADE_10
+}
+
+Enum ApiEffectType {
+  POSITIVE
+  NEGATIVE
+}
+
+Enum CalculationTrigger {
+  MANUAL
+  API_RECALC
+  CONFIG_UPDATE
+}
+
 Ref: admins.userId - users.id
 
 Ref: customers.userId - users.id
@@ -1187,6 +1453,8 @@ Ref: community_comments.customerId > customers.id
 Ref: community_comments.parentId - community_comments.id [delete: No Action]
 
 Ref: listings.ownerId > customers.id
+
+Ref: listings.priceEngineConfigId > price_engine_configs.id
 
 Ref: collection_listings.collectionId > collections.id
 
@@ -1275,3 +1543,25 @@ Ref: chat_reactions.chatId > chats.id
 Ref: chat_reactions.userId > users.id
 
 Ref: activity_logs.customerId > customers.id [delete: Set Null]
+
+Ref: base_values.configId > price_engine_configs.id [delete: Cascade]
+
+Ref: proof_multiplier_groups.configId > price_engine_configs.id [delete: Cascade]
+
+Ref: proof_multiplier_rules.groupId > proof_multiplier_groups.id [delete: Cascade]
+
+Ref: signature_multipliers.configId > price_engine_configs.id [delete: Cascade]
+
+Ref: auth_multipliers.configId > price_engine_configs.id [delete: Cascade]
+
+Ref: card_multiplier_groups.configId > price_engine_configs.id [delete: Cascade]
+
+Ref: card_multiplier_rules.groupId > card_multiplier_groups.id [delete: Cascade]
+
+Ref: honour_multipliers.configId > price_engine_configs.id [delete: Cascade]
+
+Ref: api_performance_rules.configId > price_engine_configs.id [delete: Cascade]
+
+Ref: price_calculation_logs.listingId > listings.id [delete: Set Null]
+
+Ref: price_calculation_logs.configId > price_engine_configs.id

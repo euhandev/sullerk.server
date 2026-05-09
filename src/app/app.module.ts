@@ -36,6 +36,7 @@ import { OrderModule } from '@/modules/order/order.module';
 import { PaymentModule } from '@/modules/payment/payment.module';
 import { ExchangeModule } from '@/modules/exchange/exchange.module';
 import { DisputeModule } from '@/modules/dispute/dispute.module';
+import { PriceEngineModule } from '@/modules/price-engine/price-engine.module';
 
 @Module({
   imports: [
@@ -81,6 +82,7 @@ import { DisputeModule } from '@/modules/dispute/dispute.module';
     PaymentModule,
     ExchangeModule,
     DisputeModule,
+    PriceEngineModule,
   ],
 
   controllers: [AppController],
