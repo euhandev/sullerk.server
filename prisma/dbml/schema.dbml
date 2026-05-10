@@ -1214,6 +1214,7 @@ Enum FileContext {
 }
 
 Enum NotificationType {
+  SYSTEM
   SUBSCRIPTION_REMINDER
   GROUP_ASSIGNMENT
   MEMBER_REGISTERED

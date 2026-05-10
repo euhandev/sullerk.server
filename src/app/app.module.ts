@@ -37,6 +37,10 @@ import { PaymentModule } from '@/modules/payment/payment.module';
 import { ExchangeModule } from '@/modules/exchange/exchange.module';
 import { DisputeModule } from '@/modules/dispute/dispute.module';
 import { PriceEngineModule } from '@/modules/price-engine/price-engine.module';
+import { NotificationModule } from '@/modules/notification/notification.module';
+import { WebsocketModule } from '@/ws/soket.io.module';
+import { RoomModule } from '@/modules/room/room.module';
+import { ChatModule } from '@/modules/chat/chat.module';
 
 @Module({
   imports: [
@@ -83,6 +87,10 @@ import { PriceEngineModule } from '@/modules/price-engine/price-engine.module';
     ExchangeModule,
     DisputeModule,
     PriceEngineModule,
+    RoomModule,
+    ChatModule,
+    NotificationModule,
+    WebsocketModule,
   ],
 
   controllers: [AppController],

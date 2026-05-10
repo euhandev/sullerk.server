@@ -1,6 +1,5 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-
 import { PrismaService } from '@/helper/prisma.service';
 import { CreateListingDto, FileItem } from './dto/create-listing.dto';
 import { FileService as HelperFileService } from '@/helper/file.service';
