@@ -6,6 +6,7 @@ import { UpdateMultipliersDto } from './dto/multipliers.dto';
 import { UpdateCardRulesDto } from './dto/card-rules.dto';
 import { UpdateHonoursDto } from './dto/honours.dto';
 import { UpdateApiRulesDto } from './dto/api-rules.dto';
+import { COAStatus } from '@prisma/client';
 
 @Injectable()
 export class PriceEngineService {
@@ -304,9 +305,9 @@ export class PriceEngineService {
     if (profAuthMult && profAuthKey !== 'NONE' && profAuthKey !== 'NOT AUTHENTICATED') {
       authMultiplier = profAuthMult.multiplier;
       authLabel = `Professional Auth (${profAuthKey})`;
-    } else if (coaStatus === 'COA_INCLUDED' || coaStatus === 'SELF_CERTIFIED') {
+    } else if (coaStatus === COAStatus.COA_INCLUDED || coaStatus === COAStatus.SELF_CERTIFIED) {
       // Fallback to COA if professional auth is missing
-      const coaMult = config.authMultipliers.find((a) => a.companyKey === 'COA_INCLUDED');
+      const coaMult = config.authMultipliers.find((a) => a.companyKey === COAStatus.COA_INCLUDED);
       if (coaMult) {
         authMultiplier = coaMult.multiplier;
         authLabel = `COA (${coaStatus})`;

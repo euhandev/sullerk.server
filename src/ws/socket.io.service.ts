@@ -19,6 +19,7 @@ import {
 } from '@nestjs/websockets';
 import { RoomType, NotificationType, FileType } from '@prisma/client';
 import { Server, Socket } from 'socket.io';
+import { SocketEvents } from './socket.io.constant';
 
 const getFileTypeFromUrl = (url: string): FileType => {
   const ext = url.split('.').pop()?.toLowerCase();
@@ -67,7 +68,7 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
     if (userId) {
       this.onlineUsers.delete(userId);
       this.userSockets.delete(userId);
-      this.server.emit('status', { userId, isOnline: false });
+      this.server.emit(SocketEvents.STATUS, { userId, isOnline: false });
     }
     console.log('User disconnected:', socket.id);
   }
@@ -75,13 +76,15 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
   // -----------------------------
   // Authenticate User
   // -----------------------------
-  @SubscribeMessage('authenticate')
+  @SubscribeMessage(SocketEvents.AUTHENTICATE)
   async handleAuthenticate(
     @MessageBody() payload: { token: string },
     @ConnectedSocket() socket: Socket,
   ) {
     const { token } = payload;
     if (!token) return socket.disconnect(true);
+
+    console.log(`see token`, token);
 
     try {
       const user = await this.jwtService.verifyAsync(token, {
@@ -94,8 +97,8 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
 
       this.onlineUsers.add(userId);
       this.userSockets.set(userId, socket);
-
-      this.server.emit('authenticate', { userId, isOnline: true });
+      console.log(`see user id`, userId);
+      this.server.emit(SocketEvents.AUTHENTICATE, { userId, isOnline: true });
     } catch (err) {
       console.error('Authentication error:', err);
       socket.disconnect(true);
@@ -105,7 +108,7 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
   // -----------------------------
   // Private Direct Message
   // -----------------------------
-  @SubscribeMessage('directMessage')
+  @SubscribeMessage(SocketEvents.DIRECT_MESSAGE)
   async handleDirectMessage(
     @MessageBody()
     payload: { receiverId: string; message: string; images?: string[] },
@@ -115,10 +118,10 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
     const { receiverId, message, images } = payload;
 
     if (!senderId || !receiverId) {
-      return socket.emit('error', { message: 'Invalid payload' });
+      return socket.emit(SocketEvents.ERROR, { message: 'Invalid payload' });
     }
     if (senderId === receiverId) {
-      return socket.emit('error', { message: 'Cannot message yourself' });
+      return socket.emit(SocketEvents.ERROR, { message: 'Cannot message yourself' });
     }
 
     try {
@@ -188,14 +191,14 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
       room.participants.forEach((p) => {
         const participantSocket = this.userSockets.get(p.userId);
         if (participantSocket) {
-          participantSocket.emit('directMessage', { roomId: room.id, chat });
+          participantSocket.emit(SocketEvents.DIRECT_MESSAGE, { roomId: room.id, chat });
         }
       });
 
       // Real-time notification to receiver
       const receiverSocket = this.userSockets.get(receiverId);
       if (receiverSocket) {
-        receiverSocket.emit('notification:new', {
+        receiverSocket.emit(SocketEvents.NOTIFICATION_NEW, {
           name: 'New Message',
           body: message,
           type: NotificationType.SYSTEM,
@@ -205,14 +208,14 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
       }
     } catch (error) {
       console.error('DM processing failed:', error);
-      socket.emit('error', { message: 'Failed to send message' });
+      socket.emit(SocketEvents.ERROR, { message: 'Failed to send message' });
     }
   }
 
   // -----------------------------
   // Handle typing event
   // -----------------------------
-  @SubscribeMessage('typing')
+  @SubscribeMessage(SocketEvents.TYPING)
   async handleTyping(
     @MessageBody() payload: { roomId: string; isTyping: boolean },
     @ConnectedSocket() socket: Socket,
@@ -221,7 +224,7 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
     const { roomId, isTyping } = payload;
 
     if (!senderId || !roomId) {
-      return socket.emit('error', { message: 'Missing roomId or senderId' });
+      return socket.emit(SocketEvents.ERROR, { message: 'Missing roomId or senderId' });
     }
 
     try {
@@ -238,12 +241,12 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
       });
 
       if (!room) {
-        return socket.emit('error', { message: 'Room not found' });
+        return socket.emit(SocketEvents.ERROR, { message: 'Room not found' });
       }
 
       for (const participant of room.participants) {
         const receiverSocket = this.userSockets.get(participant.userId);
-        receiverSocket?.emit('typing', {
+        receiverSocket?.emit(SocketEvents.TYPING, {
           senderId,
           isTyping,
           roomId,
@@ -252,14 +255,14 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
       }
     } catch (error) {
       console.error('Typing event failed:', error);
-      socket.emit('error', { message: 'Failed to process typing event' });
+      socket.emit(SocketEvents.ERROR, { message: 'Failed to process typing event' });
     }
   }
 
   // -----------------------------
   // Join/Leave Group Room
   // -----------------------------
-  @SubscribeMessage('joinRoom')
+  @SubscribeMessage(SocketEvents.JOIN_ROOM)
   async handleJoinRoom(
     @MessageBody() payload: { roomId: string },
     @ConnectedSocket() socket: Socket,
@@ -269,17 +272,17 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
     if (!userId || !roomId) return;
 
     const room = await this.prisma.room.findUnique({ where: { id: roomId } });
-    if (!room) return socket.emit('error', { message: 'Room not found' });
+    if (!room) return socket.emit(SocketEvents.ERROR, { message: 'Room not found' });
 
     const exists = await this.prisma.roomParticipant.findFirst({ where: { userId, roomId } });
     if (!exists) await this.prisma.roomParticipant.create({ data: { userId, roomId } });
 
     socket.join(roomId);
-    socket.emit('joinedRoom', { roomId, message: 'Successfully joined the room' });
-    socket.to(roomId).emit('room:userJoined', { roomId, userId });
+    socket.emit(SocketEvents.JOINED_ROOM, { roomId, message: 'Successfully joined the room' });
+    socket.to(roomId).emit(SocketEvents.USER_JOINED, { roomId, userId });
   }
 
-  @SubscribeMessage('leaveRoom')
+  @SubscribeMessage(SocketEvents.LEAVE_ROOM)
   async handleLeaveRoom(
     @MessageBody() payload: { roomId: string },
     @ConnectedSocket() socket: Socket,
@@ -290,14 +293,14 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
 
     await this.prisma.roomParticipant.deleteMany({ where: { userId, roomId } });
     socket.leave(roomId);
-    socket.emit('leftRoom', { roomId, message: 'Successfully left the room' });
-    socket.to(roomId).emit('room:userLeft', { roomId, userId });
+    socket.emit(SocketEvents.LEFT_ROOM, { roomId, message: 'Successfully left the room' });
+    socket.to(roomId).emit(SocketEvents.USER_LEFT, { roomId, userId });
   }
 
   // -----------------------------
   // Group Messaging
   // -----------------------------
-  @SubscribeMessage('message')
+  @SubscribeMessage(SocketEvents.MESSAGE)
   async handleMessage(
     @MessageBody() payload: { roomId: string; message: string },
     @ConnectedSocket() socket: Socket,
@@ -318,14 +321,14 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
 
     participants.forEach(({ userId: participantId }) => {
       const participantSocket = this.userSockets.get(participantId);
-      if (participantSocket) participantSocket.emit('message', chat);
+      if (participantSocket) participantSocket.emit(SocketEvents.MESSAGE, chat);
     });
   }
 
   // -----------------------------
   // Fetch Chats
   // -----------------------------
-  @SubscribeMessage('fetchChats')
+  @SubscribeMessage(SocketEvents.FETCH_CHATS)
   async handleFetchChats(
     @MessageBody() payload: { roomId: string },
     @ConnectedSocket() socket: Socket,
@@ -343,13 +346,13 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
       },
     });
 
-    socket.emit('fetchChats', messages);
+    socket.emit(SocketEvents.FETCH_CHATS, messages);
   }
 
   // -----------------------------
   // Message List
   // -----------------------------
-  @SubscribeMessage('messageList')
+  @SubscribeMessage(SocketEvents.MESSAGE_LIST)
   async handleMessageList(@ConnectedSocket() socket: Socket) {
     const userId = socket.data.userId as string;
     if (!userId) return;
@@ -379,6 +382,6 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
         );
       });
 
-    socket.emit('messageList', result);
+    socket.emit(SocketEvents.MESSAGE_LIST, result);
   }
 }

@@ -71,12 +71,10 @@ Table customers {
   comments comments [not null]
   reactions reactions [not null]
   stars starred_posts [not null]
-  followers Follower [not null]
-  followedBy Follower [not null]
-  following Following [not null]
-  followedByFollowing Following [not null]
-  blockedBy BlockedUser [not null]
-  blockedUsers BlockedUser [not null]
+  followers follows [not null]
+  following follows [not null]
+  blockedBy blocked_users [not null]
+  blockedUsers blocked_users [not null]
   balance Float [not null, default: 0]
   transactions transactions [not null]
   communityMembers community_members [not null]
@@ -94,7 +92,7 @@ Table customers {
   raisedDisputes disputes [not null]
 }
 
-Table Follower {
+Table follows {
   id String [pk]
   followerId String [not null]
   follower customers [not null]
@@ -102,19 +100,13 @@ Table Follower {
   following customers [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
+
+  indexes {
+    (followerId, followingId) [unique]
+  }
 }
 
-Table Following {
-  id String [pk]
-  followerId String [not null]
-  follower customers [not null]
-  followingId String [not null]
-  following customers [not null]
-  createdAt DateTime [default: `now()`, not null]
-  updatedAt DateTime [not null]
-}
-
-Table BlockedUser {
+Table blocked_users {
   id String [pk]
   blockedById String [not null]
   blockedBy customers [not null]
@@ -122,6 +114,10 @@ Table BlockedUser {
   blockedUser customers [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
+
+  indexes {
+    (blockedById, blockedUserId) [unique]
+  }
 }
 
 Table Post {
@@ -976,16 +972,6 @@ Table price_calculation_logs {
   createdAt DateTime [default: `now()`, not null]
 }
 
-Table Follower {
-  followersId String [ref: > Follower.id]
-  followingId String [ref: > Following.id]
-}
-
-Table Following {
-  followedbyId String [ref: > Follower.id]
-  followedbyfollowingId String [ref: > Following.id]
-}
-
 Enum FavSport {
   FOOTBALL
   BASKETBALL
@@ -1379,17 +1365,13 @@ Ref: admins.userId - users.id
 
 Ref: customers.userId - users.id
 
-Ref: Follower.followerId > customers.id
+Ref: follows.followerId > customers.id
 
-Ref: Follower.followingId > customers.id
+Ref: follows.followingId > customers.id
 
-Ref: Following.followerId > customers.id
+Ref: blocked_users.blockedById > customers.id
 
-Ref: Following.followingId > customers.id
-
-Ref: BlockedUser.blockedById > customers.id
-
-Ref: BlockedUser.blockedUserId > customers.id
+Ref: blocked_users.blockedUserId > customers.id
 
 Ref: Post.customerId > customers.id
 

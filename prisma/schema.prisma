@@ -95,10 +95,8 @@ model Customer {
   reactions Reaction[]
   stars     StarredPost[]
 
-  followers           Follower[]    @relation("Follower")
-  followedBy          Follower[]    @relation("Following")
-  following           Following[]   @relation("Follower")
-  followedByFollowing Following[]   @relation("Following")
+  followers Follow[] @relation("Following")
+  following Follow[] @relation("Follower")
   blockedBy           BlockedUser[] @relation("BlockedBy")
   blockedUsers        BlockedUser[] @relation("BlockedUser")
 
@@ -144,7 +142,7 @@ enum FavSport {
   OTHER
 }
 
-model Follower {
+model Follow {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   followerId  String   @db.ObjectId
   follower    Customer @relation(name: "Follower", fields: [followerId], references: [id])
@@ -153,17 +151,9 @@ model Follower {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-}
 
-model Following {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  followerId  String   @db.ObjectId
-  follower    Customer @relation(name: "Follower", fields: [followerId], references: [id])
-  followingId String   @db.ObjectId
-  following   Customer @relation(name: "Following", fields: [followingId], references: [id])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  @@unique([followerId, followingId])
+  @@map("follows")
 }
 
 model BlockedUser {
@@ -175,6 +165,9 @@ model BlockedUser {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@unique([blockedById, blockedUserId])
+  @@map("blocked_users")
 }
 
 // post 

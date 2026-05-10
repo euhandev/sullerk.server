@@ -41,6 +41,8 @@ import { NotificationModule } from '@/modules/notification/notification.module';
 import { WebsocketModule } from '@/ws/soket.io.module';
 import { RoomModule } from '@/modules/room/room.module';
 import { ChatModule } from '@/modules/chat/chat.module';
+import { FollowModule } from '@/modules/follow/follow.module';
+import { BlockModule } from '@/modules/block/block.module';
 
 @Module({
   imports: [
@@ -91,6 +93,8 @@ import { ChatModule } from '@/modules/chat/chat.module';
     ChatModule,
     NotificationModule,
     WebsocketModule,
+    FollowModule,
+    BlockModule,
   ],
 
   controllers: [AppController],

@@ -51,5 +51,14 @@ export const customerRangeFilter: rangeFilteringPrams[] = [
 
 // Prisma include configuration
 export const customerInclude: Prisma.UserInclude = {
-  customer: true,
+  customer: {
+    include: {
+      _count: {
+        select: {
+          followers: true,
+          following: true,
+        },
+      },
+    },
+  },
 };

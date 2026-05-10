@@ -9,7 +9,7 @@ import { Request } from 'express';
 import { CreateUserAdminDto } from './dto/create-admin.dto';
 import { Roles } from '../roles/roles.decorator';
 import { Role } from '@prisma/client';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Users')
 @Controller('users')
@@ -90,65 +90,4 @@ export class UsersController {
   //     data: result,
   //   });
   // }
-
-  @Post('follow/:identifier')
-  @Roles(Role.CUSTOMER)
-  @ApiOperation({
-    summary: 'Follow a user',
-    description: 'Provide either the User ID, Customer ID, or Email address as the identifier.',
-  })
-  async follow(@Param('identifier') identifier: string, @Req() req: any) {
-    const userId = req.user.id;
-    const result = await this.customerService.follow(userId, identifier);
-    return ResponseService.formatResponse({
-      statusCode: HttpStatus.OK,
-      message: result,
-    });
-  }
-
-  @Post('unfollow/:identifier')
-  @Roles(Role.CUSTOMER)
-  @ApiOperation({
-    summary: 'Unfollow a user',
-    description: 'Provide either the User ID, Customer ID, or Email address as the identifier.',
-  })
-  async unfollow(@Param('identifier') identifier: string, @Req() req: any) {
-    const userId = req.user.id;
-    const result = await this.customerService.unfollow(userId, identifier);
-    return ResponseService.formatResponse({
-      statusCode: HttpStatus.OK,
-      message: result,
-    });
-  }
-
-  @Post('block/:identifier')
-  @Roles(Role.CUSTOMER)
-  @ApiOperation({
-    summary: 'Block a user',
-    description: 'Provide either the User ID, Customer ID, or Email address as the identifier.',
-  })
-  async block(@Param('identifier') identifier: string, @Req() req: any) {
-    const userId = req.user.id;
-    const result = await this.customerService.block(userId, identifier);
-    return ResponseService.formatResponse({
-      statusCode: HttpStatus.OK,
-      message: 'User blocked successfully',
-      data: result,
-    });
-  }
-
-  @Post('unblock/:identifier')
-  @Roles(Role.CUSTOMER)
-  @ApiOperation({
-    summary: 'Unblock a user',
-    description: 'Provide either the User ID, Customer ID, or Email address as the identifier.',
-  })
-  async unblock(@Param('identifier') identifier: string, @Req() req: any) {
-    const userId = req.user.id;
-    const result = await this.customerService.unblock(userId, identifier);
-    return ResponseService.formatResponse({
-      statusCode: HttpStatus.OK,
-      message: result,
-    });
-  }
 }
