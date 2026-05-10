@@ -48,21 +48,13 @@ erDiagram
         String fullName
         Float balance
     }
-    Post {
-        String id PK
-        String customerId FK
-        String description
-    }
-    Comment {
-        String id PK
-        String postId FK
-        String customerId FK
-        String body
-    }
+    
+    %% Marketplace
     Listing {
         String id PK
         String ownerId FK
-        String title
+        String sport
+        String category
         Float initialPrice
         ListingStatus status
     }
@@ -75,13 +67,31 @@ erDiagram
         Float totalAmount
         OrderStatus status
     }
-    Dispute {
+    ExchangeOffer {
         String id PK
-        String listingId FK
-        String orderId FK
-        String raisedById FK
-        String resolvedById FK
-        DisputeStatus status
+        String senderId FK
+        String receiverId FK
+        ExchangeStatus status
+        Float balanceToPay
+    }
+    Deal {
+        String id PK
+        String buyerId FK
+        String sellerId FK
+        DealStatus status
+    }
+
+    %% Social & Content
+    Post {
+        String id PK
+        String customerId FK
+        String description
+    }
+    Comment {
+        String id PK
+        String postId FK
+        String customerId FK
+        String body
     }
     Community {
         String id PK
@@ -100,20 +110,53 @@ erDiagram
         String communityId FK
     }
 
+    %% Price Engine
+    PriceEngineConfig {
+        String id PK
+        String sport UK
+        Float platformFeePercent
+        Boolean isActive
+    }
+    BaseValue {
+        String id PK
+        String configId FK
+        Float basePrice
+    }
+    Multipliers {
+        String id PK
+        String configId FK
+        Float multiplier
+    }
+    PriceCalculationLog {
+        String id PK
+        String listingId FK
+        Float finalPrice
+    }
+
+    %% Relationships
     User ||--|| Admin : "manages"
     User ||--|| Customer : "profile"
     Admin ||--o{ Dispute : "resolves"
     Customer ||--o{ Post : "authors"
     Customer ||--o{ Listing : "owns"
     Customer ||--o{ Order : "buys/sells"
-    Customer ||--o{ Dispute : "raises"
+    Customer ||--o{ ExchangeOffer : "sends/receives"
+    Customer ||--o{ Deal : "participates"
     Customer ||--o{ CommunityMember : "belongs to"
-    Post ||--o{ Comment : "has"
-    Listing ||--o{ Order : "is sold via"
-    Listing ||--o{ Dispute : "is disputed"
+    
+    Listing ||--o{ Order : "sold via"
+    Listing ||--o{ ExchangeOffer : "traded via"
+    Listing ||--o{ PriceCalculationLog : "audit trail"
+    
     Order ||--o{ Dispute : "has"
+    Post ||--o{ Comment : "has"
+    
     Community ||--o{ CommunityMember : "contains"
     Community ||--o{ CommunityPost : "hosts"
+    
+    PriceEngineConfig ||--o{ BaseValue : "defines"
+    PriceEngineConfig ||--o{ Multipliers : "rules"
+    PriceEngineConfig ||--o{ Listing : "prices"
 ```
 
 
