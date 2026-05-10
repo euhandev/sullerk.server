@@ -9,6 +9,7 @@ import {
   Delete,
   Param,
   Get,
+  Query,
 } from '@nestjs/common';
 import { ListingService } from './listing.service';
 import { CreateListingDto } from './dto/create-listing.dto';
@@ -116,6 +117,54 @@ export class ListingController {
     });
   }
 
+  @Get('estimate-price')
+  @Roles(Role.CUSTOMER)
+  @ApiOperation({
+    summary: 'Estimate listing price on-the-fly (GET)',
+    description: `
+      Calculates the estimated value and price breakdown based on query parameters.
+      This route applies the new multiplicative formula and authentication hierarchy:
+      1. Derived Proof Type (Both > Photo > Video > None)
+      2. Best Authentication (Prof Auth > COA > None)
+      3. Additive Trophy Boost
+      
+      **CURL EXAMPLE:**
+      \`\`\`bash
+      curl -X GET "http://localhost:8989/api/v1/listings/estimate-price?sport=Football&category=SHIRT&signatureType=FULL&photoProofType=FULL_VIEW&videoProofType=FULL_VIEW&coaStatus=COA_INCLUDED" \\
+        -H "Authorization: Bearer YOUR_TOKEN_HERE"
+      \`\`\`
+    `,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Price estimated successfully',
+    schema: {
+      example: {
+        success: true,
+        message: 'Price estimated successfully',
+        data: {
+          finalPrice: 691,
+          breakdown: [
+            { label: 'Base Price', value: 200, type: 'BASE' },
+            { label: 'Proof Type (PHOTO_VIDEO)', multiplier: 1.8, value: 360, diff: 160 },
+            { label: 'Signature (FULL)', multiplier: 1.6, value: 576, diff: 216 },
+            { label: 'COA (COA_INCLUDED)', multiplier: 1.2, value: 691.2, diff: 115.2 },
+          ],
+          platformFee: 35,
+          sellerRange: { min: 622, max: 760 },
+        },
+      },
+    },
+  })
+  async estimatePrice(@Query() dto: CreateListingDto) {
+    const result = await this.listingService.estimatePrice(dto);
+    return ResponseService.formatResponse({
+      statusCode: HttpStatus.OK,
+      message: 'Price estimated successfully',
+      data: result,
+    });
+  }
+
   @Post()
   @Roles(Role.CUSTOMER)
   @ApiOperation({
@@ -132,27 +181,30 @@ export class ListingController {
         -H "Content-Type: application/json" \\
         -d '{
           "sport": "Football",
-          "teamOrCountry": "Argentina",
-          "playerOrManagerName": "Lionel Messi",
+          "league": "Premier League",
+          "teamOrCountry": "Manchester United",
+          "playerOrManagerName": "Marcus Rashford",
           "category": "SHIRT",
-          "title": "Signed Manchester United Jersey 2023",
+          "title": "Signed Rashford Jersey 2024",
           "seasonOrYear": "2023/24",
+          "kitType": "Home",
           "description": "Authentic signed home shirt.",
+          "signatureType": "FULL",
+          "photoProofType": "FULL_VIEW_ATHLETE",
+          "coaStatus": "COA_INCLUDED",
+          "companyAuthentication": "PSA",
+          "appliedHonours": ["Premier League"],
           "initialPrice": 500,
-          "allowOffers": true,
-          "autoPriceAdjust": false,
-          "acquiredDate": "2024-05-01",
           "photos": [
-            { "fileId": "69fae180e0c772d77befd5b8", "url": "http://localhost:8989/api/v1/files/img1.webp" },
-            { "fileId": "69fae180e0c772d77befd5b9", "url": "http://localhost:8989/api/v1/files/img2.webp" }
+            { "fileId": "69fae180e0c772d77befd5b8", "url": "http://localhost:8989/api/v1/files/img1.webp" }
           ],
-          "proofPhoto": [
+          "photoProofs": [
             { "fileId": "69fae210e0c772d77befd5b9", "url": "http://localhost:8989/api/v1/files/proof.webp" }
           ],
-          "proofVideo": [
+          "videoProofs": [
             { "fileId": "69fae440e0c772d77befd5d5", "url": "http://localhost:8989/api/v1/files/signing_video.mp4" }
           ],
-          "coaFile": [
+          "coaFiles": [
             { "fileId": "69fae330e0c772d77befd5c1", "url": "http://localhost:8989/api/v1/files/coa.pdf" }
           ]
         }'
@@ -166,44 +218,44 @@ export class ListingController {
         summary: 'Standard Request with Objects',
         value: {
           sport: 'Football',
-          teamOrCountry: 'Argentina',
-          playerOrManagerName: 'Lionel Messi',
+          league: 'Premier League',
+          teamOrCountry: 'Manchester United',
+          playerOrManagerName: 'Marcus Rashford',
           category: 'SHIRT',
           seasonOrYear: '2023/24',
+          kitType: 'Home',
           description: 'Authentic signed home shirt.',
-          initialPrice: 450,
-          allowOffers: true,
-          autoPriceAdjust: false,
-          acquiredDate: '2023-01-01',
+          signatureType: 'FULL',
+          photoProofType: 'FULL_VIEW_ATHLETE',
+          coaStatus: 'COA_INCLUDED',
+          companyAuthentication: 'PSA',
+          appliedHonours: ['Premier League'],
+          initialPrice: 500,
           photos: [
             {
               fileId: '69fae180e0c772d77befd5b8',
               url: 'http://localhost:8989/api/v1/files/img1.webp',
             },
-            {
-              fileId: '69fae180e0c772d77befd5b9',
-              url: 'http://localhost:8989/api/v1/files/img2.webp',
-            },
           ],
-          proofPhoto: [
+          photoProofs: [
             {
               fileId: '69fae210e0c772d77befd5b9',
               url: 'http://localhost:8989/api/v1/files/proof.webp',
             },
           ],
-          proofVideo: [
+          videoProofs: [
             {
               fileId: '69fae440e0c772d77befd5d5',
               url: 'http://localhost:8989/api/v1/files/signing_video.mp4',
             },
           ],
-          coaFile: [
+          coaFiles: [
             {
               fileId: '69fae330e0c772d77befd5c1',
               url: 'http://localhost:8989/api/v1/files/coa.pdf',
             },
           ],
-          title: 'Signed Manchester United Jersey 2023',
+          title: 'Signed Rashford Jersey 2024',
         },
       },
     },

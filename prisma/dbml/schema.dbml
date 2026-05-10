@@ -366,17 +366,21 @@ Table listings {
   id String [pk]
   title String
   sport String [not null]
+  league String
   teamOrCountry String [not null]
   playerOrManagerName String
   category ListingCategory [not null]
   seasonOrYear String [not null]
   kitType String
   description String [not null]
-  signatureType SignatureType [not null, default: 'NONE']
-  photoProofType PhotoProofType [not null, default: 'NONE']
-  videoProofType VideoProofType [not null, default: 'NONE']
+  signatureType SignatureKey [not null, default: 'NONE']
+  photoProofType ProofViewKey [not null, default: 'NO_PROOF']
+  videoProofType ProofViewKey [not null, default: 'NO_PROOF']
   coaStatus COAStatus [not null, default: 'NO_COA']
   companyAuthentication String [default: 'Not Authenticated']
+  cardNumbered String
+  cardFeature String
+  cardGrade String
   format SaleFormat [not null, default: 'BUY_NOW']
   photos FileItem[] [not null]
   proofPhotos FileItem[] [not null]
@@ -1295,6 +1299,7 @@ Enum ActionType {
 Enum ProofType {
   PHOTO
   VIDEO
+  PHOTO_VIDEO
 }
 
 Enum ProofViewKey {
@@ -1321,6 +1326,7 @@ Enum AuthCompanyKey {
   AFTAL
   SGC
   CGC
+  COA_INCLUDED
 }
 
 Enum CardMultiplierType {

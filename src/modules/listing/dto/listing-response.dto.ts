@@ -9,11 +9,23 @@ export class ListingResponseDto {
   @ApiProperty({ example: 'Football' })
   sport: string;
 
+  @ApiProperty({ example: 'Premier League', required: false })
+  league?: string;
+
   @ApiProperty({ example: 'Argentina' })
   teamOrCountry: string;
 
+  @ApiProperty({ example: 'Lionel Messi', required: false })
+  playerOrManagerName?: string;
+
   @ApiProperty({ enum: ListingCategory, example: ListingCategory.SHIRT })
   category: ListingCategory;
+
+  @ApiProperty({ example: '2023/24' })
+  seasonOrYear: string;
+
+  @ApiProperty({ example: 'Home', required: false })
+  kitType?: string;
 
   @ApiProperty({ example: 'Authentic signed home shirt.' })
   description: string;
@@ -30,7 +42,28 @@ export class ListingResponseDto {
   @ApiProperty({ type: () => FileItem, isArray: true })
   coaFiles: FileItem[];
 
+  @ApiProperty({ example: 'NUM_10', required: false })
+  cardNumbered?: string;
+
+  @ApiProperty({ example: 'PATCH_ONLY', required: false })
+  cardFeature?: string;
+
+  @ApiProperty({ example: 'GRADE_10', required: false })
+  cardGrade?: string;
+
+  @ApiProperty({ example: ['Premier League'], isArray: true, required: false })
+  appliedHonours?: string[];
+
   @ApiProperty({ example: 500 })
+  calculatedBasePrice: number;
+
+  @ApiProperty({ example: 550 })
+  displayPrice: number;
+
+  @ApiProperty({ example: [{ label: 'Base Price', value: 500 }] })
+  priceBreakdown: any;
+
+  @ApiProperty({ example: 450 })
   initialPrice: number;
 
   @ApiProperty({ example: 'PENDING' })
