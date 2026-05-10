@@ -43,6 +43,7 @@ import { RoomModule } from '@/modules/room/room.module';
 import { ChatModule } from '@/modules/chat/chat.module';
 import { FollowModule } from '@/modules/follow/follow.module';
 import { BlockModule } from '@/modules/block/block.module';
+import { CollectionModule } from '@/modules/collection/collection.module';
 
 @Module({
   imports: [
@@ -95,6 +96,7 @@ import { BlockModule } from '@/modules/block/block.module';
     WebsocketModule,
     FollowModule,
     BlockModule,
+    CollectionModule,
   ],
 
   controllers: [AppController],
