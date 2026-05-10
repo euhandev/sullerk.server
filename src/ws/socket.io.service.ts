@@ -17,7 +17,7 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { RoomType, NotificationType, FileType } from '@prisma/client';
+import { RoomType, NotificationType, FileType, ChatType } from '@prisma/client';
 import { Server, Socket } from 'socket.io';
 import { SocketEvents } from './socket.io.constant';
 
@@ -156,11 +156,21 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
 
       // Transaction: create chat and optional files
       const chat = await this.prisma.$transaction(async (prisma) => {
+        let resolvedChatType: ChatType = ChatType.TEXT;
+        if (images?.length) {
+          const firstFileExt = images[0].split('.').pop()?.toLowerCase();
+          if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(firstFileExt))
+            resolvedChatType = ChatType.IMAGE;
+          else if (['mp4', 'mov', 'webm'].includes(firstFileExt)) resolvedChatType = ChatType.VIDEO;
+          else resolvedChatType = ChatType.DOCUMENT;
+        }
+
         const newChat = await prisma.chat.create({
           data: {
             senderId,
             roomId: room.id,
             message,
+            type: resolvedChatType,
           },
           include: {
             sender: { select: { id: true, username: true, avatar: true } },
@@ -177,6 +187,16 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
             })),
           });
         }
+
+        // Update room last message
+        await prisma.room.update({
+          where: { id: room.id },
+          data: {
+            lastMessage:
+              message || (resolvedChatType === ChatType.IMAGE ? '[Image]' : '[Attachment]'),
+            lastMessageAt: new Date(),
+          },
+        });
 
         return prisma.chat.findUnique({
           where: { id: newChat.id },
@@ -309,9 +329,21 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
     const { roomId, message } = payload;
     if (!userId || !roomId || !message) return;
 
-    const chat = await this.prisma.chat.create({
-      data: { senderId: userId, roomId, message },
-      include: { sender: { select: { id: true, username: true, avatar: true } } },
+    const chat = await this.prisma.$transaction(async (tx) => {
+      const newChat = await tx.chat.create({
+        data: { senderId: userId, roomId, message },
+        include: { sender: { select: { id: true, username: true, avatar: true } } },
+      });
+
+      await tx.room.update({
+        where: { id: roomId },
+        data: {
+          lastMessage: message,
+          lastMessageAt: new Date(),
+        },
+      });
+
+      return newChat;
     });
 
     const participants = await this.prisma.roomParticipant.findMany({
