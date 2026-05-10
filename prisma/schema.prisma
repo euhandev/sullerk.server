@@ -491,17 +491,21 @@ model Listing {
   id                    String          @id @default(auto()) @map("_id") @db.ObjectId
   title                 String?
   sport                 String
+  league                String?
   teamOrCountry         String
   playerOrManagerName   String?
   category              ListingCategory
   seasonOrYear          String
   kitType               String? // Home, Away, Third, Special Edition, Match Worn, N/A
   description           String
-  signatureType         SignatureType   @default(NONE)
-  photoProofType        PhotoProofType  @default(NONE)
-  videoProofType        VideoProofType  @default(NONE)
+  signatureType         SignatureKey   @default(NONE)
+  photoProofType        ProofViewKey   @default(NO_PROOF)
+  videoProofType        ProofViewKey   @default(NO_PROOF)
   coaStatus             COAStatus       @default(NO_COA)
   companyAuthentication String?         @default("Not Authenticated")
+  cardNumbered          String?
+  cardFeature           String?
+  cardGrade             String?
   format                SaleFormat      @default(BUY_NOW)
 
   photos      FileItem[]
@@ -1357,6 +1361,7 @@ model ProofMultiplierRule {
 enum ProofType {
   PHOTO
   VIDEO
+  PHOTO_VIDEO
 }
 
 enum ProofViewKey {
@@ -1423,6 +1428,7 @@ enum AuthCompanyKey {
   AFTAL
   SGC
   CGC
+  COA_INCLUDED
 }
 
 // ─────────────────────────────────────────────────────────────

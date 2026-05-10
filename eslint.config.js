@@ -14,6 +14,7 @@ export default [
       'files/**',
       'coverage/**',
       'jest.config.ts',
+      'prisma.config.ts',
     ],
   },
   js.configs.recommended,

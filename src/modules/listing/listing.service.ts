@@ -10,6 +10,7 @@ import QueryBuilder from '@/utils/query_builder';
 import { listingFilterFields, listingInclude, listingSearchFields } from './listing.constant';
 import { IGenericResponse } from '@/interface/common';
 import { Request } from 'express';
+import { PriceEngineService } from '../price-engine/price-engine.service';
 
 @Injectable()
 export class ListingService {
@@ -17,6 +18,7 @@ export class ListingService {
     private readonly prisma: PrismaService,
     private readonly fileService: HelperFileService,
     private readonly emitter: EventEmitter2,
+    private readonly priceEngine: PriceEngineService,
   ) {}
 
   /**
@@ -56,7 +58,7 @@ export class ListingService {
    * Create listing and attach pending files
    */
   async create(createListingDto: CreateListingDto, userId: string) {
-    const { photos, proofPhoto, proofVideo, coaFile, ...listingData } = createListingDto;
+    const { photos, photoProofs, videoProofs, coaFiles, ...listingData } = createListingDto;
 
     // 1. Validate customer
     const customer = await this.prisma.customer.findUnique({
@@ -88,9 +90,9 @@ export class ListingService {
     };
 
     const resolvedPhotos = await resolveFiles(photos || []);
-    const resolvedProofPhotos = await resolveFiles(proofPhoto || []);
-    const resolvedProofVideos = await resolveFiles(proofVideo || []);
-    const resolvedCoaFiles = await resolveFiles(coaFile || []);
+    const resolvedProofPhotos = await resolveFiles(photoProofs || []);
+    const resolvedProofVideos = await resolveFiles(videoProofs || []);
+    const resolvedCoaFiles = await resolveFiles(coaFiles || []);
 
     const allResolvedIds = Array.from(
       new Set([
@@ -101,8 +103,11 @@ export class ListingService {
       ]),
     ).filter((id) => /^[0-9a-fA-F]{24}$/.test(id));
 
+    // 3. Price Engine Calculation
+    const priceResult = await this.priceEngine.calculatePrice(createListingDto);
+
     return await (this.prisma as any).$transaction(async (tx) => {
-      // 3. Create Listing with composite arrays
+      // 4. Create Listing with composite arrays and engine results
       const listing = await tx.listing.create({
         data: {
           ...listingData,
@@ -113,6 +118,27 @@ export class ListingService {
           proofPhotos: resolvedProofPhotos,
           proofVideos: resolvedProofVideos,
           coaFiles: resolvedCoaFiles,
+
+          // Engine fields
+          calculatedBasePrice: priceResult.finalPrice,
+          priceBreakdown: priceResult.breakdown,
+          priceEngineConfigId: priceResult.configId,
+          displayPrice: createListingDto.initialPrice || priceResult.finalPrice,
+          estimatedBaseValue: priceResult.finalPrice,
+        },
+      });
+
+      // 5. Create Calculation Log (Audit Trail)
+      await tx.priceCalculationLog.create({
+        data: {
+          listingId: listing.id,
+          configId: priceResult.configId,
+          finalPrice: priceResult.finalPrice,
+          platformFee: priceResult.platformFee,
+          sellerRangeMin: priceResult.sellerRange.min,
+          sellerRangeMax: priceResult.sellerRange.max,
+          inputContext: createListingDto as any,
+          breakdown: priceResult.breakdown,
         },
       });
 
@@ -168,6 +194,13 @@ export class ListingService {
         include: { files: true },
       });
     });
+  }
+
+  /**
+   * Estimate price without creating a listing
+   */
+  async estimatePrice(dto: CreateListingDto) {
+    return await this.priceEngine.calculatePrice(dto);
   }
   /**
    * Delete a pending file manually (Async Queue)

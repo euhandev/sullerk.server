@@ -216,4 +216,186 @@ export class PriceEngineService {
       return this.getConfig(sport);
     });
   }
+
+  /**
+   * Calculate price for a listing based on new engine rules
+   */
+  async calculatePrice(data: any) {
+    const {
+      sport,
+      category,
+      signatureType,
+      photoProofType,
+      videoProofType,
+      coaStatus,
+      companyAuthentication,
+      cardNumbered,
+      cardFeature,
+      appliedHonours,
+    } = data;
+
+    const config = await this.getConfig(sport);
+    const breakdown: any[] = [];
+
+    // --- 1. Base Price ---
+    const baseValue = config.baseValues.find((v) => v.category === category);
+    if (!baseValue) {
+      throw new NotFoundException(
+        `Base price for category "${category}" in sport "${sport}" not found`,
+      );
+    }
+
+    let currentPrice = baseValue.basePrice;
+    breakdown.push({ label: 'Base Price', value: currentPrice, type: 'BASE' });
+
+    // --- 2. Derived Proof Type Multiplier ---
+    // Rule: Both (photo_video) > Photo > Video > None
+    let derivedProofType = 'NONE';
+    if (photoProofType !== 'NO_PROOF' && videoProofType !== 'NO_PROOF')
+      derivedProofType = 'PHOTO_VIDEO';
+    else if (photoProofType !== 'NO_PROOF') derivedProofType = 'PHOTO';
+    else if (videoProofType !== 'NO_PROOF') derivedProofType = 'VIDEO';
+
+    if (derivedProofType !== 'NONE') {
+      const proofGroup = config.proofMultipliers.find((g) => g.proofType === derivedProofType);
+
+      // Try to find a rule matching the specific view provided, or fallback to the first rule
+      let targetView = 'FULL_VIEW';
+      if (derivedProofType === 'PHOTO') targetView = photoProofType;
+      else if (derivedProofType === 'VIDEO') targetView = videoProofType;
+      // For PHOTO_VIDEO, we might have a specific composite view or just use the first rule
+
+      const proofRule =
+        proofGroup?.rules.find((r) => r.viewKey === targetView) || proofGroup?.rules[0];
+
+      if (proofRule && proofRule.multiplier !== 1) {
+        const prev = currentPrice;
+        currentPrice *= proofRule.multiplier;
+        breakdown.push({
+          label: `Proof Type (${derivedProofType})`,
+          multiplier: proofRule.multiplier,
+          value: currentPrice,
+          diff: currentPrice - prev,
+        });
+      }
+    }
+
+    // --- 3. Signature Multiplier ---
+    const sigMult = config.signatureMultipliers.find((s) => s.signatureKey === signatureType);
+    if (sigMult && sigMult.multiplier !== 1) {
+      const prev = currentPrice;
+      currentPrice *= sigMult.multiplier;
+      breakdown.push({
+        label: `Signature (${signatureType})`,
+        multiplier: sigMult.multiplier,
+        value: currentPrice,
+        diff: currentPrice - prev,
+      });
+    }
+
+    // --- 4. Best Authentication Multiplier (Hierarchy) ---
+    // Professional Auth > COA Included > None
+    let authMultiplier = 1;
+    let authLabel = 'None';
+
+    const profAuthKey = companyAuthentication?.toUpperCase() || 'NONE';
+    const profAuthMult = config.authMultipliers.find((a) => a.companyKey === profAuthKey);
+
+    if (profAuthMult && profAuthKey !== 'NONE' && profAuthKey !== 'NOT AUTHENTICATED') {
+      authMultiplier = profAuthMult.multiplier;
+      authLabel = `Professional Auth (${profAuthKey})`;
+    } else if (coaStatus === 'COA_INCLUDED' || coaStatus === 'SELF_CERTIFIED') {
+      // Fallback to COA if professional auth is missing
+      const coaMult = config.authMultipliers.find((a) => a.companyKey === 'COA_INCLUDED');
+      if (coaMult) {
+        authMultiplier = coaMult.multiplier;
+        authLabel = `COA (${coaStatus})`;
+      }
+    }
+
+    if (authMultiplier !== 1) {
+      const prev = currentPrice;
+      currentPrice *= authMultiplier;
+      breakdown.push({
+        label: authLabel,
+        multiplier: authMultiplier,
+        value: currentPrice,
+        diff: currentPrice - prev,
+      });
+    }
+
+    // --- 5. Card Specifics (Only if category is CARD) ---
+    if (category === 'CARD') {
+      const cardGroups = config.cardMultipliers;
+
+      // Numbering
+      const numGroup = cardGroups.find((g) => g.groupType === 'NUMBERING');
+      const numRule = numGroup?.rules.find((r) => r.ruleKey === cardNumbered);
+      if (numRule && numRule.multiplier !== 1) {
+        const prev = currentPrice;
+        currentPrice *= numRule.multiplier;
+        breakdown.push({
+          label: `Card Rarity (${cardNumbered})`,
+          multiplier: numRule.multiplier,
+          value: currentPrice,
+          diff: currentPrice - prev,
+        });
+      }
+
+      // Feature
+      const featGroup = cardGroups.find((g) => g.groupType === 'FEATURE');
+      const featRule = featGroup?.rules.find((r) => r.ruleKey === cardFeature);
+      if (featRule && featRule.multiplier !== 1) {
+        const prev = currentPrice;
+        currentPrice *= featRule.multiplier;
+        breakdown.push({
+          label: `Card Feature (${cardFeature})`,
+          multiplier: featRule.multiplier,
+          value: currentPrice,
+          diff: currentPrice - prev,
+        });
+      }
+    }
+
+    // --- 6. Trophies/Individual Awards (Additive Boost) ---
+    if (appliedHonours && appliedHonours.length > 0) {
+      let totalTrophyBoost = 0;
+      for (const honourKey of appliedHonours) {
+        const hMult = config.honourMultipliers.find((h) => h.honourKey === honourKey);
+        if (hMult) {
+          // If multiplier is 1.2, it's a 20% boost (0.2)
+          totalTrophyBoost += hMult.multiplier - 1;
+          breakdown.push({
+            label: `Award: ${honourKey}`,
+            boost: `+${((hMult.multiplier - 1) * 100).toFixed(0)}%`,
+          });
+        }
+      }
+
+      if (totalTrophyBoost > 0) {
+        const prev = currentPrice;
+        currentPrice *= 1 + totalTrophyBoost;
+        breakdown.push({
+          label: 'Total Trophies Boost',
+          multiplier: (1 + totalTrophyBoost).toFixed(2),
+          value: currentPrice,
+          diff: currentPrice - prev,
+        });
+      }
+    }
+
+    // --- Final Step: Rounding ---
+    const finalPrice = Math.round(currentPrice);
+
+    return {
+      finalPrice,
+      breakdown,
+      configId: config.id,
+      platformFee: Math.round(finalPrice * (config.platformFeePercent / 100)),
+      sellerRange: {
+        min: Math.round(finalPrice * (1 - config.sellerAdjustRangePercent / 100)),
+        max: Math.round(finalPrice * (1 + config.sellerAdjustRangePercent / 100)),
+      },
+    };
+  }
 }

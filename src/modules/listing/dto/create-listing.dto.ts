@@ -7,14 +7,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import {
-  ListingCategory,
-  SignatureType,
-  PhotoProofType,
-  VideoProofType,
-  COAStatus,
-  SaleFormat,
-} from '@prisma/client';
+import { ListingCategory, SignatureKey, ProofViewKey, COAStatus, SaleFormat } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 
@@ -43,6 +36,15 @@ export class CreateListingDto {
   @IsString()
   @IsNotEmpty()
   sport: string;
+
+  @ApiProperty({
+    example: 'Premier League',
+    required: false,
+    description: 'The league category of the item',
+  })
+  @IsString()
+  @IsOptional()
+  league?: string;
 
   @ApiProperty({
     example: 'Manchester United',
@@ -99,34 +101,34 @@ export class CreateListingDto {
   description?: string;
 
   @ApiProperty({
-    enum: SignatureType,
-    example: SignatureType.NONE,
+    enum: SignatureKey,
+    example: SignatureKey.NONE,
     required: false,
     description: 'The type of signature on the item',
   })
-  @IsEnum(SignatureType)
+  @IsEnum(SignatureKey)
   @IsOptional()
-  signatureType?: SignatureType;
+  signatureType?: SignatureKey;
 
   @ApiProperty({
-    enum: PhotoProofType,
-    example: PhotoProofType.NONE,
+    enum: ProofViewKey,
+    example: ProofViewKey.NO_PROOF,
     required: false,
     description: 'Type of photo proof provided',
   })
-  @IsEnum(PhotoProofType)
+  @IsEnum(ProofViewKey)
   @IsOptional()
-  photoProofType?: PhotoProofType;
+  photoProofType?: ProofViewKey;
 
   @ApiProperty({
-    enum: VideoProofType,
-    example: VideoProofType.NONE,
+    enum: ProofViewKey,
+    example: ProofViewKey.NO_PROOF,
     required: false,
     description: 'Type of video proof provided',
   })
-  @IsEnum(VideoProofType)
+  @IsEnum(ProofViewKey)
   @IsOptional()
-  videoProofType?: VideoProofType;
+  videoProofType?: ProofViewKey;
 
   @ApiProperty({
     enum: COAStatus,
@@ -146,6 +148,44 @@ export class CreateListingDto {
   @IsString()
   @IsOptional()
   companyAuthentication?: string;
+
+  @ApiProperty({
+    example: 'NUM_10',
+    required: false,
+    description: 'Card numbering multiplier key',
+  })
+  @IsString()
+  @IsOptional()
+  cardNumbered?: string;
+
+  @ApiProperty({
+    example: 'PATCH_ONLY',
+    required: false,
+    description: 'Card feature multiplier key',
+  })
+  @IsString()
+  @IsOptional()
+  cardFeature?: string;
+
+  @ApiProperty({
+    example: 'GRADE_10',
+    required: false,
+    description: 'Card grade multiplier key',
+  })
+  @IsString()
+  @IsOptional()
+  cardGrade?: string;
+
+  @ApiProperty({
+    example: ['Premier League', 'Champions League'],
+    required: false,
+    description: 'List of honours/trophies won',
+    type: [String],
+  })
+  @IsArray()
+  @IsString({ each: true })
+  @IsOptional()
+  appliedHonours?: string[];
 
   @ApiProperty({
     enum: SaleFormat,
@@ -240,7 +280,7 @@ export class CreateListingDto {
   @IsArray()
   @IsOptional()
   @Type(() => FileItem)
-  proofPhoto?: FileItem[];
+  photoProofs?: FileItem[];
 
   @ApiProperty({
     description: 'Array of proof videos',
@@ -251,7 +291,7 @@ export class CreateListingDto {
   @IsArray()
   @IsOptional()
   @Type(() => FileItem)
-  proofVideo?: FileItem[];
+  videoProofs?: FileItem[];
 
   @ApiProperty({
     description: 'Array of COA files',
@@ -262,5 +302,5 @@ export class CreateListingDto {
   @IsArray()
   @IsOptional()
   @Type(() => FileItem)
-  coaFile?: FileItem[];
+  coaFiles?: FileItem[];
 }
