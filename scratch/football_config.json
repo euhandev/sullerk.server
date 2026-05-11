@@ -1,0 +1,1709 @@
+Current Config for Football:
+{
+  "id": "69ff2ebb83224888084ee4cf",
+  "sport": "Football",
+  "isActive": true,
+  "description": "Default pricing engine for Football/Soccer",
+  "platformFeePercent": 6,
+  "sellerAdjustRangePercent": 12,
+  "apiRecalcIntervalGames": 2,
+  "createdAt": "2026-05-09T12:55:23.084Z",
+  "updatedAt": "2026-05-10T14:01:27.779Z",
+  "baseValues": [
+    {
+      "id": "6a00a8cc30013286c6c676a6",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "category": "SHIRT",
+      "basePrice": 250,
+      "createdAt": "2026-05-10T15:48:28.476Z",
+      "updatedAt": "2026-05-10T15:48:28.476Z"
+    },
+    {
+      "id": "6a00a8cc30013286c6c676a7",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "category": "BOOTS",
+      "basePrice": 180,
+      "createdAt": "2026-05-10T15:48:28.476Z",
+      "updatedAt": "2026-05-10T15:48:28.476Z"
+    },
+    {
+      "id": "6a00a8cc30013286c6c676a8",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "category": "CARD",
+      "basePrice": 80,
+      "createdAt": "2026-05-10T15:48:28.476Z",
+      "updatedAt": "2026-05-10T15:48:28.476Z"
+    },
+    {
+      "id": "6a00a8cc30013286c6c676a9",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "category": "GLOVES",
+      "basePrice": 120,
+      "createdAt": "2026-05-10T15:48:28.476Z",
+      "updatedAt": "2026-05-10T15:48:28.476Z"
+    },
+    {
+      "id": "6a00a8cc30013286c6c676aa",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "category": "MATCH_BALL",
+      "basePrice": 250,
+      "createdAt": "2026-05-10T15:48:28.476Z",
+      "updatedAt": "2026-05-10T15:48:28.476Z"
+    },
+    {
+      "id": "6a00a8cc30013286c6c676ab",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "category": "SHORTS",
+      "basePrice": 100,
+      "createdAt": "2026-05-10T15:48:28.476Z",
+      "updatedAt": "2026-05-10T15:48:28.476Z"
+    },
+    {
+      "id": "6a00a8cc30013286c6c676ac",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "category": "SIGNED_PHOTO",
+      "basePrice": 60,
+      "createdAt": "2026-05-10T15:48:28.476Z",
+      "updatedAt": "2026-05-10T15:48:28.476Z"
+    }
+  ],
+  "proofMultipliers": [
+    {
+      "id": "6a00917ec19b19d3323f4ce9",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "proofType": "PHOTO",
+      "createdAt": "2026-05-10T14:09:02.253Z",
+      "updatedAt": "2026-05-10T14:09:02.253Z",
+      "rules": [
+        {
+          "id": "6a00917ec19b19d3323f4cea",
+          "groupId": "6a00917ec19b19d3323f4ce9",
+          "viewKey": "NO_PROOF",
+          "multiplier": 1.5,
+          "isActive": true,
+          "createdAt": "2026-05-10T14:09:02.253Z",
+          "updatedAt": "2026-05-10T14:09:02.253Z"
+        },
+        {
+          "id": "6a00917ec19b19d3323f4ceb",
+          "groupId": "6a00917ec19b19d3323f4ce9",
+          "viewKey": "PARTIAL_VIEW",
+          "multiplier": 1.1,
+          "isActive": true,
+          "createdAt": "2026-05-10T14:09:02.253Z",
+          "updatedAt": "2026-05-10T14:09:02.253Z"
+        },
+        {
+          "id": "6a00917ec19b19d3323f4cec",
+          "groupId": "6a00917ec19b19d3323f4ce9",
+          "viewKey": "FULL_VIEW",
+          "multiplier": 1.2,
+          "isActive": true,
+          "createdAt": "2026-05-10T14:09:02.253Z",
+          "updatedAt": "2026-05-10T14:09:02.253Z"
+        },
+        {
+          "id": "6a00917ec19b19d3323f4ced",
+          "groupId": "6a00917ec19b19d3323f4ce9",
+          "viewKey": "PARTIAL_VIEW_ATHLETE",
+          "multiplier": 1.25,
+          "isActive": true,
+          "createdAt": "2026-05-10T14:09:02.253Z",
+          "updatedAt": "2026-05-10T14:09:02.253Z"
+        },
+        {
+          "id": "6a00917ec19b19d3323f4cee",
+          "groupId": "6a00917ec19b19d3323f4ce9",
+          "viewKey": "FULL_VIEW_ATHLETE",
+          "multiplier": 1.35,
+          "isActive": true,
+          "createdAt": "2026-05-10T14:09:02.253Z",
+          "updatedAt": "2026-05-10T14:09:02.253Z"
+        }
+      ]
+    },
+    {
+      "id": "6a00917ec19b19d3323f4cef",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "proofType": "VIDEO",
+      "createdAt": "2026-05-10T14:09:02.360Z",
+      "updatedAt": "2026-05-10T14:09:02.360Z",
+      "rules": [
+        {
+          "id": "6a00917ec19b19d3323f4cf0",
+          "groupId": "6a00917ec19b19d3323f4cef",
+          "viewKey": "NO_PROOF",
+          "multiplier": 1.1,
+          "isActive": true,
+          "createdAt": "2026-05-10T14:09:02.360Z",
+          "updatedAt": "2026-05-10T14:09:02.360Z"
+        },
+        {
+          "id": "6a00917ec19b19d3323f4cf1",
+          "groupId": "6a00917ec19b19d3323f4cef",
+          "viewKey": "PARTIAL_VIEW",
+          "multiplier": 1.2,
+          "isActive": true,
+          "createdAt": "2026-05-10T14:09:02.360Z",
+          "updatedAt": "2026-05-10T14:09:02.360Z"
+        },
+        {
+          "id": "6a00917ec19b19d3323f4cf2",
+          "groupId": "6a00917ec19b19d3323f4cef",
+          "viewKey": "FULL_VIEW",
+          "multiplier": 1.35,
+          "isActive": true,
+          "createdAt": "2026-05-10T14:09:02.360Z",
+          "updatedAt": "2026-05-10T14:09:02.360Z"
+        },
+        {
+          "id": "6a00917ec19b19d3323f4cf3",
+          "groupId": "6a00917ec19b19d3323f4cef",
+          "viewKey": "PARTIAL_VIEW_ATHLETE",
+          "multiplier": 1.4,
+          "isActive": true,
+          "createdAt": "2026-05-10T14:09:02.360Z",
+          "updatedAt": "2026-05-10T14:09:02.360Z"
+        },
+        {
+          "id": "6a00917ec19b19d3323f4cf4",
+          "groupId": "6a00917ec19b19d3323f4cef",
+          "viewKey": "FULL_VIEW_ATHLETE",
+          "multiplier": 1.5,
+          "isActive": true,
+          "createdAt": "2026-05-10T14:09:02.360Z",
+          "updatedAt": "2026-05-10T14:09:02.360Z"
+        }
+      ]
+    }
+  ],
+  "signatureMultipliers": [
+    {
+      "id": "6a00917ec19b19d3323f4cf5",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "signatureKey": "NONE",
+      "multiplier": 1,
+      "isActive": true,
+      "createdAt": "2026-05-10T14:09:02.540Z",
+      "updatedAt": "2026-05-10T14:09:02.540Z"
+    },
+    {
+      "id": "6a00917ec19b19d3323f4cf6",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "signatureKey": "PARTIAL",
+      "multiplier": 1.3,
+      "isActive": true,
+      "createdAt": "2026-05-10T14:09:02.540Z",
+      "updatedAt": "2026-05-10T14:09:02.540Z"
+    },
+    {
+      "id": "6a00917ec19b19d3323f4cf7",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "signatureKey": "FULL",
+      "multiplier": 1.6,
+      "isActive": true,
+      "createdAt": "2026-05-10T14:09:02.540Z",
+      "updatedAt": "2026-05-10T14:09:02.540Z"
+    },
+    {
+      "id": "6a00917ec19b19d3323f4cf8",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "signatureKey": "PERSONALISED",
+      "multiplier": 1.8,
+      "isActive": true,
+      "createdAt": "2026-05-10T14:09:02.540Z",
+      "updatedAt": "2026-05-10T14:09:02.540Z"
+    }
+  ],
+  "authMultipliers": [
+    {
+      "id": "6a00917ec19b19d3323f4cf9",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "companyKey": "NONE",
+      "multiplier": 1,
+      "isActive": true,
+      "createdAt": "2026-05-10T14:09:02.648Z",
+      "updatedAt": "2026-05-10T14:09:02.648Z"
+    },
+    {
+      "id": "6a00917ec19b19d3323f4cfa",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "companyKey": "BECKETT",
+      "multiplier": 1.7,
+      "isActive": true,
+      "createdAt": "2026-05-10T14:09:02.648Z",
+      "updatedAt": "2026-05-10T14:09:02.648Z"
+    },
+    {
+      "id": "6a00917ec19b19d3323f4cfb",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "companyKey": "PSA",
+      "multiplier": 1.7,
+      "isActive": true,
+      "createdAt": "2026-05-10T14:09:02.648Z",
+      "updatedAt": "2026-05-10T14:09:02.648Z"
+    },
+    {
+      "id": "6a00917ec19b19d3323f4cfc",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "companyKey": "JSA",
+      "multiplier": 1.65,
+      "isActive": true,
+      "createdAt": "2026-05-10T14:09:02.648Z",
+      "updatedAt": "2026-05-10T14:09:02.648Z"
+    },
+    {
+      "id": "6a00917ec19b19d3323f4cfd",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "companyKey": "ACG",
+      "multiplier": 1.6,
+      "isActive": true,
+      "createdAt": "2026-05-10T14:09:02.648Z",
+      "updatedAt": "2026-05-10T14:09:02.648Z"
+    },
+    {
+      "id": "6a00917ec19b19d3323f4cfe",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "companyKey": "AFTAL",
+      "multiplier": 1.55,
+      "isActive": true,
+      "createdAt": "2026-05-10T14:09:02.648Z",
+      "updatedAt": "2026-05-10T14:09:02.648Z"
+    },
+    {
+      "id": "6a00917ec19b19d3323f4cff",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "companyKey": "SGC",
+      "multiplier": 1.5,
+      "isActive": true,
+      "createdAt": "2026-05-10T14:09:02.648Z",
+      "updatedAt": "2026-05-10T14:09:02.648Z"
+    },
+    {
+      "id": "6a00917ec19b19d3323f4d00",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "companyKey": "CGC",
+      "multiplier": 1.59,
+      "isActive": true,
+      "createdAt": "2026-05-10T14:09:02.648Z",
+      "updatedAt": "2026-05-10T14:09:02.648Z"
+    }
+  ],
+  "cardMultipliers": [
+    {
+      "id": "6a009254c19b19d3323f4d1e",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "groupType": "NUMBERING",
+      "createdAt": "2026-05-10T14:12:36.639Z",
+      "updatedAt": "2026-05-10T14:12:36.639Z",
+      "rules": [
+        {
+          "id": "6a009254c19b19d3323f4d1f",
+          "groupId": "6a009254c19b19d3323f4d1e",
+          "ruleKey": "NUM_5",
+          "label": "",
+          "multiplier": 3.5,
+          "sortOrder": 0,
+          "isActive": true,
+          "createdAt": "2026-05-10T14:12:36.639Z",
+          "updatedAt": "2026-05-10T14:12:36.639Z"
+        },
+        {
+          "id": "6a009254c19b19d3323f4d20",
+          "groupId": "6a009254c19b19d3323f4d1e",
+          "ruleKey": "NUM_10",
+          "label": "",
+          "multiplier": 2.5,
+          "sortOrder": 0,
+          "isActive": true,
+          "createdAt": "2026-05-10T14:12:36.639Z",
+          "updatedAt": "2026-05-10T14:12:36.639Z"
+        },
+        {
+          "id": "6a009254c19b19d3323f4d21",
+          "groupId": "6a009254c19b19d3323f4d1e",
+          "ruleKey": "NUM_15",
+          "label": "",
+          "multiplier": 2.2,
+          "sortOrder": 0,
+          "isActive": true,
+          "createdAt": "2026-05-10T14:12:36.639Z",
+          "updatedAt": "2026-05-10T14:12:36.639Z"
+        },
+        {
+          "id": "6a009254c19b19d3323f4d22",
+          "groupId": "6a009254c19b19d3323f4d1e",
+          "ruleKey": "NUM_20",
+          "label": "",
+          "multiplier": 1.9,
+          "sortOrder": 0,
+          "isActive": true,
+          "createdAt": "2026-05-10T14:12:36.639Z",
+          "updatedAt": "2026-05-10T14:12:36.639Z"
+        },
+        {
+          "id": "6a009254c19b19d3323f4d23",
+          "groupId": "6a009254c19b19d3323f4d1e",
+          "ruleKey": "NUM_25",
+          "label": "",
+          "multiplier": 1.6,
+          "sortOrder": 0,
+          "isActive": true,
+          "createdAt": "2026-05-10T14:12:36.639Z",
+          "updatedAt": "2026-05-10T14:12:36.639Z"
+        },
+        {
+          "id": "6a009254c19b19d3323f4d24",
+          "groupId": "6a009254c19b19d3323f4d1e",
+          "ruleKey": "NUM_49",
+          "label": "",
+          "multiplier": 1.35,
+          "sortOrder": 0,
+          "isActive": true,
+          "createdAt": "2026-05-10T14:12:36.639Z",
+          "updatedAt": "2026-05-10T14:12:36.639Z"
+        },
+        {
+          "id": "6a009254c19b19d3323f4d25",
+          "groupId": "6a009254c19b19d3323f4d1e",
+          "ruleKey": "NUM_75",
+          "label": "",
+          "multiplier": 1.2,
+          "sortOrder": 0,
+          "isActive": true,
+          "createdAt": "2026-05-10T14:12:36.639Z",
+          "updatedAt": "2026-05-10T14:12:36.639Z"
+        },
+        {
+          "id": "6a009254c19b19d3323f4d26",
+          "groupId": "6a009254c19b19d3323f4d1e",
+          "ruleKey": "NUM_100",
+          "label": "",
+          "multiplier": 1.15,
+          "sortOrder": 0,
+          "isActive": true,
+          "createdAt": "2026-05-10T14:12:36.639Z",
+          "updatedAt": "2026-05-10T14:12:36.639Z"
+        },
+        {
+          "id": "6a009254c19b19d3323f4d27",
+          "groupId": "6a009254c19b19d3323f4d1e",
+          "ruleKey": "UNNUMBERED",
+          "label": "",
+          "multiplier": 1,
+          "sortOrder": 0,
+          "isActive": true,
+          "createdAt": "2026-05-10T14:12:36.639Z",
+          "updatedAt": "2026-05-10T14:12:36.639Z"
+        }
+      ]
+    },
+    {
+      "id": "6a009254c19b19d3323f4d28",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "groupType": "FEATURE",
+      "createdAt": "2026-05-10T14:12:36.766Z",
+      "updatedAt": "2026-05-10T14:12:36.766Z",
+      "rules": [
+        {
+          "id": "6a009254c19b19d3323f4d29",
+          "groupId": "6a009254c19b19d3323f4d28",
+          "ruleKey": "SIG_ONLY",
+          "label": "",
+          "multiplier": 1.4,
+          "sortOrder": 0,
+          "isActive": true,
+          "createdAt": "2026-05-10T14:12:36.766Z",
+          "updatedAt": "2026-05-10T14:12:36.766Z"
+        },
+        {
+          "id": "6a009254c19b19d3323f4d2a",
+          "groupId": "6a009254c19b19d3323f4d28",
+          "ruleKey": "PATCH_ONLY",
+          "label": "",
+          "multiplier": 1.3,
+          "sortOrder": 0,
+          "isActive": true,
+          "createdAt": "2026-05-10T14:12:36.766Z",
+          "updatedAt": "2026-05-10T14:12:36.766Z"
+        },
+        {
+          "id": "6a009254c19b19d3323f4d2b",
+          "groupId": "6a009254c19b19d3323f4d28",
+          "ruleKey": "SIG_PATCH",
+          "label": "",
+          "multiplier": 1.7,
+          "sortOrder": 0,
+          "isActive": true,
+          "createdAt": "2026-05-10T14:12:36.766Z",
+          "updatedAt": "2026-05-10T14:12:36.766Z"
+        },
+        {
+          "id": "6a009254c19b19d3323f4d2c",
+          "groupId": "6a009254c19b19d3323f4d28",
+          "ruleKey": "NO_EXTRAS",
+          "label": "",
+          "multiplier": 1,
+          "sortOrder": 0,
+          "isActive": true,
+          "createdAt": "2026-05-10T14:12:36.766Z",
+          "updatedAt": "2026-05-10T14:12:36.766Z"
+        }
+      ]
+    },
+    {
+      "id": "6a009254c19b19d3323f4d2d",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "groupType": "GRADE",
+      "createdAt": "2026-05-10T14:12:36.874Z",
+      "updatedAt": "2026-05-10T14:12:36.874Z",
+      "rules": [
+        {
+          "id": "6a009254c19b19d3323f4d2e",
+          "groupId": "6a009254c19b19d3323f4d2d",
+          "ruleKey": "RAW",
+          "label": "",
+          "multiplier": 1,
+          "sortOrder": 0,
+          "isActive": true,
+          "createdAt": "2026-05-10T14:12:36.874Z",
+          "updatedAt": "2026-05-10T14:12:36.874Z"
+        },
+        {
+          "id": "6a009254c19b19d3323f4d2f",
+          "groupId": "6a009254c19b19d3323f4d2d",
+          "ruleKey": "GRADE_1",
+          "label": "",
+          "multiplier": 0.5,
+          "sortOrder": 0,
+          "isActive": true,
+          "createdAt": "2026-05-10T14:12:36.874Z",
+          "updatedAt": "2026-05-10T14:12:36.874Z"
+        },
+        {
+          "id": "6a009254c19b19d3323f4d30",
+          "groupId": "6a009254c19b19d3323f4d2d",
+          "ruleKey": "GRADE_2",
+          "label": "",
+          "multiplier": 0.6,
+          "sortOrder": 0,
+          "isActive": true,
+          "createdAt": "2026-05-10T14:12:36.874Z",
+          "updatedAt": "2026-05-10T14:12:36.874Z"
+        },
+        {
+          "id": "6a009254c19b19d3323f4d31",
+          "groupId": "6a009254c19b19d3323f4d2d",
+          "ruleKey": "GRADE_3",
+          "label": "",
+          "multiplier": 0.7,
+          "sortOrder": 0,
+          "isActive": true,
+          "createdAt": "2026-05-10T14:12:36.874Z",
+          "updatedAt": "2026-05-10T14:12:36.874Z"
+        },
+        {
+          "id": "6a009254c19b19d3323f4d32",
+          "groupId": "6a009254c19b19d3323f4d2d",
+          "ruleKey": "GRADE_4",
+          "label": "",
+          "multiplier": 0.8,
+          "sortOrder": 0,
+          "isActive": true,
+          "createdAt": "2026-05-10T14:12:36.874Z",
+          "updatedAt": "2026-05-10T14:12:36.874Z"
+        },
+        {
+          "id": "6a009254c19b19d3323f4d33",
+          "groupId": "6a009254c19b19d3323f4d2d",
+          "ruleKey": "GRADE_5",
+          "label": "",
+          "multiplier": 0.9,
+          "sortOrder": 0,
+          "isActive": true,
+          "createdAt": "2026-05-10T14:12:36.874Z",
+          "updatedAt": "2026-05-10T14:12:36.874Z"
+        },
+        {
+          "id": "6a009254c19b19d3323f4d34",
+          "groupId": "6a009254c19b19d3323f4d2d",
+          "ruleKey": "GRADE_6",
+          "label": "",
+          "multiplier": 1,
+          "sortOrder": 0,
+          "isActive": true,
+          "createdAt": "2026-05-10T14:12:36.874Z",
+          "updatedAt": "2026-05-10T14:12:36.874Z"
+        },
+        {
+          "id": "6a009254c19b19d3323f4d35",
+          "groupId": "6a009254c19b19d3323f4d2d",
+          "ruleKey": "GRADE_7",
+          "label": "",
+          "multiplier": 1.1,
+          "sortOrder": 0,
+          "isActive": true,
+          "createdAt": "2026-05-10T14:12:36.874Z",
+          "updatedAt": "2026-05-10T14:12:36.874Z"
+        },
+        {
+          "id": "6a009254c19b19d3323f4d36",
+          "groupId": "6a009254c19b19d3323f4d2d",
+          "ruleKey": "GRADE_8",
+          "label": "",
+          "multiplier": 1.3,
+          "sortOrder": 0,
+          "isActive": true,
+          "createdAt": "2026-05-10T14:12:36.874Z",
+          "updatedAt": "2026-05-10T14:12:36.874Z"
+        },
+        {
+          "id": "6a009254c19b19d3323f4d37",
+          "groupId": "6a009254c19b19d3323f4d2d",
+          "ruleKey": "GRADE_8_5",
+          "label": "",
+          "multiplier": 1.5,
+          "sortOrder": 0,
+          "isActive": true,
+          "createdAt": "2026-05-10T14:12:36.874Z",
+          "updatedAt": "2026-05-10T14:12:36.874Z"
+        },
+        {
+          "id": "6a009254c19b19d3323f4d38",
+          "groupId": "6a009254c19b19d3323f4d2d",
+          "ruleKey": "GRADE_9",
+          "label": "",
+          "multiplier": 1.8,
+          "sortOrder": 0,
+          "isActive": true,
+          "createdAt": "2026-05-10T14:12:36.874Z",
+          "updatedAt": "2026-05-10T14:12:36.874Z"
+        },
+        {
+          "id": "6a009254c19b19d3323f4d39",
+          "groupId": "6a009254c19b19d3323f4d2d",
+          "ruleKey": "GRADE_9_5",
+          "label": "",
+          "multiplier": 2.2,
+          "sortOrder": 0,
+          "isActive": true,
+          "createdAt": "2026-05-10T14:12:36.874Z",
+          "updatedAt": "2026-05-10T14:12:36.874Z"
+        },
+        {
+          "id": "6a009254c19b19d3323f4d3a",
+          "groupId": "6a009254c19b19d3323f4d2d",
+          "ruleKey": "GRADE_10",
+          "label": "",
+          "multiplier": 3.1,
+          "sortOrder": 0,
+          "isActive": true,
+          "createdAt": "2026-05-10T14:12:36.874Z",
+          "updatedAt": "2026-05-10T14:12:36.874Z"
+        }
+      ]
+    }
+  ],
+  "honourMultipliers": [
+    {
+      "id": "6a0093c5c19b19d3323f4da9",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Premier League",
+      "multiplier": 1.5,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4daa",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "FA Cup",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dab",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "League Cup (Carabao)",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dac",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Community Shield",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dad",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "La Liga",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dae",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Copa del Rey",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4daf",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Supercopa de España",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4db0",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Bundesliga",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4db1",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "DFB-Pokal",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4db2",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "DFL-Supercup",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4db3",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Serie A",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4db4",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Coppa Italia",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4db5",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Supercoppa Italiana",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4db6",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Ligue 1",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4db7",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Coupe de France",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4db8",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Trophée des Champions",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4db9",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Champions League",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dba",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Europa League",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dbb",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Conference League",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dbc",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "UEFA Super Cup",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dbd",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Club World Cup",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dbe",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "World Cup",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dbf",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "European Championship",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dc0",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Copa América",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dc1",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Africa Cup of Nations",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dc2",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Nations League",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dc3",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Ballon d'Or",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dc4",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Golden Boot",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dc5",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "FIFA Best",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dc6",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "PFA Player of the Year",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dc7",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Golden Glove",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dc8",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "NBA Championship",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dc9",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "NBA Finals MVP",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dca",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "NBA MVP",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dcb",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "All-Star Game MVP",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dcc",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Scoring Title",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dcd",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Defensive Player of the Year",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dce",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Rookie of the Year",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dcf",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Olympic Gold Medal",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dd0",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "FIBA World Cup",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dd1",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "ICC Cricket World Cup",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dd2",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "ICC T20 World Cup",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dd3",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "The Ashes",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dd4",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "ICC Champions Trophy",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dd5",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "IPL Title",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dd6",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "ICC Test Championship",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dd7",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Wisden Cricketer of the Year",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dd8",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Rugby World Cup",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dd9",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Six Nations",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dda",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Rugby Championship",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4ddb",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Lions Series",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4ddc",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Heineken Champions Cup",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4ddd",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Premiership Title",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dde",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "World Rugby Player of the Year",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4ddf",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Wimbledon",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4de0",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "US Open",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4de1",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "French Open (Roland Garros)",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4de2",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Australian Open",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4de3",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "ATP Finals",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4de4",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Davis Cup",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4de5",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Grand Slam (Calendar Year)",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4de6",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "WBA World Title",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4de7",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "WBC World Title",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4de8",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "IBF World Title",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4de9",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "WBO World Title",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dea",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Undisputed Champion",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4deb",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Ring Magazine Fighter of the Year",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dec",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "UFC Championship",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4ded",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "UFC Performance of the Night",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dee",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "UFC Fight of the Night",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4def",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "UFC Knockout of the Year",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4df0",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "UFC Hall of Fame",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4df1",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Bellator Championship",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4df2",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "World Drivers' Championship",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4df3",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Race Win",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4df4",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Pole Position Record",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4df5",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Fastest Lap Award",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4df6",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Constructors' Championship Contribution",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4df7",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Monaco GP Win",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4df8",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "F1 Rookie of the Year",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4df9",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Grand Chelem",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dfa",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "PDC World Championship",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dfb",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Premier League Darts",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dfc",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "World Grand Prix",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dfd",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Grand Slam of Darts",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dfe",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "World Matchplay",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4dff",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "UK Open",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4e00",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Nine-Dart Finish",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4e01",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "BDO World Championship",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4e02",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "PDC Player of the Year",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4e03",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "World Series",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4e04",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "MLB MVP",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4e05",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Cy Young Award",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4e06",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Silver Slugger",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4e07",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Gold Glove",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4e08",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "All-Star Game MVP",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4e09",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Triple Crown",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4e0a",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Hall of Fame",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4e0b",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "The Masters",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4e0c",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "US Open",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4e0d",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "The Open Championship",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4e0e",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "PGA Championship",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4e0f",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Ryder Cup",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4e10",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "FedEx Cup",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4e11",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Career Grand Slam",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4e12",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Olympic Gold Medal",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4e13",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "World Championship Gold",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4e14",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "World Record",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4e15",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Diamond League Title",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    },
+    {
+      "id": "6a0093c5c19b19d3323f4e16",
+      "configId": "69ff2ebb83224888084ee4cf",
+      "honourKey": "Commonwealth Games Gold",
+      "multiplier": 1.2,
+      "sportContext": "Football",
+      "isActive": true,
+      "createdAt": "2026-05-10T14:18:45.312Z",
+      "updatedAt": "2026-05-10T14:18:45.312Z"
+    }
+  ]
+}

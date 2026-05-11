@@ -548,6 +548,7 @@ Table transactions {
   orderId String
   exchangeOfferId String
   description String
+  status TransactionStatus [not null, default: 'COMPLETED']
   createdAt DateTime [default: `now()`, not null]
 }
 
@@ -1164,6 +1165,12 @@ Enum TransactionType {
   TRADE_BALANCE
   PLATFORM_FEE
   WITHDRAWAL
+}
+
+Enum TransactionStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
 }
 
 Enum DisputeType {

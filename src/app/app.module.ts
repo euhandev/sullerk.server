@@ -44,6 +44,7 @@ import { ChatModule } from '@/modules/chat/chat.module';
 import { FollowModule } from '@/modules/follow/follow.module';
 import { BlockModule } from '@/modules/block/block.module';
 import { CollectionModule } from '@/modules/collection/collection.module';
+import { TransactionModule } from '@/modules/transaction/transaction.module';
 
 @Module({
   imports: [
@@ -97,6 +98,7 @@ import { CollectionModule } from '@/modules/collection/collection.module';
     FollowModule,
     BlockModule,
     CollectionModule,
+    TransactionModule,
   ],
 
   controllers: [AppController],

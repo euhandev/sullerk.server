@@ -72,6 +72,10 @@ export interface EnvConfig {
   MAIL_FROM: string;
   GOOGLE_CLIENT_ID: string;
   GOOGLE_CLIENT_SECRET: string;
+
+  LISTING_IMAGE_SIZE_MB: string;
+  LISTING_VIDEO_SIZE_MB: string;
+  LISTING_PDF_SIZE_MB: string;
 }
 
 // config.types.ts (continued)

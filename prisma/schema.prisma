@@ -729,7 +729,8 @@ model Transaction {
   exchangeOfferId String? @db.ObjectId
 
   description String? // e.g. "Payment for Listing X"
-  createdAt   DateTime @default(now())
+  status      TransactionStatus @default(COMPLETED)
+  createdAt   DateTime          @default(now())
 
   @@map("transactions")
 }
@@ -987,6 +988,12 @@ enum TransactionType {
   TRADE_BALANCE
   PLATFORM_FEE
   WITHDRAWAL
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
 }
 
 enum DisputeType {

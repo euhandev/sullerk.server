@@ -4,12 +4,15 @@ import { PrismaService } from '@/helper/prisma.service';
 import { CreateListingDto, FileItem } from './dto/create-listing.dto';
 import { FileService as HelperFileService } from '@/helper/file.service';
 import { ApiError } from '@/utils/api_error';
-import { FileAs, FileContext, FileModule, Listing } from '@prisma/client';
+import { FileAs, FileContext, FileModule, Listing, Role } from '@prisma/client';
 import QueryBuilder from '@/utils/query_builder';
 import { listingFilterFields, listingInclude, listingSearchFields } from './listing.constant';
 import { IGenericResponse } from '@/interface/common';
 import { Request } from 'express';
 import { PriceEngineService } from '../price-engine/price-engine.service';
+import { ConfigService } from '@/config/config.service';
+
+import { UpdateListingDto } from './dto/update-listing.dto';
 
 @Injectable()
 export class ListingService {
@@ -18,7 +21,129 @@ export class ListingService {
     private readonly fileService: HelperFileService,
     private readonly emitter: EventEmitter2,
     private readonly priceEngine: PriceEngineService,
+    private readonly configService: ConfigService,
   ) {}
+
+  /**
+   * Update an existing listing
+   * Only the owner can update their own listing
+   */
+  async update(id: string, updateDto: UpdateListingDto, userId: string, role?: Role) {
+    return await this.prisma.$transaction(async (tx) => {
+      // 1. Verify ownership
+      const existing = await tx.listing.findUnique({
+        where: { id },
+        include: { owner: true },
+      });
+
+      if (!existing) throw new ApiError(HttpStatus.NOT_FOUND, 'Listing not found');
+      if (role === Role.CUSTOMER && existing.owner.userId !== userId) {
+        throw new ApiError(HttpStatus.FORBIDDEN, 'You can only edit your own listings');
+      }
+
+      const { photos, photoProofs, videoProofs, coaFiles, ...listingData } = updateDto;
+
+      // 2. Decide if price needs recalculation
+      const pricingFields: (keyof UpdateListingDto)[] = [
+        'sport',
+        'category',
+        'signatureType',
+        'photoProofType',
+        'videoProofType',
+        'coaStatus',
+        'companyAuthentication',
+        'appliedHonours',
+        'cardNumbered',
+        'cardFeature',
+        'cardGrade',
+      ];
+
+      const needsRecalc = pricingFields.some((field) => updateDto[field] !== undefined);
+      let pricingUpdate = {};
+
+      if (needsRecalc) {
+        // Merge existing values with updates for calculation
+        const calcInput = {
+          ...existing,
+          ...updateDto,
+        } as any;
+
+        const priceResult = await this.priceEngine.calculatePrice(calcInput);
+
+        pricingUpdate = {
+          calculatedBasePrice: priceResult.finalPrice,
+          priceBreakdown: priceResult.breakdown,
+          priceEngineConfigId: priceResult.configId,
+          displayPrice: priceResult.finalPrice,
+          estimatedBaseValue: priceResult.finalPrice,
+          initialPrice: priceResult.finalPrice,
+        };
+
+        // Create new log
+        await tx.priceCalculationLog.create({
+          data: {
+            listingId: id,
+            configId: priceResult.configId,
+            finalPrice: priceResult.finalPrice,
+            platformFee: priceResult.platformFee,
+            sellerRangeMin: priceResult.sellerRange.min,
+            sellerRangeMax: priceResult.sellerRange.max,
+            inputContext: calcInput,
+            breakdown: priceResult.breakdown,
+          },
+        });
+      }
+
+      // 3. Handle File Updates (Step 2 logic for EDIT context)
+      const allResolvedIds: string[] = [];
+      const fileUpdates: any = {};
+
+      const resolveFiles = (files: any[] | undefined, fieldName: string) => {
+        if (files) {
+          const resolved = files.map((f) => ({ fileId: f.fileId, url: f.url }));
+          fileUpdates[fieldName] = resolved;
+          allResolvedIds.push(...files.map((f) => f.fileId));
+        }
+      };
+
+      resolveFiles(photos, 'photos');
+      resolveFiles(photoProofs, 'proofPhotos');
+      resolveFiles(videoProofs, 'proofVideos');
+      resolveFiles(coaFiles, 'coaFiles');
+
+      // 4. Perform Update
+      const updated = await tx.listing.update({
+        where: { id },
+        data: {
+          ...listingData,
+          ...pricingUpdate,
+          ...fileUpdates,
+          acquiredDate: listingData.acquiredDate ? new Date(listingData.acquiredDate) : undefined,
+        },
+        include: { files: true },
+      });
+
+      // 5. Attach new files to listing in File table
+      if (allResolvedIds.length > 0) {
+        for (const fileId of allResolvedIds) {
+          await tx.file.updateMany({
+            where: {
+              id: fileId,
+              uploadedById: userId,
+              isPending: true,
+            },
+            data: {
+              listingId: updated.id,
+              isPending: false,
+              context: 'EDIT',
+            },
+          });
+        }
+      }
+
+      return updated;
+    });
+  }
 
   /**
    * Upload single media file with purpose and context
@@ -30,6 +155,38 @@ export class ListingService {
     context: FileContext = FileContext.CREATE,
   ) {
     if (!file) return null;
+
+    // 1. Validation: Ensure purpose matches file type and size limits
+    const isImage = file.mimetype.startsWith('image/');
+    const isVideo = file.mimetype.startsWith('video/');
+    const isPDF = file.mimetype === 'application/pdf';
+    const fileSizeMB = file.size / (1024 * 1024);
+
+    const imageLimit = this.configService.getFileLimit('image');
+    const videoLimit = this.configService.getFileLimit('video');
+    const pdfLimit = this.configService.getFileLimit('pdf');
+
+    // Purpose Type Validation
+    if (purpose === FileAs.PROOF_VIDEO && !isVideo) {
+      throw new ApiError(HttpStatus.BAD_REQUEST, 'A video file is required for PROOF_VIDEO');
+    }
+    if ((purpose === FileAs.PHOTOS || purpose === FileAs.PROOF_PHOTO) && !isImage) {
+      throw new ApiError(HttpStatus.BAD_REQUEST, 'An image file is required for this purpose');
+    }
+    if (purpose === FileAs.COA_FILE && !isPDF && !isImage) {
+      throw new ApiError(HttpStatus.BAD_REQUEST, 'Only PDF or Image files are allowed for COA');
+    }
+
+    // Granular Size Validation
+    if (isImage && fileSizeMB > imageLimit) {
+      throw new ApiError(HttpStatus.BAD_REQUEST, `Image size exceeds the ${imageLimit}MB limit`);
+    }
+    if (isPDF && fileSizeMB > pdfLimit) {
+      throw new ApiError(HttpStatus.BAD_REQUEST, `PDF document exceeds the ${pdfLimit}MB limit`);
+    }
+    if (isVideo && fileSizeMB > videoLimit) {
+      throw new ApiError(HttpStatus.BAD_REQUEST, `Video file exceeds the ${videoLimit}MB limit`);
+    }
 
     let folder = 'listings/others';
     if (purpose === FileAs.PHOTOS) folder = 'listings/photos';
@@ -118,12 +275,13 @@ export class ListingService {
           proofVideos: resolvedProofVideos,
           coaFiles: resolvedCoaFiles,
 
-          // Engine fields
+          // Engine fields (System Calculated - Overrides any user input)
           calculatedBasePrice: priceResult.finalPrice,
           priceBreakdown: priceResult.breakdown,
           priceEngineConfigId: priceResult.configId,
-          displayPrice: createListingDto.initialPrice || priceResult.finalPrice,
+          displayPrice: priceResult.finalPrice,
           estimatedBaseValue: priceResult.finalPrice,
+          initialPrice: priceResult.finalPrice,
         },
       });
 
@@ -333,5 +491,105 @@ export class ListingService {
     ]);
 
     return { meta, data };
+  }
+
+  /**
+   * Get single listing details
+   */
+  async findOne(id: string) {
+    const listing = await this.prisma.listing.findUnique({
+      where: { id },
+      include: {
+        ...listingInclude,
+        files: true,
+      },
+    });
+
+    if (!listing) throw new ApiError(HttpStatus.NOT_FOUND, 'Listing not found');
+    return listing;
+  }
+
+  /**
+   * Toggle listing between ACTIVE and PAUSED status
+   */
+  async togglePause(id: string, userId: string, role?: Role) {
+    const listing = await this.prisma.listing.findUnique({
+      where: { id },
+      include: { owner: true },
+    });
+
+    if (!listing) throw new ApiError(HttpStatus.NOT_FOUND, 'Listing not found');
+    if (role === Role.CUSTOMER && listing.owner.userId !== userId) {
+      throw new ApiError(HttpStatus.FORBIDDEN, 'You can only toggle your own listings');
+    }
+
+    const currentStatus = listing.status;
+    let newStatus: any;
+
+    if (currentStatus === 'ACTIVE') {
+      newStatus = 'PAUSED';
+    } else if (currentStatus === 'PAUSED') {
+      newStatus = 'ACTIVE';
+    } else {
+      throw new ApiError(
+        HttpStatus.BAD_REQUEST,
+        `Cannot toggle status. Listing is currently ${currentStatus}. This action is only allowed for ACTIVE or PAUSED listings.`,
+      );
+    }
+
+    return await this.prisma.listing.update({
+      where: { id },
+      data: { status: newStatus },
+    });
+  }
+
+  /**
+   * Delete a listing (Cascade Delete)
+   * Only the owner can delete their own listing, and only if not SOLD/EXCHANGED
+   */
+  async remove(id: string, userId: string, role?: Role) {
+    const listing = await this.prisma.listing.findUnique({
+      where: { id },
+      include: { owner: true, files: true },
+    });
+
+    if (!listing) throw new ApiError(HttpStatus.NOT_FOUND, 'Listing not found');
+    if (role === Role.CUSTOMER && listing.owner.userId !== userId) {
+      throw new ApiError(HttpStatus.FORBIDDEN, 'You can only delete your own listings');
+    }
+
+    // 1. Condition: Cannot delete if already SOLD or EXCHANGED
+    if (listing.status === 'SOLD' || listing.status === 'EXCHANGED') {
+      throw new ApiError(
+        HttpStatus.BAD_REQUEST,
+        `Cannot delete a listing that is already ${listing.status}`,
+      );
+    }
+
+    return await this.prisma.$transaction(async (tx) => {
+      // 2. Cascade Delete: Files from Storage
+      if (listing.files && listing.files.length > 0) {
+        for (const file of listing.files) {
+          if (file.url && file.key) {
+            await this.fileService.autoDelete(file.url, file.key);
+          }
+        }
+      }
+
+      // 3. Cascade Delete: Related Database Records
+      // We explicitly delete these to ensure a clean purge across models
+      await tx.watchlist.deleteMany({ where: { listingId: id } });
+      await tx.starredListing.deleteMany({ where: { listingId: id } });
+      await tx.listingShare.deleteMany({ where: { listingId: id } });
+      await tx.collectionListing.deleteMany({ where: { listingId: id } });
+      await tx.priceCalculationLog.deleteMany({ where: { listingId: id } });
+      await tx.listingHistory.deleteMany({ where: { listingId: id } });
+      await tx.file.deleteMany({ where: { listingId: id } });
+
+      // 4. Finally delete the listing itself
+      return await tx.listing.delete({
+        where: { id },
+      });
+    });
   }
 }
