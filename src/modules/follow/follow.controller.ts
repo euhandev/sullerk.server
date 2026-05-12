@@ -20,9 +20,9 @@ export class FollowController {
     });
   }
 
-  @Get('followers/:userId')
-  async getFollowers(@Param('userId') userId: string, @Query() query: any) {
-    const result = await this.followService.getFollowers(userId, query);
+  @Get('followers/:customerId')
+  async getFollowers(@Param('customerId') customerId: string, @Query() query: any) {
+    const result = await this.followService.getFollowers(customerId, query);
     return ResponseService.formatResponse({
       statusCode: HttpStatus.OK,
       message: 'Followers retrieved successfully',
@@ -31,9 +31,9 @@ export class FollowController {
     });
   }
 
-  @Get('following/:userId')
-  async getFollowing(@Param('userId') userId: string, @Query() query: any) {
-    const result = await this.followService.getFollowing(userId, query);
+  @Get('following/:customerId')
+  async getFollowing(@Param('customerId') customerId: string, @Query() query: any) {
+    const result = await this.followService.getFollowing(customerId, query);
     return ResponseService.formatResponse({
       statusCode: HttpStatus.OK,
       message: 'Following retrieved successfully',
@@ -42,13 +42,13 @@ export class FollowController {
     });
   }
 
-  @Get('mutual/:targetUserId')
+  @Get('mutual/:targetCustomerId')
   async getMutualFollows(
-    @Param('targetUserId') targetUserId: string,
+    @Param('targetCustomerId') targetCustomerId: string,
     @Req() req: any,
     @Query() query: any,
   ) {
-    const result = await this.followService.getMutualFollows(req.user.id, targetUserId, query);
+    const result = await this.followService.getMutualFollows(req.user.id, targetCustomerId, query);
     return ResponseService.formatResponse({
       statusCode: HttpStatus.OK,
       message: 'Mutual followers retrieved successfully',
@@ -57,9 +57,9 @@ export class FollowController {
     });
   }
 
-  @Get('counts/:userId')
-  async getCounts(@Param('userId') userId: string) {
-    const result = await this.followService.getFollowCounts(userId);
+  @Get('counts/:customerId')
+  async getCounts(@Param('customerId') customerId: string) {
+    const result = await this.followService.getFollowCounts(customerId);
     return ResponseService.formatResponse({
       statusCode: HttpStatus.OK,
       message: 'Follow counts retrieved successfully',

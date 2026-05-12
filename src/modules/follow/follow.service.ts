@@ -4,7 +4,7 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import QueryBuilder from '@/utils/query_builder';
 import { NotificationService } from '../notification/notification.service';
 import { NotificationType } from '@prisma/client';
-import { followInclude } from './follow.constant';
+import { followerInclude, followInclude, followingInclude } from './follow.constant';
 
 @Injectable()
 export class FollowService {
@@ -63,15 +63,16 @@ export class FollowService {
     }
   }
 
-  async getFollowers(targetUserId: string, query: Record<string, any>) {
-    const customer = await this.prisma.customer.findUnique({ where: { userId: targetUserId } });
-    if (!customer) throw new ApiError(HttpStatus.NOT_FOUND, 'User profile not found');
+  async getFollowers(customerId: string, query: Record<string, any>) {
+    const customer = await this.prisma.customer.findUnique({ where: { id: customerId } });
+
+    if (!customer) throw new ApiError(HttpStatus.NOT_FOUND, 'Customer profile not found');
 
     const queryBuilder = new QueryBuilder(query, this.prisma.follow);
     const result = await queryBuilder
       .paginate()
       .sort()
-      .include(followInclude)
+      .include(followerInclude)
       .rawFilter({ followingId: customer.id })
       .execute();
 
@@ -79,15 +80,15 @@ export class FollowService {
     return { meta, data: result };
   }
 
-  async getFollowing(targetUserId: string, query: Record<string, any>) {
-    const customer = await this.prisma.customer.findUnique({ where: { userId: targetUserId } });
-    if (!customer) throw new ApiError(HttpStatus.NOT_FOUND, 'User profile not found');
+  async getFollowing(customerId: string, query: Record<string, any>) {
+    const customer = await this.prisma.customer.findUnique({ where: { id: customerId } });
+    if (!customer) throw new ApiError(HttpStatus.NOT_FOUND, 'Customer profile not found');
 
     const queryBuilder = new QueryBuilder(query, this.prisma.follow);
     const result = await queryBuilder
       .paginate()
       .sort()
-      .include(followInclude)
+      .include(followingInclude)
       .rawFilter({ followerId: customer.id })
       .execute();
 
@@ -95,8 +96,8 @@ export class FollowService {
     return { meta, data: result };
   }
 
-  async getFollowCounts(userId: string) {
-    const customer = await this.prisma.customer.findUnique({ where: { userId: userId } });
+  async getFollowCounts(customerId: string) {
+    const customer = await this.prisma.customer.findUnique({ where: { id: customerId } });
     if (!customer) return { followers: 0, following: 0 };
 
     const [followers, following] = await Promise.all([
@@ -107,14 +108,20 @@ export class FollowService {
     return { followers, following };
   }
 
-  async getMutualFollows(userId: string, targetUserId: string, query: Record<string, any>) {
-    const myCustomer = await this.prisma.customer.findUnique({ where: { userId } });
+  async getMutualFollows(
+    currentUserId: string,
+    targetCustomerId: string,
+    query: Record<string, any>,
+  ) {
+    const myCustomer = await this.prisma.customer.findUnique({
+      where: { userId: currentUserId },
+    });
     const targetCustomer = await this.prisma.customer.findUnique({
-      where: { userId: targetUserId },
+      where: { id: targetCustomerId },
     });
 
     if (!myCustomer || !targetCustomer)
-      throw new ApiError(HttpStatus.NOT_FOUND, 'User profile not found');
+      throw new ApiError(HttpStatus.NOT_FOUND, 'Customer profile not found');
 
     // Get IDs of people I follow
     const myFollowing = await this.prisma.follow.findMany({
@@ -140,15 +147,17 @@ export class FollowService {
   }
 
   private async resolveTargetCustomer(identifier: string) {
-    const customer = await this.prisma.customer.findUnique({
-      where: { id: identifier.length === 24 ? identifier : undefined },
-    });
-    if (customer) return customer;
+    // Try to find directly by customer ID
+    if (identifier.length === 24) {
+      const customer = await this.prisma.customer.findUnique({
+        where: { id: identifier },
+      });
+      if (customer) return customer;
+    }
 
+    // Fallback: try to find by username
     const user = await this.prisma.user.findFirst({
-      where: {
-        OR: [{ id: identifier.length === 24 ? identifier : undefined }, { username: identifier }],
-      },
+      where: { username: identifier },
       include: { customer: true },
     });
 

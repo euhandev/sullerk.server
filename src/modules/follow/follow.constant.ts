@@ -24,3 +24,31 @@ export const followInclude: Prisma.FollowInclude = {
     },
   },
 };
+
+export const followerInclude: Prisma.FollowInclude = {
+  follower: {
+    include: {
+      user: {
+        select: {
+          id: true,
+          username: true,
+          avatar: true,
+        },
+      },
+    },
+  },
+};
+
+export const followingInclude: Prisma.FollowInclude = {
+  following: {
+    include: {
+      user: {
+        select: {
+          id: true,
+          username: true,
+          avatar: true,
+        },
+      },
+    },
+  },
+};

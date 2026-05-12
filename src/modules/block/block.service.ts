@@ -60,7 +60,7 @@ export class BlockService {
 
   async getBlockedUsers(userId: string, query: Record<string, any>) {
     const customer = await this.prisma.customer.findUnique({ where: { userId } });
-    if (!customer) throw new ApiError(HttpStatus.NOT_FOUND, 'User profile not found');
+    if (!customer) throw new ApiError(HttpStatus.NOT_FOUND, 'Customer profile not found');
 
     const queryBuilder = new QueryBuilder(query, this.prisma.blockedUser);
     const result = await queryBuilder
@@ -74,11 +74,9 @@ export class BlockService {
     return { meta, data: result };
   }
 
-  async isBlocked(userId: string, targetUserId: string) {
-    const [me, target] = await Promise.all([
-      this.prisma.customer.findUnique({ where: { userId } }),
-      this.prisma.customer.findUnique({ where: { userId: targetUserId } }),
-    ]);
+  async isBlocked(currentUserId: string, targetCustomerId: string) {
+    const me = await this.prisma.customer.findUnique({ where: { userId: currentUserId } });
+    const target = await this.prisma.customer.findUnique({ where: { id: targetCustomerId } });
 
     if (!me || !target) return { blockedByMe: false, blockedByThem: false };
 
@@ -98,15 +96,17 @@ export class BlockService {
   }
 
   private async resolveTargetCustomer(identifier: string) {
-    const customer = await this.prisma.customer.findUnique({
-      where: { id: identifier.length === 24 ? identifier : undefined },
-    });
-    if (customer) return customer;
+    // Try to find directly by customer ID
+    if (identifier.length === 24) {
+      const customer = await this.prisma.customer.findUnique({
+        where: { id: identifier },
+      });
+      if (customer) return customer;
+    }
 
+    // Fallback: try to find by username
     const user = await this.prisma.user.findFirst({
-      where: {
-        OR: [{ id: identifier.length === 24 ? identifier : undefined }, { username: identifier }],
-      },
+      where: { username: identifier },
       include: { customer: true },
     });
 

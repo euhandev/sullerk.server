@@ -32,10 +32,10 @@ export class BlockController {
     });
   }
 
-  @Get('check/:targetUserId')
+  @Get('check/:targetCustomerId')
   @Roles(Role.CUSTOMER, Role.ADMIN, Role.SUPER_ADMIN)
-  async checkBlock(@Param('targetUserId') targetUserId: string, @Req() req: any) {
-    const result = await this.blockService.isBlocked(req.user.id, targetUserId);
+  async checkBlock(@Param('targetCustomerId') targetCustomerId: string, @Req() req: any) {
+    const result = await this.blockService.isBlocked(req.user.id, targetCustomerId);
     return ResponseService.formatResponse({
       statusCode: HttpStatus.OK,
       message: 'Block status checked successfully',

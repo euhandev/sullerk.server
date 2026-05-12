@@ -1592,3 +1592,473 @@ enum CalculationTrigger {
 //   isPriceLocked           Boolean       @default(false)
 //   sellerAdjustmentPercent Float?        // % deviation applied by seller (within range)
 // */
+
+
+// =============================================================================
+// MULTI-SPORT COLLECTIBLES PLATFORM — Prisma Schema (MongoDB)
+// =============================================================================
+// All IDs use MongoDB ObjectId:
+//   @id @default(auto()) @map("_id") @db.ObjectId
+// All foreign-key scalar fields annotated with @db.ObjectId
+// No onDelete: Cascade — MongoDB does not support referential actions in Prisma
+// No @@unique compound on non-embedded fields — use @unique on scalar instead
+// @@index is supported and maps to MongoDB collection indexes
+// =============================================================================
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ENUMS
+// ─────────────────────────────────────────────────────────────────────────────
+
+enum Sport {
+  FOOTBALL
+  BASKETBALL
+  CRICKET
+  RUGBY_UNION
+  RUGBY_LEAGUE
+  TENNIS
+  BOXING
+  MMA
+  F1
+  DARTS
+  BASEBALL
+  GOLF
+  ATHLETICS
+}
+
+enum PlayerStatus {
+  RISING
+  HYPE
+  VOLATILE
+  BALANCED
+}
+
+enum CollectibleCondition {
+  MINT
+  NEAR_MINT
+  EXCELLENT
+  GOOD
+  FAIR
+  POOR
+}
+
+enum TradeStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CORE: PLAYER
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Player {
+  id        String       @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  name      String
+  initials  String
+  slug      String       @unique
+  sport     Sport
+  status    PlayerStatus @default(BALANCED)
+
+  teamId    String?      @db.ObjectId
+  team      Team?        @relation(fields: [teamId], references: [id])
+
+  // Sport-specific aggregate profiles (1-to-1, enforced at app layer)
+  footballProfile   FootballProfile?
+  basketballProfile BasketballProfile?
+  cricketProfile    CricketProfile?
+  rugbyProfile      RugbyProfile?
+  tennisProfile     TennisProfile?
+  boxingMmaProfile  BoxingMmaProfile?
+  f1Profile         F1Profile?
+  dartsProfile      DartsProfile?
+  baseballProfile   BaseballProfile?
+  golfProfile       GolfProfile?
+  athleticsProfile  AthleticsProfile?
+
+  // Raw per-game log
+  performanceEntries PerformanceEntry[]
+
+  // Pre-computed cumulative graph data
+  statTimeline StatTimeline[]
+
+  @@index([sport])
+  @@index([status])
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TEAM / ORGANISATION
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Team {
+  id      String  @id @default(auto()) @map("_id") @db.ObjectId
+  name    String
+  sport   Sport
+  country String?
+  logo    String?
+
+  players Player[]
+
+  @@index([sport])
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PERFORMANCE ENTRY  (raw, per-game/event — source of truth)
+//
+// `metrics` JSON examples per sport:
+//   Football:   { goals: 2, assists: 1, minutesPlayed: 90, yellowCards: 0,
+//                 shots: 4, keyPasses: 3, cleanSheet: false }
+//   Basketball: { points: 32, rebounds: 8, assists: 10, steals: 2, blocks: 1 }
+//   Tennis:     { setsWon: 2, setsLost: 0, aces: 14, doubleFaults: 2,
+//                 firstServePct: 68, breakPointsConverted: 3 }
+//   F1:         { gridPosition: 3, finishPosition: 1, pointsScored: 25,
+//                 fastestLap: true, dnf: false, overtakes: 4 }
+//   Golf:       { score: -4, fairwaysHit: 11, gir: 14, putts: 28 }
+// ─────────────────────────────────────────────────────────────────────────────
+
+model PerformanceEntry {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+
+  playerId  String   @db.ObjectId
+  player    Player   @relation(fields: [playerId], references: [id])
+
+  // Game number within the season — X-axis label (G1, G2, G3...)
+  sequenceNumber Int
+
+  season    String   // "2024/25" | "2025" | "Season 3"
+  eventName String   // "vs Arsenal (PL)" | "Bahrain GP"
+  eventDate DateTime
+  sport     Sport
+
+  win       Boolean?
+  draw      Boolean?
+
+  // Raw single-game numbers — shape validated at app layer with Zod
+  metrics   Json     @default("{}")
+
+  // Back-reference to the StatTimeline point this entry generated
+  timelinePoint StatTimeline?
+
+  @@unique([playerId, season, sequenceNumber])
+  @@index([playerId, season])
+  @@index([sport])
+  @@index([eventDate])
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// STAT TIMELINE  ★ THE GRAPH TABLE ★
+//
+// Pre-computed cumulative totals after each game.
+// One row = one data point on the line graph X-axis.
+//
+// Graph query:
+//   prisma.statTimeline.findMany({
+//     where: { playerId, season: "2024/25" },
+//     orderBy: { sequenceNumber: "asc" }
+//   })
+//
+// Frontend usage:
+//   const goalsLine   = rows.map(r => r.cumulativeStats.goals)
+//   const assistsLine = rows.map(r => r.cumulativeStats.assists)
+//   const winsLine    = rows.map(r => r.cumulativeStats.wins)
+//
+// Sport-specific cumulativeStats keys:
+//   Football:   { goals, assists, cleanSheets, wins, draws, losses, yellowCards }
+//   Basketball: { points, rebounds, assists, steals, blocks, wins, losses }
+//   Tennis:     { matchesWon, matchesLost, setsWon, setsLost, aces }
+//   F1:         { wins, podiums, points, fastestLaps, polePositions, dnfs }
+//   Cricket:    { runs, wickets, centuries, catches }
+//   Golf:       { wins, topTens, roundsUnderPar }
+//
+// deltaStats = raw numbers from this single game (for hover tooltips)
+// ─────────────────────────────────────────────────────────────────────────────
+
+model StatTimeline {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt      DateTime @default(now())
+
+  playerId       String   @db.ObjectId
+  player         Player   @relation(fields: [playerId], references: [id])
+
+  performanceEntryId String           @unique @db.ObjectId
+  performanceEntry   PerformanceEntry @relation(fields: [performanceEntryId], references: [id])
+
+  season         String
+  sequenceNumber Int
+  eventLabel     String   // "G5" | "R3" | "M12" — shown on X axis
+  eventDate      DateTime
+  sport          Sport
+
+  // Cumulative totals up to and including this game — what the lines plot
+  cumulativeStats Json @default("{}")
+
+  // Single-game delta — what changed this game (hover tooltip data)
+  deltaStats      Json @default("{}")
+
+  @@unique([playerId, season, sequenceNumber])
+  @@index([playerId, season])
+  @@index([sport])
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SPORT-SPECIFIC AGGREGATE PROFILES
+// Headline totals shown in player header cards (NOT for graphs).
+// ─────────────────────────────────────────────────────────────────────────────
+
+model FootballProfile {
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  playerId      String @unique @db.ObjectId
+  player        Player @relation(fields: [playerId], references: [id])
+
+  season        String?
+  goals         Int    @default(0)
+  assists       Int    @default(0)
+  shots         Int    @default(0)
+  shotsOnTarget Int    @default(0)
+  xG            Float  @default(0)
+  cleanSheets   Int    @default(0)
+  tackles       Int    @default(0)
+  interceptions Int    @default(0)
+  clearances    Int    @default(0)
+  yellowCards   Int    @default(0)
+  redCards      Int    @default(0)
+  wins          Int    @default(0)
+  draws         Int    @default(0)
+  losses        Int    @default(0)
+  passAccuracyPct Float?
+  keyPasses     Int    @default(0)
+  appearances   Int    @default(0)
+  minutesPlayed Int    @default(0)
+}
+
+model BasketballProfile {
+  id               String @id @default(auto()) @map("_id") @db.ObjectId
+  playerId         String @unique @db.ObjectId
+  player           Player @relation(fields: [playerId], references: [id])
+
+  season           String?
+  pointsPerGame    Float  @default(0)
+  reboundsPerGame  Float  @default(0)
+  assistsPerGame   Float  @default(0)
+  stealsPerGame    Float  @default(0)
+  blocksPerGame    Float  @default(0)
+  turnoversPerGame Float  @default(0)
+  fieldGoalPct     Float?
+  threePointPct    Float?
+  freeThrowPct     Float?
+  gamesPlayed      Int    @default(0)
+  wins             Int    @default(0)
+  losses           Int    @default(0)
+  minutesPerGame   Float?
+}
+
+model CricketProfile {
+  id                String @id @default(auto()) @map("_id") @db.ObjectId
+  playerId          String @unique @db.ObjectId
+  player            Player @relation(fields: [playerId], references: [id])
+
+  role              String  // "Batsman" | "Bowler" | "All-Rounder" | "Wicket-Keeper"
+  format            String? // "Test" | "ODI" | "T20"
+  season            String?
+
+  battingAverage    Float?
+  battingStrikeRate Float?
+  runs              Int    @default(0)
+  centuries         Int    @default(0)
+  halfCenturies     Int    @default(0)
+  highScore         Int?
+  fours             Int    @default(0)
+  sixes             Int    @default(0)
+  wickets           Int    @default(0)
+  bowlingAverage    Float?
+  economy           Float?
+  bowlingStrikeRate Float?
+  fiveWicketHauls   Int    @default(0)
+  catches           Int    @default(0)
+  stumpings         Int    @default(0)
+  innings           Int    @default(0)
+  matchesPlayed     Int    @default(0)
+}
+
+model RugbyProfile {
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  playerId      String @unique @db.ObjectId
+  player        Player @relation(fields: [playerId], references: [id])
+
+  rugbyType     String  // "UNION" | "LEAGUE"
+  position      String?
+  season        String?
+
+  tries         Int @default(0)
+  tryAssists    Int @default(0)
+  conversions   Int @default(0)
+  penalties     Int @default(0)
+  dropGoals     Int @default(0)
+  tackles       Int @default(0)
+  tacklesMissed Int @default(0)
+  carries       Int @default(0)
+  metresCarried Int @default(0)
+  linebreaks    Int @default(0)
+  turnoversWon  Int @default(0)
+  yellowCards   Int @default(0)
+  redCards      Int @default(0)
+  wins          Int @default(0)
+  losses        Int @default(0)
+  matchesPlayed Int @default(0)
+}
+
+model TennisProfile {
+  id                   String @id @default(auto()) @map("_id") @db.ObjectId
+  playerId             String @unique @db.ObjectId
+  player               Player @relation(fields: [playerId], references: [id])
+
+  worldRanking         Int?
+  surface              String?
+  season               String?
+
+  titlesCareer         Int    @default(0)
+  grandSlamTitles      Int    @default(0)
+  winRate              Float?
+  aces                 Int    @default(0)
+  doubleFaults         Int    @default(0)
+  firstServePct        Float?
+  breakPointsSaved     Float?
+  breakPointsConverted Float?
+  matchesWon           Int    @default(0)
+  matchesLost          Int    @default(0)
+  setsWon              Int    @default(0)
+  setsLost             Int    @default(0)
+}
+
+model BoxingMmaProfile {
+  id                    String @id @default(auto()) @map("_id") @db.ObjectId
+  playerId              String @unique @db.ObjectId
+  player                Player @relation(fields: [playerId], references: [id])
+
+  fightType             String  // "BOXING" | "MMA"
+  weightClass           String?
+  organisation          String?
+
+  wins                  Int    @default(0)
+  losses                Int    @default(0)
+  draws                 Int    @default(0)
+  noContests            Int    @default(0)
+  knockouts             Int    @default(0)
+  submissions           Int    @default(0)
+  decisions             Int    @default(0)
+  significantStrikesPct Float?
+  takedownAccuracy      Float?
+  currentStreak         Int    @default(0)
+  titleFights           Int    @default(0)
+  titleDefences         Int    @default(0)
+}
+
+model F1Profile {
+  id              String @id @default(auto()) @map("_id") @db.ObjectId
+  playerId        String @unique @db.ObjectId
+  player          Player @relation(fields: [playerId], references: [id])
+
+  constructorName String?
+  carNumber       Int?
+  season          String?
+
+  championships   Int    @default(0)
+  raceWins        Int    @default(0)
+  podiums         Int    @default(0)
+  polePositions   Int    @default(0)
+  fastestLaps     Int    @default(0)
+  pointsInSeason  Float  @default(0)
+  racesEntered    Int    @default(0)
+  dnfs            Int    @default(0)
+  currentStanding Int?
+}
+
+model DartsProfile {
+  id              String @id @default(auto()) @map("_id") @db.ObjectId
+  playerId        String @unique @db.ObjectId
+  player          Player @relation(fields: [playerId], references: [id])
+
+  pdcRanking      Int?
+  season          String?
+
+  averagePerLeg   Float?
+  checkoutPct     Float?
+  highestCheckout Int?
+  oneEighties     Int @default(0)
+  titlesCareer    Int @default(0)
+  worldTitles     Int @default(0)
+  legsWon         Int @default(0)
+  legsLost        Int @default(0)
+  matchesWon      Int @default(0)
+  matchesLost     Int @default(0)
+}
+
+model BaseballProfile {
+  id             String @id @default(auto()) @map("_id") @db.ObjectId
+  playerId       String @unique @db.ObjectId
+  player         Player @relation(fields: [playerId], references: [id])
+
+  position       String?
+  season         String?
+
+  battingAverage Float?
+  homeRuns       Int    @default(0)
+  rbis           Int    @default(0)
+  stolenBases    Int    @default(0)
+  onBasePct      Float?
+  sluggingPct    Float?
+  ops            Float?
+  era            Float?
+  wins           Int    @default(0)
+  losses         Int    @default(0)
+  strikeouts     Int    @default(0)
+  walks          Int    @default(0)
+  saves          Int    @default(0)
+  whip           Float?
+  gamesPlayed    Int    @default(0)
+}
+
+model GolfProfile {
+  id                 String @id @default(auto()) @map("_id") @db.ObjectId
+  playerId           String @unique @db.ObjectId
+  player             Player @relation(fields: [playerId], references: [id])
+
+  worldRanking       Int?
+  tourName           String?
+  season             String?
+
+  tourWins           Int    @default(0)
+  majorWins          Int    @default(0)
+  scoringAverage     Float?
+  drivingDistance    Float?
+  drivingAccuracy    Float?
+  greensInRegulation Float?
+  puttingAverage     Float?
+  scrambling         Float?
+  cutsMade           Int    @default(0)
+  topTens            Int    @default(0)
+  eventsPlayed       Int    @default(0)
+}
+
+model AthleticsProfile {
+  id                       String  @id @default(auto()) @map("_id") @db.ObjectId
+  playerId                 String  @unique @db.ObjectId
+  player                   Player  @relation(fields: [playerId], references: [id])
+
+  discipline               String  // "100m" | "Marathon" | "Long Jump" | "Javelin"
+  personalBest             String? // String: "9.58s" / "8.95m" / "2:01:39"
+  worldRecord              Boolean @default(false)
+  season                   String?
+
+  olympicGolds             Int @default(0)
+  olympicSilvers           Int @default(0)
+  olympicBronzes           Int @default(0)
+  worldChampionshipGolds   Int @default(0)
+  worldChampionshipSilvers Int @default(0)
+  worldChampionshipBronzes Int @default(0)
+  eventsEntered            Int @default(0)
+  podiums                  Int @default(0)
+}

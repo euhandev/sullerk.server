@@ -972,6 +972,371 @@ Table price_calculation_logs {
   createdAt DateTime [default: `now()`, not null]
 }
 
+Table Player {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  name String [not null]
+  initials String [not null]
+  slug String [unique, not null]
+  sport Sport [not null]
+  status PlayerStatus [not null, default: 'BALANCED']
+  teamId String
+  team Team
+  footballProfile FootballProfile
+  basketballProfile BasketballProfile
+  cricketProfile CricketProfile
+  rugbyProfile RugbyProfile
+  tennisProfile TennisProfile
+  boxingMmaProfile BoxingMmaProfile
+  f1Profile F1Profile
+  dartsProfile DartsProfile
+  baseballProfile BaseballProfile
+  golfProfile GolfProfile
+  athleticsProfile AthleticsProfile
+  performanceEntries PerformanceEntry [not null]
+  statTimeline StatTimeline [not null]
+  collectibles Collectible [not null]
+  priceHistory PriceHistory [not null]
+  marketSnapshot MarketSnapshot
+}
+
+Table Team {
+  id String [pk]
+  name String [not null]
+  sport Sport [not null]
+  country String
+  logo String
+  players Player [not null]
+}
+
+Table PerformanceEntry {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  playerId String [not null]
+  player Player [not null]
+  sequenceNumber Int [not null]
+  season String [not null]
+  eventName String [not null]
+  eventDate DateTime [not null]
+  sport Sport [not null]
+  win Boolean
+  draw Boolean
+  metrics Json [not null, default: '{}']
+  timelinePoint StatTimeline
+
+  indexes {
+    (playerId, season, sequenceNumber) [unique]
+  }
+}
+
+Table StatTimeline {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  playerId String [not null]
+  player Player [not null]
+  performanceEntryId String [unique, not null]
+  performanceEntry PerformanceEntry [not null]
+  season String [not null]
+  sequenceNumber Int [not null]
+  eventLabel String [not null]
+  eventDate DateTime [not null]
+  sport Sport [not null]
+  cumulativeStats Json [not null, default: '{}']
+  deltaStats Json [not null, default: '{}']
+
+  indexes {
+    (playerId, season, sequenceNumber) [unique]
+  }
+}
+
+Table FootballProfile {
+  id String [pk]
+  playerId String [unique, not null]
+  player Player [not null]
+  season String
+  goals Int [not null, default: 0]
+  assists Int [not null, default: 0]
+  shots Int [not null, default: 0]
+  shotsOnTarget Int [not null, default: 0]
+  xG Float [not null, default: 0]
+  cleanSheets Int [not null, default: 0]
+  tackles Int [not null, default: 0]
+  interceptions Int [not null, default: 0]
+  clearances Int [not null, default: 0]
+  yellowCards Int [not null, default: 0]
+  redCards Int [not null, default: 0]
+  wins Int [not null, default: 0]
+  draws Int [not null, default: 0]
+  losses Int [not null, default: 0]
+  passAccuracyPct Float
+  keyPasses Int [not null, default: 0]
+  appearances Int [not null, default: 0]
+  minutesPlayed Int [not null, default: 0]
+}
+
+Table BasketballProfile {
+  id String [pk]
+  playerId String [unique, not null]
+  player Player [not null]
+  season String
+  pointsPerGame Float [not null, default: 0]
+  reboundsPerGame Float [not null, default: 0]
+  assistsPerGame Float [not null, default: 0]
+  stealsPerGame Float [not null, default: 0]
+  blocksPerGame Float [not null, default: 0]
+  turnoversPerGame Float [not null, default: 0]
+  fieldGoalPct Float
+  threePointPct Float
+  freeThrowPct Float
+  gamesPlayed Int [not null, default: 0]
+  wins Int [not null, default: 0]
+  losses Int [not null, default: 0]
+  minutesPerGame Float
+}
+
+Table CricketProfile {
+  id String [pk]
+  playerId String [unique, not null]
+  player Player [not null]
+  role String [not null]
+  format String
+  season String
+  battingAverage Float
+  battingStrikeRate Float
+  runs Int [not null, default: 0]
+  centuries Int [not null, default: 0]
+  halfCenturies Int [not null, default: 0]
+  highScore Int
+  fours Int [not null, default: 0]
+  sixes Int [not null, default: 0]
+  wickets Int [not null, default: 0]
+  bowlingAverage Float
+  economy Float
+  bowlingStrikeRate Float
+  fiveWicketHauls Int [not null, default: 0]
+  catches Int [not null, default: 0]
+  stumpings Int [not null, default: 0]
+  innings Int [not null, default: 0]
+  matchesPlayed Int [not null, default: 0]
+}
+
+Table RugbyProfile {
+  id String [pk]
+  playerId String [unique, not null]
+  player Player [not null]
+  rugbyType String [not null]
+  position String
+  season String
+  tries Int [not null, default: 0]
+  tryAssists Int [not null, default: 0]
+  conversions Int [not null, default: 0]
+  penalties Int [not null, default: 0]
+  dropGoals Int [not null, default: 0]
+  tackles Int [not null, default: 0]
+  tacklesMissed Int [not null, default: 0]
+  carries Int [not null, default: 0]
+  metresCarried Int [not null, default: 0]
+  linebreaks Int [not null, default: 0]
+  turnoversWon Int [not null, default: 0]
+  yellowCards Int [not null, default: 0]
+  redCards Int [not null, default: 0]
+  wins Int [not null, default: 0]
+  losses Int [not null, default: 0]
+  matchesPlayed Int [not null, default: 0]
+}
+
+Table TennisProfile {
+  id String [pk]
+  playerId String [unique, not null]
+  player Player [not null]
+  worldRanking Int
+  surface String
+  season String
+  titlesCareer Int [not null, default: 0]
+  grandSlamTitles Int [not null, default: 0]
+  winRate Float
+  aces Int [not null, default: 0]
+  doubleFaults Int [not null, default: 0]
+  firstServePct Float
+  breakPointsSaved Float
+  breakPointsConverted Float
+  matchesWon Int [not null, default: 0]
+  matchesLost Int [not null, default: 0]
+  setsWon Int [not null, default: 0]
+  setsLost Int [not null, default: 0]
+}
+
+Table BoxingMmaProfile {
+  id String [pk]
+  playerId String [unique, not null]
+  player Player [not null]
+  fightType String [not null]
+  weightClass String
+  organisation String
+  wins Int [not null, default: 0]
+  losses Int [not null, default: 0]
+  draws Int [not null, default: 0]
+  noContests Int [not null, default: 0]
+  knockouts Int [not null, default: 0]
+  submissions Int [not null, default: 0]
+  decisions Int [not null, default: 0]
+  significantStrikesPct Float
+  takedownAccuracy Float
+  currentStreak Int [not null, default: 0]
+  titleFights Int [not null, default: 0]
+  titleDefences Int [not null, default: 0]
+}
+
+Table F1Profile {
+  id String [pk]
+  playerId String [unique, not null]
+  player Player [not null]
+  constructorName String
+  carNumber Int
+  season String
+  championships Int [not null, default: 0]
+  raceWins Int [not null, default: 0]
+  podiums Int [not null, default: 0]
+  polePositions Int [not null, default: 0]
+  fastestLaps Int [not null, default: 0]
+  pointsInSeason Float [not null, default: 0]
+  racesEntered Int [not null, default: 0]
+  dnfs Int [not null, default: 0]
+  currentStanding Int
+}
+
+Table DartsProfile {
+  id String [pk]
+  playerId String [unique, not null]
+  player Player [not null]
+  pdcRanking Int
+  season String
+  averagePerLeg Float
+  checkoutPct Float
+  highestCheckout Int
+  oneEighties Int [not null, default: 0]
+  titlesCareer Int [not null, default: 0]
+  worldTitles Int [not null, default: 0]
+  legsWon Int [not null, default: 0]
+  legsLost Int [not null, default: 0]
+  matchesWon Int [not null, default: 0]
+  matchesLost Int [not null, default: 0]
+}
+
+Table BaseballProfile {
+  id String [pk]
+  playerId String [unique, not null]
+  player Player [not null]
+  position String
+  season String
+  battingAverage Float
+  homeRuns Int [not null, default: 0]
+  rbis Int [not null, default: 0]
+  stolenBases Int [not null, default: 0]
+  onBasePct Float
+  sluggingPct Float
+  ops Float
+  era Float
+  wins Int [not null, default: 0]
+  losses Int [not null, default: 0]
+  strikeouts Int [not null, default: 0]
+  walks Int [not null, default: 0]
+  saves Int [not null, default: 0]
+  whip Float
+  gamesPlayed Int [not null, default: 0]
+}
+
+Table GolfProfile {
+  id String [pk]
+  playerId String [unique, not null]
+  player Player [not null]
+  worldRanking Int
+  tourName String
+  season String
+  tourWins Int [not null, default: 0]
+  majorWins Int [not null, default: 0]
+  scoringAverage Float
+  drivingDistance Float
+  drivingAccuracy Float
+  greensInRegulation Float
+  puttingAverage Float
+  scrambling Float
+  cutsMade Int [not null, default: 0]
+  topTens Int [not null, default: 0]
+  eventsPlayed Int [not null, default: 0]
+}
+
+Table AthleticsProfile {
+  id String [pk]
+  playerId String [unique, not null]
+  player Player [not null]
+  discipline String [not null]
+  personalBest String
+  worldRecord Boolean [not null, default: false]
+  season String
+  olympicGolds Int [not null, default: 0]
+  olympicSilvers Int [not null, default: 0]
+  olympicBronzes Int [not null, default: 0]
+  worldChampionshipGolds Int [not null, default: 0]
+  worldChampionshipSilvers Int [not null, default: 0]
+  worldChampionshipBronzes Int [not null, default: 0]
+  eventsEntered Int [not null, default: 0]
+  podiums Int [not null, default: 0]
+}
+
+Table Collectible {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  playerId String [not null]
+  player Player [not null]
+  name String [not null]
+  description String
+  condition CollectibleCondition [not null, default: 'MINT']
+  pricePence Int [not null]
+  imageUrl String
+  editionSize Int
+  editionNumber Int
+  trades Trade [not null]
+}
+
+Table Trade {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  collectibleId String [not null]
+  collectible Collectible [not null]
+  sellerId String [not null]
+  buyerId String [not null]
+  pricePence Int [not null]
+  status TradeStatus [not null, default: 'PENDING']
+}
+
+Table MarketSnapshot {
+  id String [pk]
+  updatedAt DateTime [not null]
+  playerId String [unique, not null]
+  player Player [not null]
+  weeklyChangePct Float [not null, default: 0]
+  monthlyChangePct Float [not null, default: 0]
+  weeklyVolume Int [not null, default: 0]
+  monthlyVolume Int [not null, default: 0]
+  totalItems Int [not null, default: 0]
+  topCollectibleName String
+  topCollectiblePrice Int
+  sparklineData Int[] [not null]
+  status PlayerStatus [not null, default: 'BALANCED']
+}
+
+Table PriceHistory {
+  id String [pk]
+  recordedAt DateTime [default: `now()`, not null]
+  playerId String [not null]
+  player Player [not null]
+  pricePence Int [not null]
+  period String [not null]
+}
+
 Enum FavSport {
   FOOTBALL
   BASKETBALL
@@ -1361,6 +1726,44 @@ Enum CalculationTrigger {
   CONFIG_UPDATE
 }
 
+Enum Sport {
+  FOOTBALL
+  BASKETBALL
+  CRICKET
+  RUGBY_UNION
+  RUGBY_LEAGUE
+  TENNIS
+  BOXING
+  MMA
+  F1
+  DARTS
+  BASEBALL
+  GOLF
+  ATHLETICS
+}
+
+Enum PlayerStatus {
+  RISING
+  HYPE
+  VOLATILE
+  BALANCED
+}
+
+Enum CollectibleCondition {
+  MINT
+  NEAR_MINT
+  EXCELLENT
+  GOOD
+  FAIR
+  POOR
+}
+
+Enum TradeStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+}
+
 Ref: admins.userId - users.id
 
 Ref: customers.userId - users.id
@@ -1554,3 +1957,41 @@ Ref: api_performance_rules.configId > price_engine_configs.id [delete: Cascade]
 Ref: price_calculation_logs.listingId > listings.id [delete: Set Null]
 
 Ref: price_calculation_logs.configId > price_engine_configs.id
+
+Ref: Player.teamId > Team.id
+
+Ref: PerformanceEntry.playerId > Player.id
+
+Ref: StatTimeline.playerId > Player.id
+
+Ref: StatTimeline.performanceEntryId - PerformanceEntry.id
+
+Ref: FootballProfile.playerId - Player.id
+
+Ref: BasketballProfile.playerId - Player.id
+
+Ref: CricketProfile.playerId - Player.id
+
+Ref: RugbyProfile.playerId - Player.id
+
+Ref: TennisProfile.playerId - Player.id
+
+Ref: BoxingMmaProfile.playerId - Player.id
+
+Ref: F1Profile.playerId - Player.id
+
+Ref: DartsProfile.playerId - Player.id
+
+Ref: BaseballProfile.playerId - Player.id
+
+Ref: GolfProfile.playerId - Player.id
+
+Ref: AthleticsProfile.playerId - Player.id
+
+Ref: Collectible.playerId > Player.id
+
+Ref: Trade.collectibleId > Collectible.id
+
+Ref: MarketSnapshot.playerId - Player.id
+
+Ref: PriceHistory.playerId > Player.id
