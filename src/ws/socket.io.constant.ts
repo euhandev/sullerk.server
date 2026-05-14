@@ -6,8 +6,11 @@ export const SocketEvents = {
   JOIN_ROOM: 'joinRoom',
   LEAVE_ROOM: 'leaveRoom',
   MESSAGE: 'message',
+  EDIT_MESSAGE: 'editMessage',
+  DELETE_MESSAGE: 'deleteMessage',
   FETCH_CHATS: 'fetchChats',
   MESSAGE_LIST: 'messageList',
+  MARK_READ: 'markRead',
 
   // Output Events (Emit)
   STATUS: 'status',
@@ -17,4 +20,5 @@ export const SocketEvents = {
   USER_JOINED: 'room:userJoined',
   LEFT_ROOM: 'leftRoom',
   USER_LEFT: 'room:userLeft',
+  MESSAGE_LIST_UPDATE: 'messageList:update',
 };

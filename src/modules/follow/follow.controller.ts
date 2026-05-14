@@ -57,6 +57,17 @@ export class FollowController {
     });
   }
 
+  @Get('is-followed/:targetCustomerId')
+  @Roles(Role.CUSTOMER, Role.ADMIN, Role.SUPER_ADMIN)
+  async isFollowed(@Param('targetCustomerId') targetCustomerId: string, @Req() req: any) {
+    const result = await this.followService.isFollowed(req.user.id, targetCustomerId);
+    return ResponseService.formatResponse({
+      statusCode: HttpStatus.OK,
+      message: 'Following status retrieved successfully',
+      data: result,
+    });
+  }
+
   @Get('counts/:customerId')
   async getCounts(@Param('customerId') customerId: string) {
     const result = await this.followService.getFollowCounts(customerId);

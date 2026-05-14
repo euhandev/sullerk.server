@@ -135,22 +135,41 @@ export class RoomService {
 
     const meta = await queryBuilder.countTotal();
 
-    // Now fetch unread counts per room
+    // Now fetch unread counts per room using lastReadAt
     const roomIds = result.map((room: any) => room.id);
 
-    const unreadCounts = await this.prisma.chat.groupBy({
-      by: ['roomId'],
-      where: {
-        roomId: { in: roomIds },
-        // read: false, // Ensure this exists in your Chat schema if you use it
-        senderId: { not: user?.id },
-      },
-      _count: { id: true },
+    // Get the current user's lastReadAt per room
+    const participantData = await this.prisma.roomParticipant.findMany({
+      where: { userId: user?.id, roomId: { in: roomIds } },
+      select: { roomId: true, lastReadAt: true },
     });
+
+    const lastReadMap = participantData.reduce(
+      (acc, item) => {
+        acc[item.roomId] = item.lastReadAt;
+        return acc;
+      },
+      {} as Record<string, Date | null>,
+    );
+
+    // Count unread messages per room (messages after lastReadAt, not from current user)
+    const unreadCounts = await Promise.all(
+      roomIds.map(async (roomId: string) => {
+        const lastReadAt = lastReadMap[roomId];
+        const count = await this.prisma.chat.count({
+          where: {
+            roomId,
+            senderId: { not: user?.id },
+            ...(lastReadAt ? { createdAt: { gt: lastReadAt } } : {}),
+          },
+        });
+        return { roomId, count };
+      }),
+    );
 
     const unreadMap = unreadCounts.reduce(
       (acc, item) => {
-        acc[item.roomId] = item._count.id;
+        acc[item.roomId] = item.count;
         return acc;
       },
       {} as Record<string, number>,

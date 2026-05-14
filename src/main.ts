@@ -48,6 +48,7 @@ async function bootstrap() {
       'http://localhost:5173',
       'http://127.0.0.1:5173',
       'https://keepsake-memorabilia.vercel.app',
+      'https://dazzling-basbousa-8c0b5a.netlify.app',
     ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],

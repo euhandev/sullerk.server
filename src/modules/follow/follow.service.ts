@@ -146,6 +146,27 @@ export class FollowService {
     return { meta, data: result };
   }
 
+  async isFollowed(currentUserId: string, targetCustomerId: string) {
+    const me = await this.prisma.customer.findUnique({ where: { userId: currentUserId } });
+    const target = await this.prisma.customer.findUnique({ where: { id: targetCustomerId } });
+
+    if (!me || !target) return { followingMe: false, followingYou: false };
+
+    const [followingMe, followingYou] = await Promise.all([
+      this.prisma.follow.findUnique({
+        where: { followerId_followingId: { followerId: me.id, followingId: target.id } },
+      }),
+      this.prisma.follow.findUnique({
+        where: { followerId_followingId: { followerId: target.id, followingId: me.id } },
+      }),
+    ]);
+
+    return {
+      followingMe: !!followingMe,
+      followingYou: !!followingYou,
+    };
+  }
+
   private async resolveTargetCustomer(identifier: string) {
     // Try to find directly by customer ID
     if (identifier.length === 24) {

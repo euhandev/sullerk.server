@@ -111,7 +111,7 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
   @SubscribeMessage(SocketEvents.DIRECT_MESSAGE)
   async handleDirectMessage(
     @MessageBody()
-    payload: { receiverId: string; message: string; images?: string[] },
+    payload: { receiverId: string; message: string; images?: string[]; replyToId?: string },
     @ConnectedSocket() socket: Socket,
   ) {
     const senderId = socket.data.userId as string;
@@ -171,10 +171,14 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
             roomId: room.id,
             message,
             type: resolvedChatType,
+            replyToId: payload.replyToId || undefined,
           },
           include: {
             sender: { select: { id: true, username: true, avatar: true } },
             attachments: true,
+            replyTo: {
+              include: { sender: { select: { id: true, username: true, avatar: true } } },
+            },
           },
         });
 
@@ -203,6 +207,9 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
           include: {
             sender: { select: { id: true, username: true, avatar: true } },
             attachments: true,
+            replyTo: {
+              include: { sender: { select: { id: true, username: true, avatar: true } } },
+            },
           },
         });
       });
@@ -225,6 +232,11 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
           actionUrl: `/rooms/${room.id}`,
           data: { senderId, roomId: room.id },
         });
+      }
+
+      // Live update message list for ALL participants
+      for (const p of room.participants) {
+        await this.pushMessageListUpdate(p.userId);
       }
     } catch (error) {
       console.error('DM processing failed:', error);
@@ -322,17 +334,21 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
   // -----------------------------
   @SubscribeMessage(SocketEvents.MESSAGE)
   async handleMessage(
-    @MessageBody() payload: { roomId: string; message: string },
+    @MessageBody() payload: { roomId: string; message: string; replyToId?: string },
     @ConnectedSocket() socket: Socket,
   ) {
     const userId = socket.data.userId as string;
-    const { roomId, message } = payload;
+    const { roomId, message, replyToId } = payload;
     if (!userId || !roomId || !message) return;
 
     const chat = await this.prisma.$transaction(async (tx) => {
       const newChat = await tx.chat.create({
-        data: { senderId: userId, roomId, message },
-        include: { sender: { select: { id: true, username: true, avatar: true } } },
+        data: { senderId: userId, roomId, message, replyToId: replyToId || undefined },
+        include: {
+          sender: { select: { id: true, username: true, avatar: true } },
+          attachments: true,
+          replyTo: { include: { sender: { select: { id: true, username: true, avatar: true } } } },
+        },
       });
 
       await tx.room.update({
@@ -355,13 +371,147 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
       const participantSocket = this.userSockets.get(participantId);
       if (participantSocket) participantSocket.emit(SocketEvents.MESSAGE, chat);
     });
+
+    // Live update message list for ALL participants
+    for (const { userId: participantId } of participants) {
+      await this.pushMessageListUpdate(participantId);
+    }
   }
 
   // -----------------------------
-  // Fetch Chats
+  // Edit Message
+  // -----------------------------
+  @SubscribeMessage(SocketEvents.EDIT_MESSAGE)
+  async handleEditMessage(
+    @MessageBody() payload: { chatId: string; newMessage: string },
+    @ConnectedSocket() socket: Socket,
+  ) {
+    const userId = socket.data.userId as string;
+    const { chatId, newMessage } = payload;
+    if (!userId || !chatId || !newMessage) return;
+
+    try {
+      const chat = await this.prisma.chat.findUnique({ where: { id: chatId } });
+      if (!chat) return socket.emit(SocketEvents.ERROR, { message: 'Message not found' });
+      if (chat.senderId !== userId)
+        return socket.emit(SocketEvents.ERROR, { message: 'Unauthorized' });
+
+      const updatedChat = await this.prisma.chat.update({
+        where: { id: chatId },
+        data: { message: newMessage, isEdited: true },
+        include: {
+          sender: { select: { id: true, username: true, avatar: true } },
+          attachments: true,
+          replyTo: { include: { sender: { select: { id: true, username: true, avatar: true } } } },
+        },
+      });
+
+      const participants = await this.prisma.roomParticipant.findMany({
+        where: { roomId: updatedChat.roomId },
+        select: { userId: true },
+      });
+
+      participants.forEach(({ userId: participantId }) => {
+        const participantSocket = this.userSockets.get(participantId);
+        if (participantSocket) participantSocket.emit(SocketEvents.EDIT_MESSAGE, updatedChat);
+      });
+    } catch (error) {
+      console.error('Edit message failed:', error);
+      socket.emit(SocketEvents.ERROR, { message: 'Failed to edit message' });
+    }
+  }
+
+  // -----------------------------
+  // Delete Message
+  // -----------------------------
+  @SubscribeMessage(SocketEvents.DELETE_MESSAGE)
+  async handleDeleteMessage(
+    @MessageBody() payload: { chatId: string },
+    @ConnectedSocket() socket: Socket,
+  ) {
+    const userId = socket.data.userId as string;
+    const { chatId } = payload;
+    if (!userId || !chatId) return;
+
+    try {
+      const chat = await this.prisma.chat.findUnique({ where: { id: chatId } });
+      if (!chat) return socket.emit(SocketEvents.ERROR, { message: 'Message not found' });
+      if (chat.senderId !== userId)
+        return socket.emit(SocketEvents.ERROR, { message: 'Unauthorized' });
+
+      const deletedChat = await this.prisma.chat.update({
+        where: { id: chatId },
+        data: { isDeleted: true },
+        include: {
+          sender: { select: { id: true, username: true, avatar: true } },
+          attachments: true,
+          replyTo: { include: { sender: { select: { id: true, username: true, avatar: true } } } },
+        },
+      });
+
+      const participants = await this.prisma.roomParticipant.findMany({
+        where: { roomId: deletedChat.roomId },
+        select: { userId: true },
+      });
+
+      participants.forEach(({ userId: participantId }) => {
+        const participantSocket = this.userSockets.get(participantId);
+        if (participantSocket) participantSocket.emit(SocketEvents.DELETE_MESSAGE, deletedChat);
+      });
+    } catch (error) {
+      console.error('Delete message failed:', error);
+      socket.emit(SocketEvents.ERROR, { message: 'Failed to delete message' });
+    }
+  }
+
+  // -----------------------------
+  // Fetch Chats (Paginated + Auto-Mark Read)
   // -----------------------------
   @SubscribeMessage(SocketEvents.FETCH_CHATS)
   async handleFetchChats(
+    @MessageBody() payload: { roomId: string; page?: number; limit?: number },
+    @ConnectedSocket() socket: Socket,
+  ) {
+    const userId = socket.data.userId as string;
+    const { roomId, page = 1, limit = 10 } = payload;
+    if (!userId || !roomId) return;
+
+    const skip = (page - 1) * limit;
+    const total = await this.prisma.chat.count({ where: { roomId } });
+    const totalPage = Math.ceil(total / limit);
+
+    const messages = await this.prisma.chat.findMany({
+      where: { roomId },
+      orderBy: { createdAt: 'desc' },
+      skip,
+      take: limit,
+      include: {
+        sender: { select: { id: true, username: true, avatar: true } },
+        attachments: true,
+        replyTo: { include: { sender: { select: { id: true, username: true, avatar: true } } } },
+      },
+    });
+
+    // Auto-mark as read when user fetches chats (standard chat UX)
+    await this.prisma.roomParticipant.updateMany({
+      where: { userId, roomId },
+      data: { lastReadAt: new Date() },
+    });
+
+    // Push updated message list so unread badge clears
+    await this.pushMessageListUpdate(userId);
+
+    socket.emit(SocketEvents.FETCH_CHATS, {
+      meta: { page, limit, total, totalPage },
+      data: messages.reverse(), // Return in chronological order
+    });
+  }
+
+  // -----------------------------
+  // Mark Room as Read
+  // -----------------------------
+  @SubscribeMessage(SocketEvents.MARK_READ)
+  async handleMarkRead(
     @MessageBody() payload: { roomId: string },
     @ConnectedSocket() socket: Socket,
   ) {
@@ -369,51 +519,160 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
     const { roomId } = payload;
     if (!userId || !roomId) return;
 
-    const messages = await this.prisma.chat.findMany({
-      where: { roomId },
-      orderBy: { createdAt: 'asc' },
-      include: {
-        sender: { select: { id: true, username: true, avatar: true } },
-        attachments: true,
-      },
+    // Update lastReadAt for this participant
+    await this.prisma.roomParticipant.updateMany({
+      where: { userId, roomId },
+      data: { lastReadAt: new Date() },
     });
 
-    socket.emit(SocketEvents.FETCH_CHATS, messages);
+    // Push updated message list so unread badge clears
+    await this.pushMessageListUpdate(userId);
   }
 
   // -----------------------------
-  // Message List
+  // Message List (Paginated + Unread Counts)
   // -----------------------------
   @SubscribeMessage(SocketEvents.MESSAGE_LIST)
-  async handleMessageList(@ConnectedSocket() socket: Socket) {
+  async handleMessageList(
+    @MessageBody() payload: { page?: number; limit?: number },
+    @ConnectedSocket() socket: Socket,
+  ) {
     const userId = socket.data.userId as string;
     if (!userId) return;
 
+    const page = payload?.page || 1;
+    const limit = payload?.limit || 10;
+    const skip = (page - 1) * limit;
+
+    // Get total count for pagination meta
+    const total = await this.prisma.roomParticipant.count({
+      where: { userId },
+    });
+
+    // Fetch rooms with pagination, ordered by lastMessageAt
     const roomParticipants = await this.prisma.roomParticipant.findMany({
       where: { userId },
       include: {
         room: {
           include: {
-            messages: { orderBy: { createdAt: 'desc' }, take: 1 },
+            participants: {
+              include: {
+                user: { select: { id: true, username: true, avatar: true } },
+              },
+            },
+            messages: {
+              orderBy: { createdAt: 'desc' },
+              take: 1,
+              include: {
+                sender: { select: { id: true, username: true, avatar: true } },
+              },
+            },
           },
         },
       },
+      orderBy: { room: { lastMessageAt: 'desc' } },
+      skip,
+      take: limit,
     });
 
-    const result = roomParticipants
-      .map(({ room }) => ({
-        roomId: room.id,
-        avatar: room.avatar,
-        name: room.name,
-        lastMessage: room.messages[0] || null,
-      }))
-      .sort((a, b) => {
-        if (!a.lastMessage || !b.lastMessage) return 0;
-        return (
-          new Date(b.lastMessage.createdAt).getTime() - new Date(a.lastMessage.createdAt).getTime()
-        );
-      });
+    // Compute unread counts per room using lastReadAt
+    const result = await Promise.all(
+      roomParticipants.map(async ({ room, lastReadAt }) => {
+        const unreadCount = await this.prisma.chat.count({
+          where: {
+            roomId: room.id,
+            senderId: { not: userId },
+            ...(lastReadAt ? { createdAt: { gt: lastReadAt } } : {}),
+          },
+        });
 
-    socket.emit(SocketEvents.MESSAGE_LIST, result);
+        return {
+          roomId: room.id,
+          name: room.name,
+          avatar: room.avatar,
+          type: room.type,
+          lastMessage: room.messages[0] || null,
+          lastMessageAt: room.lastMessageAt,
+          participants: room.participants,
+          unreadCount,
+        };
+      }),
+    );
+
+    // Sort by lastMessageAt (newest first)
+    result.sort((a, b) => {
+      if (!a.lastMessageAt || !b.lastMessageAt) return 0;
+      return new Date(b.lastMessageAt).getTime() - new Date(a.lastMessageAt).getTime();
+    });
+
+    const totalPage = Math.ceil(total / limit);
+
+    socket.emit(SocketEvents.MESSAGE_LIST, {
+      meta: { page, limit, total, totalPage },
+      data: result,
+    });
+  }
+
+  // -----------------------------
+  // Live Push: Message List Update
+  // -----------------------------
+  private async pushMessageListUpdate(userId: string) {
+    const userSocket = this.userSockets.get(userId);
+    if (!userSocket) return;
+
+    // Re-fetch first page (default view) for live push
+    const roomParticipants = await this.prisma.roomParticipant.findMany({
+      where: { userId },
+      include: {
+        room: {
+          include: {
+            participants: {
+              include: {
+                user: { select: { id: true, username: true, avatar: true } },
+              },
+            },
+            messages: {
+              orderBy: { createdAt: 'desc' },
+              take: 1,
+              include: {
+                sender: { select: { id: true, username: true, avatar: true } },
+              },
+            },
+          },
+        },
+      },
+      orderBy: { room: { lastMessageAt: 'desc' } },
+      take: 10,
+    });
+
+    const result = await Promise.all(
+      roomParticipants.map(async ({ room, lastReadAt }) => {
+        const unreadCount = await this.prisma.chat.count({
+          where: {
+            roomId: room.id,
+            senderId: { not: userId },
+            ...(lastReadAt ? { createdAt: { gt: lastReadAt } } : {}),
+          },
+        });
+
+        return {
+          roomId: room.id,
+          name: room.name,
+          avatar: room.avatar,
+          type: room.type,
+          lastMessage: room.messages[0] || null,
+          lastMessageAt: room.lastMessageAt,
+          participants: room.participants,
+          unreadCount,
+        };
+      }),
+    );
+
+    result.sort((a, b) => {
+      if (!a.lastMessageAt || !b.lastMessageAt) return 0;
+      return new Date(b.lastMessageAt).getTime() - new Date(a.lastMessageAt).getTime();
+    });
+
+    userSocket.emit(SocketEvents.MESSAGE_LIST_UPDATE, { data: result });
   }
 }
