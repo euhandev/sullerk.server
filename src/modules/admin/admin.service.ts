@@ -13,12 +13,15 @@ import {
   adminSearchFields,
 } from './admin.constant';
 import { FileService } from '@/helper/file.service';
+import { BcryptService } from '@/utils/bcrypt.service';
+import { UpdateAdminProfileDto } from './dto/update-profile.dto';
 
 @Injectable()
 export class AdminService {
   constructor(
     private prisma: PrismaService,
     private readonly fileService: FileService,
+    private readonly bcryptService: BcryptService,
   ) {}
 
   async findAll(query: Record<string, any>): Promise<IGenericResponse<User[]>> {
@@ -146,5 +149,48 @@ export class AdminService {
     );
 
     return 'user deleted successfully';
+  }
+
+  async updateProfile(userId: string, dto: UpdateAdminProfileDto) {
+    // 1. Find user with admin profile
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      include: { admin: true },
+    });
+
+    if (!user) throw new ApiError(HttpStatus.NOT_FOUND, 'User not found');
+    if (!user.admin) throw new ApiError(HttpStatus.NOT_FOUND, 'Admin profile not found');
+
+    // 2. Verify password
+    const isPasswordMatched = await this.bcryptService.compare(dto.currentPassword, user.password!);
+    if (!isPasswordMatched) {
+      throw new ApiError(HttpStatus.UNAUTHORIZED, 'Invalid password. Verification failed.');
+    }
+
+    // 3. Check email conflict if email is changing
+    if (dto.email !== user.email) {
+      const emailExists = await this.prisma.user.findUnique({
+        where: { email: dto.email, NOT: { id: userId } },
+      });
+      if (emailExists) {
+        throw new ApiError(HttpStatus.CONFLICT, 'Email is already in use by another account');
+      }
+    }
+
+    // 4. Atomic update
+    return await this.prisma.$transaction(async (tx) => {
+      // Update User
+      await tx.user.update({
+        where: { id: userId },
+        data: { email: dto.email },
+      });
+
+      // Update Admin
+      return await tx.admin.update({
+        where: { id: user.admin?.id },
+        data: { fullName: dto.fullName },
+        include: { user: { omit: { password: true } } },
+      });
+    });
   }
 }

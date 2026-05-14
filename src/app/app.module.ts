@@ -45,6 +45,7 @@ import { FollowModule } from '@/modules/follow/follow.module';
 import { BlockModule } from '@/modules/block/block.module';
 import { CollectionModule } from '@/modules/collection/collection.module';
 import { TransactionModule } from '@/modules/transaction/transaction.module';
+import { WithdrawalModule } from '@/modules/withdrawal/withdrawal.module';
 
 @Module({
   imports: [
@@ -99,6 +100,7 @@ import { TransactionModule } from '@/modules/transaction/transaction.module';
     BlockModule,
     CollectionModule,
     TransactionModule,
+    WithdrawalModule,
   ],
 
   controllers: [AppController],

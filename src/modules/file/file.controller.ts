@@ -22,7 +22,10 @@ import { UpdateFileDto } from './dto/update-file.dto';
 import { FileService } from './file.service';
 import { FileInterceptorInmemory } from '@/helper/file_interceptor_inmemorty';
 import { CreateFileDto } from './dto/create-file.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiBearerAuth('JWT-auth')
+@ApiTags('Files')
 @Controller('files')
 export class FileController {
   constructor(

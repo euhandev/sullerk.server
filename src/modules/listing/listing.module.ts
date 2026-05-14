@@ -23,5 +23,6 @@ import { ConfigService } from '@/config/config.service';
   ],
   controllers: [ListingController],
   providers: [ListingService],
+  exports: [ListingService],
 })
 export class ListingModule {}

@@ -4,7 +4,10 @@ import { ResponseService } from '@/utils/response';
 import { HttpStatus } from '@nestjs/common';
 import { Roles } from '../roles/roles.decorator';
 import { Role } from '@prisma/client';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiBearerAuth('JWT-auth')
+@ApiTags('Follows')
 @Controller('follows')
 export class FollowController {
   constructor(private readonly followService: FollowService) {}

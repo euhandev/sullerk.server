@@ -76,6 +76,9 @@ export interface EnvConfig {
   LISTING_IMAGE_SIZE_MB: string;
   LISTING_VIDEO_SIZE_MB: string;
   LISTING_PDF_SIZE_MB: string;
+
+  MIN_WITHDRAWAL_AMOUNT: string;
+  WITHDRAWAL_AUTO_APPROVE: string;
 }
 
 // config.types.ts (continued)

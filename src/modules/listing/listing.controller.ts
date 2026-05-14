@@ -34,7 +34,6 @@ import {
 import { ResponseService } from '@/utils/response';
 
 @ApiTags('Listings')
-@ApiBearerAuth('JWT-auth')
 @Controller('listings')
 export class ListingController {
   constructor(private readonly listingService: ListingService) {}
@@ -61,6 +60,8 @@ export class ListingController {
       \`\`\`
     `,
   })
+  @Roles(Role.CUSTOMER, Role.ADMIN, Role.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
   @ApiResponse({
     status: 200,
     description: 'Listings retrieved successfully',
@@ -152,6 +153,7 @@ export class ListingController {
     description: 'File uploaded successfully',
     type: FileUploadResponse,
   })
+  @ApiBearerAuth('JWT-auth')
   @UseInterceptors(FileInterceptor('file'))
   async uploadMedia(
     @UploadedFile() file: any,
@@ -208,6 +210,7 @@ export class ListingController {
       },
     },
   })
+  @ApiBearerAuth('JWT-auth')
   async estimatePrice(@Query() dto: CreateListingDto) {
     const result = await this.listingService.estimatePrice(dto);
     return ResponseService.formatResponse({
@@ -319,6 +322,7 @@ export class ListingController {
     description: 'Listing created successfully',
     type: CreateListingResponse,
   })
+  @ApiBearerAuth('JWT-auth')
   async create(@Body() createListingDto: CreateListingDto, @Req() req: any) {
     const userId = req.user.id;
     const result = await this.listingService.create(createListingDto, userId);
@@ -355,6 +359,7 @@ export class ListingController {
     description: 'Listing updated successfully',
     type: CreateListingResponse,
   })
+  @ApiBearerAuth('JWT-auth')
   async update(
     @Param('id') id: string,
     @Body() updateListingDto: UpdateListingDto,
@@ -391,6 +396,7 @@ export class ListingController {
     description: 'Status toggled successfully',
     type: CreateListingResponse,
   })
+  @ApiBearerAuth('JWT-auth')
   async togglePause(@Param('id') id: string, @Req() req: any) {
     const userId = req.user.id;
     const role = req.user.role;
@@ -428,6 +434,7 @@ export class ListingController {
       },
     },
   })
+  @ApiBearerAuth('JWT-auth')
   async deletePendingFile(@Param('id') id: string, @Req() req: any) {
     const userId = req.user.id;
     const result = await this.listingService.deletePendingFile(id, userId);
@@ -459,6 +466,7 @@ export class ListingController {
     description: 'Listing deleted successfully',
     schema: { example: { success: true, message: 'Listing deleted successfully' } },
   })
+  @ApiBearerAuth('JWT-auth')
   async remove(@Param('id') id: string, @Req() req: any) {
     const userId = req.user.id;
     const role = req.user.role;
@@ -489,6 +497,7 @@ export class ListingController {
     status: 200,
     schema: { example: { success: true, data: { starred: true } } },
   })
+  @ApiBearerAuth('JWT-auth')
   async toggleStar(@Param('id') id: string, @Req() req: any) {
     const userId = req.user.id;
     const result = await this.listingService.toggleStar(id, userId);
@@ -518,6 +527,7 @@ export class ListingController {
     status: 200,
     schema: { example: { success: true, data: { watching: true } } },
   })
+  @ApiBearerAuth('JWT-auth')
   async toggleWatchlist(@Param('id') id: string, @Req() req: any) {
     const userId = req.user.id;
     const result = await this.listingService.toggleWatchlist(id, userId);
@@ -551,6 +561,7 @@ export class ListingController {
       example: { success: true, message: 'Listing shared successfully', data: { success: true } },
     },
   })
+  @ApiBearerAuth('JWT-auth')
   async share(@Param('id') id: string, @Req() req: any) {
     const userId = req.user.id;
     const result = await this.listingService.share(id, userId);

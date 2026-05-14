@@ -9,7 +9,7 @@ import { Request } from 'express';
 import { CreateUserAdminDto } from './dto/create-admin.dto';
 import { Roles } from '../roles/roles.decorator';
 import { Role } from '@prisma/client';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Users')
 @Controller('users')
@@ -54,6 +54,7 @@ export class UsersController {
   }
 
   @Get(':id')
+  @ApiBearerAuth('JWT-auth')
   @Roles(Role.ADMIN)
   async findOne(@Param('id') id: string) {
     const result = await this.usersService.getOne({ email: id });
@@ -65,6 +66,7 @@ export class UsersController {
   }
 
   @Patch('status/:id')
+  @ApiBearerAuth('JWT-auth')
   @Roles(Role.ADMIN, Role.SUPER_ADMIN)
   async changeStatus(@Param('id') id: string) {
     const result = await this.usersService.changeStatus(id);

@@ -8,7 +8,6 @@ import { FileAs, FileContext, FileModule, Listing, Role } from '@prisma/client';
 import QueryBuilder from '@/utils/query_builder';
 import { listingFilterFields, listingInclude, listingSearchFields } from './listing.constant';
 import { IGenericResponse } from '@/interface/common';
-import { Request } from 'express';
 import { PriceEngineService } from '../price-engine/price-engine.service';
 import { ConfigService } from '@/config/config.service';
 
@@ -474,8 +473,22 @@ export class ListingService {
   /**
    * Get all listings with optimized search, filter, and pagination
    */
-  async findAll(req: Request): Promise<IGenericResponse<Listing[]>> {
+  async findAll(req: any): Promise<IGenericResponse<Listing[]>> {
+    const user = req.user;
     const query = req.query;
+
+    // Logic:
+    // 1. ADMIN/SUPER_ADMIN -> Return all listings (no ownerId filter unless specified)
+    // 2. CUSTOMER -> Only return their own listings
+    if (user && user.role === Role.CUSTOMER) {
+      const customer = await this.prisma.customer.findUnique({
+        where: { userId: user.id },
+      });
+      if (customer) {
+        query.ownerId = customer.id;
+      }
+    }
+
     const queryBuilder = new QueryBuilder(query, this.prisma.listing);
 
     const [data, meta] = await Promise.all([
@@ -491,6 +504,40 @@ export class ListingService {
     ]);
 
     return { meta, data };
+  }
+
+  /**
+   * Get all listings for Admin with specific field transformation
+   */
+  async findAllAdmin(query: Record<string, any>): Promise<IGenericResponse<any[]>> {
+    // Default sort to most recent if not provided
+    if (!query.sortBy) query.sortBy = 'createdAt';
+    if (!query.sortOrder) query.sortOrder = 'desc';
+
+    const queryBuilder = new QueryBuilder(query, this.prisma.listing);
+
+    const [data, meta] = await Promise.all([
+      queryBuilder
+        .filter(listingFilterFields)
+        .search(listingSearchFields)
+        .sort()
+        .paginate()
+        .include(listingInclude)
+        .execute(),
+      queryBuilder.countTotal(),
+    ]);
+
+    // Transform data for Admin UI requirements
+    const transformedData = data.map((item: any) => ({
+      id: item.id,
+      Item: `${item.playerOrManagerName || item.title} (${item.category})`,
+      Seller: item.owner?.fullName || 'Unknown',
+      Price: item.displayPrice,
+      Listed: item.createdAt,
+      Status: item.status,
+    }));
+
+    return { meta, data: transformedData };
   }
 
   /**

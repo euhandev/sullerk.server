@@ -16,7 +16,7 @@ import { LoginDto } from './dto/login.dto';
 import { Public } from './auth.decorator';
 import { Request, Response } from 'express';
 import { ResponseService } from '@/utils/response';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Roles } from '../roles/roles.decorator';
 import { Role } from '@prisma/client';
 import { ConfigService } from '@/config/config.service';
@@ -85,7 +85,46 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Public()
   @Post('login')
-  @ApiOperation({ summary: 'User Login' })
+  @ApiOperation({
+    summary: 'User Login',
+    description: `Authenticates a user and returns access and refresh tokens.
+    
+**cURL Sample:**
+\`\`\`bash
+curl -X POST http://localhost:5001/auth/login \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "email": "user@example.com",
+    "password": "password123"
+  }'
+\`\`\``,
+  })
+  @ApiBody({
+    type: LoginDto,
+    examples: {
+      standard: {
+        value: {
+          email: 'user@example.com',
+          password: 'password123',
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Login successful, returns tokens and user info.',
+    schema: {
+      example: {
+        message: 'User Login successfully',
+        success: true,
+        data: {
+          access_token: 'eyJhbGciOiJIUzI1NiIsInR5cCI...',
+          refresh_token: 'eyJhbGciOiJIUzI1NiIsInR5cCI...',
+          user: { id: '...', email: 'user@example.com' },
+        },
+      },
+    },
+  })
   async signIn(@Body() loginDto: LoginDto, @Res({ passthrough: true }) res: Response) {
     const result = await this.authService.login(loginDto);
 
@@ -103,7 +142,41 @@ export class AuthController {
   }
 
   @Post('fcm-token')
+  @ApiBearerAuth('JWT-auth')
   @Roles(Role.ADMIN, Role.CUSTOMER)
+  @ApiOperation({
+    summary: 'Set FCM Device Token',
+    description: `Updates the current user's Firebase Cloud Messaging token for push notifications.
+    
+**cURL Sample:**
+\`\`\`bash
+curl -X POST http://localhost:5001/auth/fcm-token \\
+  -H "Authorization: Bearer <access_token>" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "deviceToken": "fcm_token_here"
+  }'
+\`\`\``,
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        deviceToken: { type: 'string', example: 'fcm_token_abc123' },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'FCM token updated successfully.',
+    schema: {
+      example: {
+        message: 'FCM token set successfully',
+        success: true,
+        data: { id: '...', fcmToken: 'fcm_token_abc123' },
+      },
+    },
+  })
   async setFCMToken(@Req() req: Request, @Body() tokenDto: { deviceToken: string }) {
     const result = await this.authService.setFCMToken(req, tokenDto);
     return ResponseService.formatResponse({
@@ -114,6 +187,33 @@ export class AuthController {
   }
 
   @Get('get-me')
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({
+    summary: 'Get Current User Profile',
+    description: `Retrieves the profile information of the currently authenticated user.
+    
+**cURL Sample:**
+\`\`\`bash
+curl -X GET http://localhost:5001/auth/get-me \\
+  -H "Authorization: Bearer <access_token>"
+\`\`\``,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Profile found successfully.',
+    schema: {
+      example: {
+        message: 'Getme Found successfully',
+        success: true,
+        data: {
+          id: '...',
+          username: 'johndoe',
+          email: 'john@example.com',
+          role: 'CUSTOMER',
+        },
+      },
+    },
+  })
   async getProfile(@Req() req: Request) {
     const user: any = req?.user;
     const result = await this.authService.getMe(user);
@@ -125,6 +225,43 @@ export class AuthController {
   }
 
   @Post('change-password')
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({
+    summary: 'Change Password',
+    description: `Updates the password for the currently logged-in user.
+    
+**cURL Sample:**
+\`\`\`bash
+curl -X POST http://localhost:5001/auth/change-password \\
+  -H "Authorization: Bearer <access_token>" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "prevPass": "old_password_123",
+    "newPass": "new_password_456"
+  }'
+\`\`\``,
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        prevPass: { type: 'string', example: 'old_password_123' },
+        newPass: { type: 'string', example: 'new_password_456' },
+      },
+      required: ['prevPass', 'newPass'],
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Password changed successfully.',
+    schema: {
+      example: {
+        message: 'Password Changed successfully',
+        success: true,
+        data: { id: '...', email: 'user@example.com' },
+      },
+    },
+  })
   async changePassword(@Body() data: { prevPass: string; newPass: string }, @Req() req: Request) {
     const user: any = req?.user;
     const id: string = user?.id;
@@ -139,6 +276,39 @@ export class AuthController {
 
   @Public()
   @Post('forgot-password')
+  @ApiOperation({
+    summary: 'Forgot Password Request',
+    description: `Sends a password reset OTP to the user's registered email address.
+    
+**cURL Sample:**
+\`\`\`bash
+curl -X POST http://localhost:5001/auth/forgot-password \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "email": "user@example.com"
+  }'
+\`\`\``,
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        email: { type: 'string', example: 'user@example.com' },
+      },
+      required: ['email'],
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Forget password mail sent successfully.',
+    schema: {
+      example: {
+        message: 'Forget Password Mail Sent successfully',
+        success: true,
+        data: true,
+      },
+    },
+  })
   async forgotPasswod(@Body() data: { email: string }) {
     const result = await this.authService.forgetPassword({
       email: data?.email,
@@ -152,6 +322,43 @@ export class AuthController {
 
   @Public()
   @Post('reset-password')
+  @ApiOperation({
+    summary: 'Reset Password with OTP',
+    description: `Resets the user's password using the OTP received via email.
+    
+**cURL Sample:**
+\`\`\`bash
+curl -X POST http://localhost:5001/auth/reset-password \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "email": "user@example.com",
+    "otp": "123456",
+    "newPass": "new_secure_password"
+  }'
+\`\`\``,
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        email: { type: 'string', example: 'user@example.com' },
+        otp: { type: 'string', example: '123456' },
+        newPass: { type: 'string', example: 'new_secure_password' },
+      },
+      required: ['email', 'otp', 'newPass'],
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Password reset successful.',
+    schema: {
+      example: {
+        message: 'Password Resetted successfully',
+        success: true,
+        data: true,
+      },
+    },
+  })
   async resetPassword(@Body() payload: { email: string; otp: string; newPass: string }) {
     const result = await this.authService.resetPassword(payload);
 
@@ -164,7 +371,28 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('logout')
-  @ApiOperation({ summary: 'User Logout' })
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({
+    summary: 'User Logout',
+    description: `Clears the authentication cookies and logs the user out.
+    
+**cURL Sample:**
+\`\`\`bash
+curl -X POST http://localhost:5001/auth/logout \\
+  -H "Authorization: Bearer <access_token>"
+\`\`\``,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Logout successful.',
+    schema: {
+      example: {
+        message: 'User Logout successfully',
+        success: true,
+        data: true,
+      },
+    },
+  })
   async logout(@Res({ passthrough: true }) res: Response) {
     const cookieDomain = this.configService.get('COOKIE_DOMAIN') || 'localhost';
     // 🧹 Clear auth cookies
@@ -187,7 +415,12 @@ export class AuthController {
   @Public()
   @Get('google')
   @UseGuards(AuthGuard('google'))
-  @ApiOperation({ summary: 'Initiate Google Login' })
+  @ApiOperation({
+    summary: 'Initiate Google Login',
+    description: `Redirects the user to Google's OAuth 2.0 server to initiate the login flow.
+    
+**Note:** This route should be visited in a browser, not via cURL.`,
+  })
   async googleAuth() {
     // This initiates the Google OAuth flow
   }
@@ -195,7 +428,15 @@ export class AuthController {
   @Public()
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
-  @ApiOperation({ summary: 'Google Login Callback' })
+  @ApiOperation({
+    summary: 'Google Login Callback',
+    description: `Google redirects back to this endpoint after successful authentication. It sets cookies and redirects to the frontend.`,
+  })
+  @ApiResponse({
+    status: 302,
+    description:
+      'Redirects to frontend with tokens in URL (for mobile/legacy) and sets HTTP-only cookies.',
+  })
   async googleAuthRedirect(@Req() req: any, @Res() res: Response) {
     const result = await this.authService.validateOAuthUser(req.user);
 
