@@ -2,7 +2,10 @@ import { Controller, Post, Body, Get, Query, Req, HttpCode, HttpStatus } from '@
 import { NotificationService } from './notification.service';
 import { NotificationType } from '@prisma/client';
 import { ResponseService } from '@/utils/response';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiBearerAuth('JWT-auth')
+@ApiTags('Notifications')
 @Controller('notifications')
 export class NotificationController {
   constructor(private readonly notificationService: NotificationService) {}

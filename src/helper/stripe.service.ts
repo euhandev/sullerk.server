@@ -48,6 +48,46 @@ export class StripeService {
     });
   }
 
+  /**
+   * Create a Stripe Connect Express account for a user
+   */
+  async createConnectAccount(email: string, userId: string) {
+    const account = await this.stripe.accounts.create({
+      type: 'express',
+      email: email,
+      capabilities: {
+        transfers: { requested: true },
+      },
+      metadata: { userId },
+    });
+
+    return account;
+  }
+
+  /**
+   * Generate an onboarding link for a Connect account
+   */
+  async createAccountLink(accountId: string, returnUrl: string, refreshUrl: string) {
+    return await this.stripe.accountLinks.create({
+      account: accountId,
+      refresh_url: refreshUrl,
+      return_url: returnUrl,
+      type: 'account_onboarding',
+    });
+  }
+
+  /**
+   * Transfer funds from Platform to a Connect account
+   */
+  async createTransfer(amount: number, destinationAccountId: string, description?: string) {
+    return await this.stripe.transfers.create({
+      amount: Math.round(amount * 100), // convert to cents
+      currency: 'gbp', // Default to GBP as per listing logic, should be configurable
+      destination: destinationAccountId,
+      description: description || 'Withdrawal from platform',
+    });
+  }
+
   verifyWebhook(payload: Buffer, signature: string) {
     const secret = this.configService.get('STRIPE_WEBHOOK_SECRET');
     return this.stripe.webhooks.constructEvent(payload, signature, secret);

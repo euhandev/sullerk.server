@@ -26,6 +26,7 @@ async function main() {
     fileService,
     new EventEmitter2(),
     priceEngine,
+    configService,
   );
 
   const testCases = [

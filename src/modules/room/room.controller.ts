@@ -16,7 +16,10 @@ import { Role } from '@prisma/client';
 import type { Request } from 'express';
 import { Roles } from '../roles/roles.decorator';
 import { RoomService } from './room.service';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiBearerAuth('JWT-auth')
+@ApiTags('Rooms')
 @Controller('rooms')
 export class RoomController {
   constructor(

@@ -4,12 +4,15 @@ import { ResponseService } from '@/utils/response';
 import { HttpStatus } from '@nestjs/common';
 import { Roles } from '../roles/roles.decorator';
 import { Role } from '@prisma/client';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Blocks')
 @Controller('blocks')
 export class BlockController {
   constructor(private readonly blockService: BlockService) {}
 
   @Post('toggle/:identifier')
+  @ApiBearerAuth('JWT-auth')
   @Roles(Role.CUSTOMER, Role.ADMIN, Role.SUPER_ADMIN)
   async toggleBlock(@Param('identifier') identifier: string, @Req() req: any) {
     const result = await this.blockService.toggleBlock(req.user.id, identifier);
@@ -21,6 +24,7 @@ export class BlockController {
   }
 
   @Get('/')
+  @ApiBearerAuth('JWT-auth')
   @Roles(Role.CUSTOMER, Role.ADMIN, Role.SUPER_ADMIN)
   async getBlockedUsers(@Req() req: any, @Query() query: any) {
     const result = await this.blockService.getBlockedUsers(req.user.id, query);

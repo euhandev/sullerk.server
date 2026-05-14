@@ -54,16 +54,21 @@ export class ListingResponseDto {
   @ApiProperty({ example: ['Premier League'], isArray: true, required: false })
   appliedHonours?: string[];
 
-  @ApiProperty({ example: 500 })
+  @ApiProperty({ example: 500, description: 'The raw engine-calculated base price' })
   calculatedBasePrice: number;
 
-  @ApiProperty({ example: 550 })
+  @ApiProperty({ example: 500, description: 'The final price shown on the platform (automated)' })
   displayPrice: number;
 
-  @ApiProperty({ example: [{ label: 'Base Price', value: 500 }] })
+  @ApiProperty({
+    example: [
+      { label: 'Base Price', value: 400 },
+      { label: 'Signature', multiplier: 1.25, value: 500 },
+    ],
+  })
   priceBreakdown: any;
 
-  @ApiProperty({ example: 450 })
+  @ApiProperty({ example: 500, description: 'The starting system-calculated price' })
   initialPrice: number;
 
   @ApiProperty({ example: 'PENDING' })
@@ -116,4 +121,25 @@ export class FileUploadResponse {
 
   @ApiProperty({ type: () => FileUploadData, isArray: true })
   data: FileUploadData[];
+}
+
+export class PaginatedListingResponse {
+  @ApiProperty({ example: true })
+  success: boolean;
+
+  @ApiProperty({ example: 'Listings retrieved successfully' })
+  message: string;
+
+  @ApiProperty({
+    example: {
+      page: 1,
+      limit: 10,
+      total: 100,
+      totalPage: 10,
+    },
+  })
+  meta: any;
+
+  @ApiProperty({ type: ListingResponseDto, isArray: true })
+  data: ListingResponseDto[];
 }

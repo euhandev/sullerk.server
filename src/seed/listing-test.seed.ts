@@ -71,6 +71,7 @@ async function main() {
     fileService,
     new EventEmitter2(),
     priceEngine,
+    configService,
   );
 
   // 4. Create Listing Data

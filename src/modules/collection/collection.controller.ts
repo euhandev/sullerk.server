@@ -16,12 +16,15 @@ import { CollectionService } from './collection.service';
 import { CreateCollectionDto } from './dto/create-collection.dto';
 import { UpdateCollectionDto } from './dto/update-collection.dto';
 import { Public } from '../auth/auth.decorator';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Collections')
 @Controller('collections')
 export class CollectionController {
   constructor(private readonly collectionService: CollectionService) {}
 
   @Post()
+  @ApiBearerAuth('JWT-auth')
   @Roles(Role.ADMIN, Role.SUPER_ADMIN)
   async create(@Body() createCollectionDto: CreateCollectionDto) {
     const result = await this.collectionService.create(createCollectionDto);
@@ -68,6 +71,7 @@ export class CollectionController {
   }
 
   @Patch(':id')
+  @ApiBearerAuth('JWT-auth')
   @Roles(Role.ADMIN, Role.SUPER_ADMIN)
   async update(@Param('id') id: string, @Body() updateCollectionDto: UpdateCollectionDto) {
     const result = await this.collectionService.update(id, updateCollectionDto);
@@ -79,6 +83,7 @@ export class CollectionController {
   }
 
   @Delete(':id')
+  @ApiBearerAuth('JWT-auth')
   @Roles(Role.ADMIN, Role.SUPER_ADMIN)
   async remove(@Param('id') id: string) {
     const result = await this.collectionService.remove(id);
@@ -90,6 +95,7 @@ export class CollectionController {
   }
 
   @Post(':id/listings/:listingId')
+  @ApiBearerAuth('JWT-auth')
   @Roles(Role.ADMIN, Role.SUPER_ADMIN)
   async addListing(@Param('id') id: string, @Param('listingId') listingId: string) {
     const result = await this.collectionService.addListing(id, listingId);
@@ -101,6 +107,7 @@ export class CollectionController {
   }
 
   @Delete(':id/listings/:listingId')
+  @ApiBearerAuth('JWT-auth')
   @Roles(Role.ADMIN, Role.SUPER_ADMIN)
   async removeListing(@Param('id') id: string, @Param('listingId') listingId: string) {
     const result = await this.collectionService.removeListing(id, listingId);

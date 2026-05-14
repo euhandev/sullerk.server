@@ -222,14 +222,18 @@ export class CreateListingDto {
   @ApiProperty({
     example: 500,
     required: false,
-    description: 'The estimated base value of the item',
+    description: 'The system-calculated estimated base value of the item (Ignored in request)',
   })
   @IsNumber()
   @IsOptional()
   @Type(() => Number)
   estimatedBaseValue?: number;
 
-  @ApiProperty({ example: 450, required: false, description: 'The initial asking price' })
+  @ApiProperty({
+    example: 450,
+    required: false,
+    description: 'The system-calculated initial asking price (Ignored in request)',
+  })
   @IsNumber()
   @IsOptional()
   @Type(() => Number)

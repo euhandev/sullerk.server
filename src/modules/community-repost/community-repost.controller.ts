@@ -5,7 +5,10 @@ import { Roles } from '../roles/roles.decorator';
 import { Role } from '@prisma/client';
 import { ResponseService } from '@/utils/response';
 import { Request } from 'express';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiBearerAuth('JWT-auth')
+@ApiTags('Community Reposts')
 @Controller('community-reposts')
 export class CommunityRepostController {
   constructor(private readonly communityRepostService: CommunityRepostService) {}

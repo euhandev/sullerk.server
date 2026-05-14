@@ -10,10 +10,16 @@ import {
   Param,
   Get,
   Query,
+  Patch,
 } from '@nestjs/common';
 import { ListingService } from './listing.service';
 import { CreateListingDto } from './dto/create-listing.dto';
-import { CreateListingResponse, FileUploadResponse } from './dto/listing-response.dto';
+import {
+  CreateListingResponse,
+  FileUploadResponse,
+  PaginatedListingResponse,
+} from './dto/listing-response.dto';
+import { UpdateListingDto } from './dto/update-listing.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Roles } from '../roles/roles.decorator';
 import { Role, FileContext, FileAs } from '@prisma/client';
@@ -28,7 +34,6 @@ import {
 import { ResponseService } from '@/utils/response';
 
 @ApiTags('Listings')
-@ApiBearerAuth('JWT-auth')
 @Controller('listings')
 export class ListingController {
   constructor(private readonly listingService: ListingService) {}
@@ -37,9 +42,30 @@ export class ListingController {
   @ApiOperation({
     summary: 'Get all listings with search, filter, and pagination',
     description: `
-      Retrieves a paginated list of all active listings.
-      Supports searching (searchTerm), filtering (sport, teamOrCountry, category, etc.), and sorting.
+      Retrieves a paginated list of listings with powerful filtering and search capabilities.
+      
+      ### **How to use filters:**
+      - **Search**: Use \`searchTerm\` to search across title, description, and player names.
+      - **Filters**: Pass exact field values like \`sport=Football\`, \`category=SHIRT\`, or \`ownerId=ID\`.
+      - **Sorting**: Use \`sort=displayPrice\` (asc) or \`sort=-displayPrice\` (desc). Newest first by default.
+      
+      **CURL EXAMPLE:**
+      \`\`\`bash
+      # Get all active Football shirts by owner
+      curl -X GET "http://localhost:8989/api/v1/listings?sport=Football&category=SHIRT&status=ACTIVE&ownerId=65f12345" \
+        -H "Authorization: Bearer YOUR_TOKEN"
+        
+      # Global search for "Messi"
+      curl -X GET "http://localhost:8989/api/v1/listings?searchTerm=Messi"
+      \`\`\`
     `,
+  })
+  @Roles(Role.CUSTOMER, Role.ADMIN, Role.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
+  @ApiResponse({
+    status: 200,
+    description: 'Listings retrieved successfully',
+    type: PaginatedListingResponse,
   })
   async findAll(@Req() req: any) {
     const result = await this.listingService.findAll(req);
@@ -48,6 +74,33 @@ export class ListingController {
       message: 'Listings retrieved successfully',
       meta: result.meta,
       data: result.data,
+    });
+  }
+
+  @Get(':id')
+  @ApiOperation({
+    summary: 'Get single listing details by ID',
+    description: `
+      Retrieves the full details of a specific listing, including owner information, 
+      all uploaded media (Step 2 files), and interaction counts.
+
+      **CURL EXAMPLE:**
+      \`\`\`bash
+      curl -X GET "http://localhost:8989/api/v1/listings/65f123456789"
+      \`\`\`
+    `,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Listing retrieved successfully',
+    type: CreateListingResponse,
+  })
+  async findOne(@Param('id') id: string) {
+    const result = await this.listingService.findOne(id);
+    return ResponseService.formatResponse({
+      statusCode: HttpStatus.OK,
+      message: 'Listing retrieved successfully',
+      data: result,
     });
   }
 
@@ -61,11 +114,11 @@ export class ListingController {
       
       **CURL EXAMPLE:**
       \`\`\`bash
-      curl -X POST "http://localhost:8989/api/v1/listings/upload" \\
-        -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \\
-        -H "Content-Type: multipart/form-data" \\
-        -F "file=@/path/to/image.jpg" \\
-        -F "purpose=PHOTOS" \\
+      curl -X POST "http://localhost:8989/api/v1/listings/upload" \
+        -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+        -H "Content-Type: multipart/form-data" \
+        -F "file=@/path/to/image.jpg" \
+        -F "purpose=PHOTOS" \
         -F "context=CREATE"
       \`\`\`
     `,
@@ -100,6 +153,7 @@ export class ListingController {
     description: 'File uploaded successfully',
     type: FileUploadResponse,
   })
+  @ApiBearerAuth('JWT-auth')
   @UseInterceptors(FileInterceptor('file'))
   async uploadMedia(
     @UploadedFile() file: any,
@@ -130,7 +184,7 @@ export class ListingController {
       
       **CURL EXAMPLE:**
       \`\`\`bash
-      curl -X GET "http://localhost:8989/api/v1/listings/estimate-price?sport=Football&category=SHIRT&signatureType=FULL&photoProofType=FULL_VIEW&videoProofType=FULL_VIEW&coaStatus=COA_INCLUDED" \\
+      curl -X GET "http://localhost:8989/api/v1/listings/estimate-price?sport=Football&category=SHIRT&signatureType=FULL&photoProofType=FULL_VIEW&videoProofType=FULL_VIEW&coaStatus=COA_INCLUDED" \
         -H "Authorization: Bearer YOUR_TOKEN_HERE"
       \`\`\`
     `,
@@ -156,6 +210,7 @@ export class ListingController {
       },
     },
   })
+  @ApiBearerAuth('JWT-auth')
   async estimatePrice(@Query() dto: CreateListingDto) {
     const result = await this.listingService.estimatePrice(dto);
     return ResponseService.formatResponse({
@@ -173,12 +228,16 @@ export class ListingController {
       Finalizes the listing creation using FileItem objects {fileId, url} from Step 1.
       The system verifies these IDs against the user's uploaded files.
       Unused pending files for this user will be automatically deleted from storage.
+
+      **Automated Pricing**:
+      The listing price is strictly calculated by the system using the Price Engine. 
+      The \`initialPrice\` and \`displayPrice\` will be set automatically based on the same logic used in \`GET /estimate-price\`.
       
       **CURL EXAMPLE:**
       \`\`\`bash
-      curl -X POST "http://localhost:8989/api/v1/listings" \\
-        -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \\
-        -H "Content-Type: application/json" \\
+      curl -X POST "http://localhost:8989/api/v1/listings" \
+        -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+        -H "Content-Type: application/json" \
         -d '{
           "sport": "Football",
           "league": "Premier League",
@@ -194,7 +253,6 @@ export class ListingController {
           "coaStatus": "COA_INCLUDED",
           "companyAuthentication": "PSA",
           "appliedHonours": ["Premier League"],
-          "initialPrice": 500,
           "photos": [
             { "fileId": "69fae180e0c772d77befd5b8", "url": "http://localhost:8989/api/v1/files/img1.webp" }
           ],
@@ -230,7 +288,6 @@ export class ListingController {
           coaStatus: 'COA_INCLUDED',
           companyAuthentication: 'PSA',
           appliedHonours: ['Premier League'],
-          initialPrice: 500,
           photos: [
             {
               fileId: '69fae180e0c772d77befd5b8',
@@ -265,12 +322,88 @@ export class ListingController {
     description: 'Listing created successfully',
     type: CreateListingResponse,
   })
+  @ApiBearerAuth('JWT-auth')
   async create(@Body() createListingDto: CreateListingDto, @Req() req: any) {
     const userId = req.user.id;
     const result = await this.listingService.create(createListingDto, userId);
     return ResponseService.formatResponse({
       statusCode: HttpStatus.CREATED,
       message: 'Listing created successfully',
+      data: result,
+    });
+  }
+
+  @Patch(':id')
+  @Roles(Role.CUSTOMER, Role.ADMIN, Role.SUPER_ADMIN)
+  @ApiOperation({
+    summary: 'Update an existing listing',
+    description: `
+      Allows a user to update their own listing. 
+      If pricing-related fields (sport, category, signatureType, etc.) are changed, 
+      the system will automatically recalculate the price.
+
+      **CURL EXAMPLE:**
+      \`\`\`bash
+      curl -X PATCH "http://localhost:8989/api/v1/listings/65f123456789" \
+        -H "Authorization: Bearer YOUR_TOKEN" \
+        -H "Content-Type: application/json" \
+        -d '{
+          "title": "Updated Rashford Jersey 2024",
+          "signatureType": "FULL"
+        }'
+      \`\`\`
+    `,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Listing updated successfully',
+    type: CreateListingResponse,
+  })
+  @ApiBearerAuth('JWT-auth')
+  async update(
+    @Param('id') id: string,
+    @Body() updateListingDto: UpdateListingDto,
+    @Req() req: any,
+  ) {
+    const userId = req.user.id;
+    const role = req.user.role;
+    const result = await this.listingService.update(id, updateListingDto, userId, role);
+    return ResponseService.formatResponse({
+      statusCode: HttpStatus.OK,
+      message: 'Listing updated successfully',
+      data: result,
+    });
+  }
+
+  @Patch(':id/toggle-pause')
+  @Roles(Role.CUSTOMER, Role.ADMIN, Role.SUPER_ADMIN)
+  @ApiOperation({
+    summary: 'Toggle listing status between ACTIVE and PAUSED',
+    description: `
+      Allows an owner to pause an active listing or activate a paused listing.
+      Transitions are strictly limited to **ACTIVE <-> PAUSED**.
+      If the listing is in any other state (e.g. PENDING, SOLD), the action will be rejected.
+
+      **CURL EXAMPLE:**
+      \`\`\`bash
+      curl -X PATCH "http://localhost:8989/api/v1/listings/65f123456789/toggle-pause" \
+        -H "Authorization: Bearer YOUR_TOKEN"
+      \`\`\`
+    `,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Status toggled successfully',
+    type: CreateListingResponse,
+  })
+  @ApiBearerAuth('JWT-auth')
+  async togglePause(@Param('id') id: string, @Req() req: any) {
+    const userId = req.user.id;
+    const role = req.user.role;
+    const result = await this.listingService.togglePause(id, userId, role);
+    return ResponseService.formatResponse({
+      statusCode: HttpStatus.OK,
+      message: `Listing status updated to ${result.status}`,
       data: result,
     });
   }
@@ -285,7 +418,7 @@ export class ListingController {
 
       **CURL EXAMPLE:**
       \`\`\`bash
-      curl -X DELETE "http://localhost:8989/api/v1/listings/upload/69fae180e0c772d77befd5b8" \\
+      curl -X DELETE "http://localhost:8989/api/v1/listings/upload/69fae180e0c772d77befd5b8" \
         -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
       \`\`\`
     `,
@@ -301,6 +434,7 @@ export class ListingController {
       },
     },
   })
+  @ApiBearerAuth('JWT-auth')
   async deletePendingFile(@Param('id') id: string, @Req() req: any) {
     const userId = req.user.id;
     const result = await this.listingService.deletePendingFile(id, userId);
@@ -308,6 +442,39 @@ export class ListingController {
       statusCode: HttpStatus.OK,
       message: 'File deleted successfully',
       data: result,
+    });
+  }
+
+  @Delete(':id')
+  @Roles(Role.CUSTOMER, Role.ADMIN, Role.SUPER_ADMIN)
+  @ApiOperation({
+    summary: 'Delete a listing by ID',
+    description: `
+      Deletes a listing permanently. 
+      Only the owner of the listing can perform this action.
+      All associated files will be detached (but not necessarily deleted from storage immediately).
+
+      **CURL EXAMPLE:**
+      \`\`\`bash
+      curl -X DELETE "http://localhost:8989/api/v1/listings/65f123456789" \\
+        -H "Authorization: Bearer YOUR_TOKEN"
+      \`\`\`
+    `,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Listing deleted successfully',
+    schema: { example: { success: true, message: 'Listing deleted successfully' } },
+  })
+  @ApiBearerAuth('JWT-auth')
+  async remove(@Param('id') id: string, @Req() req: any) {
+    const userId = req.user.id;
+    const role = req.user.role;
+    await this.listingService.remove(id, userId, role);
+    return ResponseService.formatResponse({
+      statusCode: HttpStatus.OK,
+      message: 'Listing deleted successfully',
+      data: { id },
     });
   }
 
@@ -321,7 +488,7 @@ export class ListingController {
 
       **CURL EXAMPLE:**
       \`\`\`bash
-      curl -X POST "http://localhost:8989/api/v1/listings/star/69fae180e0c772d77befd5b8" \\
+      curl -X POST "http://localhost:8989/api/v1/listings/star/69fae180e0c772d77befd5b8" \
         -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
       \`\`\`
     `,
@@ -330,6 +497,7 @@ export class ListingController {
     status: 200,
     schema: { example: { success: true, data: { starred: true } } },
   })
+  @ApiBearerAuth('JWT-auth')
   async toggleStar(@Param('id') id: string, @Req() req: any) {
     const userId = req.user.id;
     const result = await this.listingService.toggleStar(id, userId);
@@ -350,7 +518,7 @@ export class ListingController {
 
       **CURL EXAMPLE:**
       \`\`\`bash
-      curl -X POST "http://localhost:8989/api/v1/listings/watchlist/69fae180e0c772d77befd5b8" \\
+      curl -X POST "http://localhost:8989/api/v1/listings/watchlist/69fae180e0c772d77befd5b8" \
         -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
       \`\`\`
     `,
@@ -359,6 +527,7 @@ export class ListingController {
     status: 200,
     schema: { example: { success: true, data: { watching: true } } },
   })
+  @ApiBearerAuth('JWT-auth')
   async toggleWatchlist(@Param('id') id: string, @Req() req: any) {
     const userId = req.user.id;
     const result = await this.listingService.toggleWatchlist(id, userId);
@@ -381,7 +550,7 @@ export class ListingController {
 
       **CURL EXAMPLE:**
       \`\`\`bash
-      curl -X POST "http://localhost:8989/api/v1/listings/share/69fae180e0c772d77befd5b8" \\
+      curl -X POST "http://localhost:8989/api/v1/listings/share/69fae180e0c772d77befd5b8" \
         -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
       \`\`\`
     `,
@@ -392,6 +561,7 @@ export class ListingController {
       example: { success: true, message: 'Listing shared successfully', data: { success: true } },
     },
   })
+  @ApiBearerAuth('JWT-auth')
   async share(@Param('id') id: string, @Req() req: any) {
     const userId = req.user.id;
     const result = await this.listingService.share(id, userId);

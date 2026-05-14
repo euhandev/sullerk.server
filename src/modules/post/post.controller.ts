@@ -31,7 +31,6 @@ import { CommentService } from '../comment/comment.service';
 import { CreateCommentDto } from '../comment/dto/create-comment.dto';
 
 @ApiTags('Posts')
-@ApiBearerAuth('JWT-auth')
 @Controller('post')
 export class PostController {
   constructor(
@@ -83,6 +82,7 @@ export class PostController {
     description: 'File uploaded successfully',
     type: PostFileUploadResponse,
   })
+  @ApiBearerAuth('JWT-auth')
   @UseInterceptors(FileInterceptor('file'))
   async uploadMedia(
     @UploadedFile() file: any,
@@ -160,6 +160,7 @@ export class PostController {
     description: 'Post created successfully',
     type: CreatePostResponse,
   })
+  @ApiBearerAuth('JWT-auth')
   async create(@Body() createPostDto: CreatePostDto, @Req() req: any) {
     const userId = req.user.id;
     const result = await this.postService.create(createPostDto, userId);
@@ -196,6 +197,7 @@ export class PostController {
       },
     },
   })
+  @ApiBearerAuth('JWT-auth')
   async deletePendingFile(@Param('id') id: string, @Req() req: any) {
     const userId = req.user.id;
     const result = await this.postService.deletePendingFile(id, userId);
@@ -207,6 +209,7 @@ export class PostController {
   }
 
   @Post(':id/react')
+  @ApiBearerAuth('JWT-auth')
   @Roles(Role.CUSTOMER)
   @ApiOperation({
     summary: 'React to a post (Love/Like)',
@@ -231,6 +234,7 @@ curl -X POST http://localhost:8989/api/v1/post/65fc123.../react \\
   }
 
   @Post(':id/share')
+  @ApiBearerAuth('JWT-auth')
   @Roles(Role.CUSTOMER)
   @ApiOperation({
     summary: 'Share a post (Repost)',
@@ -253,6 +257,7 @@ curl -X POST http://localhost:8989/api/v1/post/65fc123.../share \\
   }
 
   @Get()
+  @ApiBearerAuth('JWT-auth')
   @ApiOperation({
     summary: 'Get all posts (Feed)',
     description: `
@@ -279,6 +284,7 @@ curl -X GET http://localhost:8989/api/v1/post \\
   // ─────────────────────────────────────────
 
   @Post('comments')
+  @ApiBearerAuth('JWT-auth')
   @Roles(Role.CUSTOMER)
   @ApiOperation({
     summary: 'Comment on a post',
@@ -322,6 +328,7 @@ curl -X GET http://localhost:8989/api/v1/post/65fc123.../comments
   }
 
   @Delete('comments/:id')
+  @ApiBearerAuth('JWT-auth')
   @Roles(Role.CUSTOMER)
   @ApiOperation({
     summary: 'Delete your comment',
@@ -344,6 +351,7 @@ curl -X DELETE http://localhost:8989/api/v1/post/comments/65fc123... \\
   }
 
   @Patch(':id')
+  @ApiBearerAuth('JWT-auth')
   @Roles(Role.CUSTOMER)
   @ApiOperation({
     summary: 'Update a post',
@@ -368,6 +376,7 @@ curl -X PATCH http://localhost:8989/api/v1/post/65fc123... \\
   }
 
   @Delete(':id')
+  @ApiBearerAuth('JWT-auth')
   @Roles(Role.CUSTOMER)
   @ApiOperation({
     summary: 'Delete a post',
