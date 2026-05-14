@@ -101,7 +101,9 @@ model Customer {
   blockedUsers        BlockedUser[] @relation("BlockedUser")
 
   balance      Float         @default(0.0) // Virtual wallet
+  stripeConnectId String?    // Stripe Connect Account ID for payouts
   transactions Transaction[]
+  withdrawals  Withdrawal[]
 
   communityMembers   CommunityMember[]
   communityPosts     CommunityPost[]
@@ -682,6 +684,7 @@ model Order {
   updatedAt DateTime @updatedAt
 
   @@map("orders")
+  transactions Transaction[]
 }
 
 model ExchangeOffer {
@@ -715,6 +718,7 @@ model ExchangeOffer {
   updatedAt DateTime @updatedAt
 
   @@map("exchange_offers")
+  transactions Transaction[]
 }
 
 model Transaction {
@@ -726,10 +730,15 @@ model Transaction {
   type   TransactionType
 
   orderId         String? @db.ObjectId
+  order           Order?  @relation(fields: [orderId], references: [id])
   exchangeOfferId String? @db.ObjectId
+  exchangeOffer   ExchangeOffer? @relation(fields: [exchangeOfferId], references: [id])
+  withdrawalId    String? @db.ObjectId
+  withdrawal      Withdrawal? @relation(fields: [withdrawalId], references: [id])
 
   description String? // e.g. "Payment for Listing X"
-  createdAt   DateTime @default(now())
+  status      TransactionStatus @default(COMPLETED)
+  createdAt   DateTime          @default(now())
 
   @@map("transactions")
 }
@@ -803,6 +812,31 @@ model PaymentMethod {
   updatedAt DateTime @updatedAt
 
   @@map("payment_methods")
+}
+
+model Withdrawal {
+  id              String           @id @default(auto()) @map("_id") @db.ObjectId
+  customerId      String           @db.ObjectId
+  customer        Customer         @relation(fields: [customerId], references: [id])
+  
+  amount          Float
+  paymentMethodId String?          @db.ObjectId // Optional if using Stripe Connect directly
+  
+  status          WithdrawalStatus @default(PENDING)
+  adminNote       String?          
+  stripeTransferId String?         // Reference to Stripe transfer
+  
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@map("withdrawals")
+  transactions Transaction[]
+}
+
+enum WithdrawalStatus {
+  PENDING
+  COMPLETED
+  REJECTED
 }
 
 model SubscriptionPlan {
@@ -987,6 +1021,12 @@ enum TransactionType {
   TRADE_BALANCE
   PLATFORM_FEE
   WITHDRAWAL
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
 }
 
 enum DisputeType {

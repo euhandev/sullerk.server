@@ -5,12 +5,15 @@ import type { Request } from 'express';
 import { Roles } from '../roles/roles.decorator';
 import { ChatService } from './chat.service';
 import { UpdateChatDto } from './dto/update-chat.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Chat')
 @Controller('chats')
 export class ChatController {
   constructor(private readonly chatService: ChatService) {}
 
   @Get()
+  @ApiBearerAuth('JWT-auth')
   @Roles(Role.ADMIN, Role.SUPER_ADMIN, Role.CUSTOMER)
   async findAll(@Req() req: Request) {
     const result = await this.chatService.findAll(req);
@@ -23,6 +26,7 @@ export class ChatController {
   }
 
   @Get(':id')
+  @ApiBearerAuth('JWT-auth')
   @Roles(Role.ADMIN, Role.SUPER_ADMIN, Role.CUSTOMER)
   async findOne(@Param('id') id: string) {
     const result = await this.chatService.findOne(id);
@@ -34,6 +38,7 @@ export class ChatController {
   }
 
   @Patch(':id')
+  @ApiBearerAuth('JWT-auth')
   @Roles(Role.ADMIN, Role.SUPER_ADMIN, Role.CUSTOMER)
   async update(@Param('id') id: string, @Body() updateChatDto: UpdateChatDto) {
     const result = await this.chatService.update(id, updateChatDto);
@@ -45,6 +50,7 @@ export class ChatController {
   }
 
   @Delete(':id')
+  @ApiBearerAuth('JWT-auth')
   @Roles(Role.ADMIN, Role.SUPER_ADMIN, Role.CUSTOMER)
   async remove(@Param('id') id: string) {
     const result = await this.chatService.remove(id);

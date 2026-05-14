@@ -76,7 +76,9 @@ Table customers {
   blockedBy blocked_users [not null]
   blockedUsers blocked_users [not null]
   balance Float [not null, default: 0]
+  stripeConnectId String
   transactions transactions [not null]
+  withdrawals withdrawals [not null]
   communityMembers community_members [not null]
   communityPosts community_posts [not null]
   communityComments community_comments [not null]
@@ -515,6 +517,7 @@ Table orders {
   disputes disputes [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
+  transactions transactions [not null]
 }
 
 Table exchange_offers {
@@ -537,6 +540,7 @@ Table exchange_offers {
   counterOffers exchange_offers [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
+  transactions transactions [not null]
 }
 
 Table transactions {
@@ -546,8 +550,13 @@ Table transactions {
   amount Float [not null]
   type TransactionType [not null]
   orderId String
+  order orders
   exchangeOfferId String
+  exchangeOffer exchange_offers
+  withdrawalId String
+  withdrawal withdrawals
   description String
+  status TransactionStatus [not null, default: 'COMPLETED']
   createdAt DateTime [default: `now()`, not null]
 }
 
@@ -607,6 +616,20 @@ Table payment_methods {
   isDefault Boolean [not null, default: false]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
+}
+
+Table withdrawals {
+  id String [pk]
+  customerId String [not null]
+  customer customers [not null]
+  amount Float [not null]
+  paymentMethodId String
+  status WithdrawalStatus [not null, default: 'PENDING']
+  adminNote String
+  stripeTransferId String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  transactions transactions [not null]
 }
 
 Table subscription_plans {
@@ -1049,6 +1072,12 @@ Enum ReportStatus {
   COMPLETED
 }
 
+Enum WithdrawalStatus {
+  PENDING
+  COMPLETED
+  REJECTED
+}
+
 Enum SubscriptionStatus {
   PENDING
   ACTIVE
@@ -1164,6 +1193,12 @@ Enum TransactionType {
   TRADE_BALANCE
   PLATFORM_FEE
   WITHDRAWAL
+}
+
+Enum TransactionStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
 }
 
 Enum DisputeType {
@@ -1479,6 +1514,12 @@ Ref: exchange_offers.parentOfferId - exchange_offers.id [delete: No Action]
 
 Ref: transactions.customerId > customers.id
 
+Ref: transactions.orderId > orders.id
+
+Ref: transactions.exchangeOfferId > exchange_offers.id
+
+Ref: transactions.withdrawalId > withdrawals.id
+
 Ref: disputes.listingId > listings.id
 
 Ref: disputes.orderId > orders.id
@@ -1496,6 +1537,8 @@ Ref: listing_shares.customerId > customers.id
 Ref: listing_shares.listingId > listings.id
 
 Ref: payment_methods.customerId > customers.id
+
+Ref: withdrawals.customerId > customers.id
 
 Ref: subscriptions.customerId > customers.id
 
